@@ -9,8 +9,8 @@ import orbag.impl.cis.Server;
 import orbag.metadata.DisplayLabel;
 
 @Component
-@DisplayLabel("Install WebSphere")
-public class InstallWebsphere extends ConfigurationItemActionBase{
+@DisplayLabel("Install Generic software")
+public class InstallGenericSoftware extends ConfigurationItemActionBase{
 
 	@Override
 	public boolean isAvailableFor(ActionRequest request) {
@@ -20,7 +20,7 @@ public class InstallWebsphere extends ConfigurationItemActionBase{
 
 	@Override
 	public String execute(ActionRequest request) {
-		return "Installed WAS on "+request.getTargetCis().size()+" servers";
+		return "Software installed on "+request.getTargetCis().size()+" servers";
 	}
 
 }

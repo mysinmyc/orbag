@@ -14,7 +14,7 @@ Il server è una applicazione springboot implementata nel modulo *orbag-server* 
 
 L'interfaccia web è definita nel progetto *orbag-ui* in VUEjs 2 + bootstrap . Il risultato della compilazione (folder [dist](orbag-ui/dist) va copiato nel folder [src/main/resources/public](orbag-server/src/main/resources/public) del progetto orbag-server 
 
-I dati sono caricati in un H2 inmemory all'avvio e inizializzati con lo script sql [data.sql](orbag-server/src/main/resources/data.sql)
+I dati sono caricati in un H2 inmemory all'avvio e inizializzati con lo script sql [data.sql](orbag-impl/src/main/resources/data.sql)
 
 
 
@@ -43,8 +43,8 @@ E' possibile inoltre definire delle azioni associate alle Entities
 
 ```
 @Component
-@DisplayLabel("Install WebSphere")
-public class InstallWebsphere extends ConfigurationItemActionBase{
+@DisplayLabel("Install software")
+public class InstallSoftware extends ConfigurationItemActionBase{
 
 	@Override
 	public boolean isAvailableFor(ActionRequest request) {
@@ -54,7 +54,7 @@ public class InstallWebsphere extends ConfigurationItemActionBase{
 
 	@Override
 	public String execute(ActionRequest request) {
-		return "Installed WAS on "+request.getTargetCis().size()+" servers";
+		return "Software installed on "+request.getTargetCis().size()+" servers";
 	}
 
 }
