@@ -39,4 +39,9 @@ public class Dao {
 	public List<?> getCis(List<ConfigurationItemReference> configurationItemReferences) {
 		return configurationItemReferences.stream().map(this::getCi).filter(i -> i !=null).toList();
 	}
+	
+	
+	public void delete(Object object) {
+		getRepositoryFor(object.getClass()).delete(object);
+	}
 }

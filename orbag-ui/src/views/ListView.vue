@@ -5,7 +5,7 @@
 
     Select cis from list, then click on one of the available actions
     
-    <b-alert variant="success"  :show=" showMessage " dismissible>{{infoMesssage}}</b-alert>
+    <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
     <br/>
     <br/>
 
@@ -31,8 +31,9 @@ export default {
             cis: Array<ConfigurationItemReference>(),
             selectedCis: Array<ConfigurationItemReference>(),
             availablableActions: Array<SerializableAction>(),
-            infoMesssage: "",
-            showMessage:false
+            messsage: "",
+            showMessage:false,
+            messageType: "success"
         }
     },
     computed: {
@@ -41,11 +42,14 @@ export default {
         }
     },
     mounted() {
-        listConfigurationItems(this.configurationItemType).then( r => {
-            this.cis = r.cis;
-        });
+        this.reloadList();
     },
     methods: {
+        reloadList() {
+            listConfigurationItems(this.configurationItemType).then( r => {
+                this.cis = r.cis;
+            });
+        },
         onRowSelected(items:Array<ConfigurationItemReference>) {
             this.availablableActions=[];
             this.selectedCis = items;
@@ -56,8 +60,15 @@ export default {
         onClickAction(action:SerializableAction) {
             this.showMessage=false;
             submitAction(action, this.selectedCis).then(r=>{
-                this.infoMesssage = r.message;
+                this.messsage = r.message;
                 this.showMessage=true;
+                this.messageType="success";
+                this.reloadList();
+            }).catch ( reason=> {
+                this.messsage = action.displayLabel + " failed: "+reason;
+                this.messageType="warning";
+                this.showMessage=true;
+                this.reloadList();
             });
         }
     }

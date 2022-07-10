@@ -10,4 +10,6 @@ public interface OrbagRepository {
 	<T> List<T> list(Class<T> javaClass);
 
 	Object getById(Long identifier, Class<?> javaClass);
+
+	void delete(Object object);
 }

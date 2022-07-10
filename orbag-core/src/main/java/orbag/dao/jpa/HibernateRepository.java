@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,12 @@ public class HibernateRepository  implements OrbagRepository{
 	@Override
 	public Object getById(Long identifier, Class<?> javaClass) {
 		return entityManager.find(javaClass, identifier);
+	}
+
+	@Override
+	@Transactional(Transactional.TxType.REQUIRES_NEW)
+	public void delete(Object object) {
+		entityManager.remove(object);
 	}
 
 }
