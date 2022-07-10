@@ -18,7 +18,7 @@ public class GoToDrinkAction extends ConfigurationItemActionBase{
 
 	@Override
 	public String execute(ActionRequest request) {
-		return " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choise!!!" ;
+		return " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choice!!!" ;
 	}
 
 }
