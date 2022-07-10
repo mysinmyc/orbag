@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class MetadataRegistryTest {
 
 	@ConfigurationItem()
-	static class ParentConfigurationItem implements Manageable{
+	static class ParentConfigurationItem implements Manageable<Long>{
 
 		@Override
 		public Long getIdentifier() {

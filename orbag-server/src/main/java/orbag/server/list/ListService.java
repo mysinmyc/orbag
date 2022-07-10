@@ -31,6 +31,6 @@ public class ListService {
 		}
 
 		return dao.list(configurationItemDescriptor.getJavaClass()).stream().filter(ci -> ci instanceof Manageable).map(
-				ci -> ConfigurationItemReference.fromConfigurationItem(configurationItemDescriptor, (Manageable) ci)).toList();
+				ci -> ConfigurationItemReference.fromConfigurationItem(configurationItemDescriptor, (Manageable<?>) ci)).toList();
 	}
 }

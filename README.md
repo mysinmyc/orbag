@@ -83,3 +83,8 @@ docker build -t orbag .
 
 docker run -d --rm -p8080:8080 orbag 
 
+
+
+## Ringraziamenti
+
+Alla ricerca di dati di esempio per testare il software ho trovato un'api pubblica [https://www.openbrewerydb.org](https://www.openbrewerydb.org/) che è stata inglobata con il solo scopo di fornire dati di esempio

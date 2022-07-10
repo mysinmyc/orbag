@@ -22,7 +22,7 @@ public class HibernateMetadataProvider implements MetadataProvider{
 	public List<ConfigurationItemDescriptor> getClassesMetadata() {
 		List<ConfigurationItemDescriptor> classesMetadata = new ArrayList<>();
 		for (EntityType<?> currentEntityType :  entityManager.getMetamodel().getEntities()) {
-				ConfigurationItemDescriptor currentDescriptor = ConfigurationItemDescriptor.fromClass(currentEntityType.getJavaType());
+				ConfigurationItemDescriptor currentDescriptor = ConfigurationItemDescriptor.fromClass(currentEntityType.getJavaType(),currentEntityType.getIdType().getJavaType());
 				if (currentDescriptor!=null) {
 					classesMetadata.add(currentDescriptor);
 				}

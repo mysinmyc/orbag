@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class ConfigurationItemDescriptorTest {
 
-	public static class NoConfigurationItem implements Identifiable {
+	public static class NoConfigurationItem implements Identifiable<Long> {
 
 		@Override
 		public Long getIdentifier() {
@@ -22,7 +22,7 @@ public class ConfigurationItemDescriptorTest {
 	}
 
 	@ConfigurationItem
-	public static class WellDefinedConfigurationItem implements Manageable {
+	public static class WellDefinedConfigurationItem implements Manageable<Long> {
 
 		@Override
 		public Long getIdentifier() {

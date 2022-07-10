@@ -10,10 +10,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import orbag.dao.OrbagRepository;
+import orbag.dao.OrbagWritableRepository;
 
 @Component
-public class HibernateRepository  implements OrbagRepository{
+public class HibernateRepository  implements OrbagWritableRepository{
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -31,7 +31,7 @@ public class HibernateRepository  implements OrbagRepository{
 	}
 
 	@Override
-	public Object getById(Long identifier, Class<?> javaClass) {
+	public <T> T getById(Object identifier, Class<T> javaClass) {
 		return entityManager.find(javaClass, identifier);
 	}
 

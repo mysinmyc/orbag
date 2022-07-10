@@ -6,7 +6,7 @@ import javax.persistence.MappedSuperclass;
 import orbag.metadata.Manageable;
 
 @MappedSuperclass
-public class RootConfigurationItem implements Manageable{
+public class RootConfigurationItem implements Manageable<Long>{
 
 	@Id
 	Long id;

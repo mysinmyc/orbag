@@ -1,5 +1,5 @@
 package orbag.metadata;
 
-public interface Manageable extends Identifiable,Displayable{
+public interface Manageable<T> extends Identifiable<T>,Displayable{
 
 }

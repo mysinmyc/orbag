@@ -8,10 +8,14 @@ import org.springframework.stereotype.Component;
 import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReference;
+import orbag.reference.ConfigurationItemReferenceService;
 
 @Component
 public class Dao {
 
+	@Autowired
+	ConfigurationItemReferenceService configurationItemReferenceService;
+	
 	@Autowired
 	List<OrbagRepository> repositories;
 	
@@ -32,7 +36,7 @@ public class Dao {
 			return null;
 		}
 		OrbagRepository  repository = getRepositoryFor(descriptor.getJavaClass());
-		return repository.getById(reference.getIdentifier(), descriptor.getJavaClass());
+		return repository.getById(configurationItemReferenceService.getIdentifierFromReference(reference), descriptor.getJavaClass());
 	}
 	
 	
@@ -42,6 +46,16 @@ public class Dao {
 	
 	
 	public void delete(Object object) {
-		getRepositoryFor(object.getClass()).delete(object);
+		OrbagRepository repository = getRepositoryFor(object.getClass());
+		
+		if (! (repository instanceof OrbagWritableRepository)) {
+			throw new UnsupportedOperationException("Read only repository");
+		}
+		((OrbagWritableRepository)repository).delete(object);
+	}
+	
+	public boolean isWritable(Object object) {
+		OrbagRepository repository = getRepositoryFor(object.getClass());
+		return repository instanceof OrbagWritableRepository;
 	}
 }

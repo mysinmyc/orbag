@@ -18,7 +18,7 @@ public class DeleteCi extends ConfigurationItemActionBase{
 	
 	@Override
 	public boolean isAvailableFor(ActionRequest request) {
-		return request.getTargetCis().size() == 1;
+		return request.getTargetCis().size() == 1 && dao.isWritable(request.getTargetCis().get(0));
 	}
 
 	@Override

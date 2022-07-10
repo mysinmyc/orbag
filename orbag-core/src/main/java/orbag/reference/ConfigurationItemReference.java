@@ -6,7 +6,7 @@ import orbag.metadata.Manageable;
 public class ConfigurationItemReference {
 
 	
-	Long identifier;
+	String identifier;
 
 	String configurationItemType;
 	
@@ -15,17 +15,17 @@ public class ConfigurationItemReference {
 	public ConfigurationItemReference() {	
 	}
 	
-	public ConfigurationItemReference(Long identifier, String configurationItemType, String displayLabel) {
+	public ConfigurationItemReference(String identifier, String configurationItemType, String displayLabel) {
 		this.identifier = identifier;
 		this.configurationItemType = configurationItemType;
 		this.displayLabel = displayLabel;
 	}
 
-	public Long getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(Long identifier) {
+	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
@@ -45,8 +45,8 @@ public class ConfigurationItemReference {
 		this.displayLabel = displayLabel;
 	}
 	
-	public static ConfigurationItemReference fromConfigurationItem(ConfigurationItemDescriptor configurationItemDescriptor, Manageable configurationItem) {
-		return new ConfigurationItemReference(configurationItem.getIdentifier(), configurationItemDescriptor.getName(), configurationItem.getDisplayLabel());
+	public static ConfigurationItemReference fromConfigurationItem(ConfigurationItemDescriptor configurationItemDescriptor, Manageable<?> configurationItem) {
+		return new ConfigurationItemReference(configurationItem.getIdentifier().toString(), configurationItemDescriptor.getName(), configurationItem.getDisplayLabel());
 	}
 }
  

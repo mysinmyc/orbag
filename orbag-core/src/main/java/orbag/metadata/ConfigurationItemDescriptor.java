@@ -7,9 +7,12 @@ public class ConfigurationItemDescriptor {
 	
 	Class<?> javaClass;
 	
-	public ConfigurationItemDescriptor(Class<?> javaClass, String name) {
+	Class<?> identifierClass;
+
+	public ConfigurationItemDescriptor(Class<?> javaClass, String name, Class<?> identifierClass) {
 		this.javaClass = javaClass;
 		this.name = (name == null || name.isEmpty())? javaClass.getSimpleName() : name;
+		this.identifierClass = identifierClass;
 	}
 	
 	public Class<?> getJavaClass() {
@@ -20,7 +23,16 @@ public class ConfigurationItemDescriptor {
 		return name;
 	}
 	
+	public Class<?> getIdentifierClass() {
+		return identifierClass;
+	}
+
+	
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass) {
+		return fromClass(javaClass, Object.class);
+	}
+	
+	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass) {
 		
 		if (!Manageable.class.isAssignableFrom(javaClass)) {
 			return null;
@@ -29,6 +41,6 @@ public class ConfigurationItemDescriptor {
 		if (configurationItemAnnotation ==null) {
 			return null;
 		}
-		return new ConfigurationItemDescriptor(javaClass, configurationItemAnnotation.name());
+		return new ConfigurationItemDescriptor(javaClass, configurationItemAnnotation.name(), identifierClass);
 	}
 }

@@ -1,25 +1,24 @@
-package orbag.impl.actions;
+package orbag.impl.brewery;
 
 import org.springframework.stereotype.Component;
 
 import orbag.action.ActionRequest;
 import orbag.action.ActionUtils;
 import orbag.action.ConfigurationItemActionBase;
-import orbag.impl.cis.Server;
 import orbag.metadata.DisplayLabel;
 
 @Component
-@DisplayLabel("Restart single server")
-public class RestartSingleServer extends ConfigurationItemActionBase {
+@DisplayLabel("Go to drink")
+public class GoToDrinkAction extends ConfigurationItemActionBase{
 
 	@Override
 	public boolean isAvailableFor(ActionRequest request) {
-		return ActionUtils.isSingleObjectOfType(request.getTargetCis(), Server.class);
+		return ActionUtils.isSingleObjectOfType(request.getTargetCis(), Brewery.class);
 	}
 
 	@Override
 	public String execute(ActionRequest request) {
-		return "Submitted restart of "+ ((Server)request.getTargetCis().get(0)).getName();
+		return " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choise!!!" ;
 	}
 
 }

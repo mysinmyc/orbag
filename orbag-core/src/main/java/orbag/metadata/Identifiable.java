@@ -1,6 +1,6 @@
 package orbag.metadata;
 
-public interface Identifiable {
+public interface Identifiable<T> {
 
-	Long getIdentifier();
+	T getIdentifier();
 }
