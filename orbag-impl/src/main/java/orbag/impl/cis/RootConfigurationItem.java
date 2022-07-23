@@ -4,6 +4,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import orbag.metadata.Manageable;
+import orbag.search.Searcheable;
 
 @MappedSuperclass
 public class RootConfigurationItem implements Manageable<Long>{
@@ -11,6 +12,7 @@ public class RootConfigurationItem implements Manageable<Long>{
 	@Id
 	Long id;
 	
+	@Searcheable
 	String name;	
 	
 	@Override

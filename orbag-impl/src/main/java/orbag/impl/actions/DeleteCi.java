@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import orbag.action.ActionRequest;
 import orbag.action.ConfigurationItemActionBase;
-import orbag.dao.Dao;
+import orbag.dao.ConfigurationItemDao;
 import orbag.metadata.DisplayLabel;
 
 @Component
@@ -13,7 +13,7 @@ import orbag.metadata.DisplayLabel;
 public class DeleteCi extends ConfigurationItemActionBase{
 
 	@Autowired
-	Dao dao;
+	ConfigurationItemDao dao;
 	
 	
 	@Override

@@ -6,8 +6,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 
 import orbag.metadata.ConfigurationItem;
+import orbag.metadata.ConfigurationItemProperty;
+import orbag.search.Searcheable;
 
-@ConfigurationItem
+@ConfigurationItem(category = "Infrastructure")
 @Entity
 public class Server extends RootConfigurationItem {
 
@@ -20,12 +22,14 @@ public class Server extends RootConfigurationItem {
 	@ManyToOne
 	ServerGroup serverGroup;
 
+	@Searcheable
 	String address;
 
 	public Person getOwner() {
 		return owner;
 	}
 
+	@ConfigurationItemProperty( displayLabel = "Server owner")
 	public void setOwner(Person owner) {
 		this.owner = owner;
 	}
@@ -34,6 +38,7 @@ public class Server extends RootConfigurationItem {
 		return serverGroup;
 	}
 
+	@ConfigurationItemProperty
 	public void setServerGroup(ServerGroup serverGroup) {
 		this.serverGroup = serverGroup;
 	}
@@ -42,6 +47,7 @@ public class Server extends RootConfigurationItem {
 		return address;
 	}
 
+	@ConfigurationItemProperty
 	public void setAddress(String address) {
 		this.address = address;
 	}

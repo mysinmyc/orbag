@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Lazy;
 
 import orbag.metadata.ConfigurationItem;
 
-@ConfigurationItem
+@ConfigurationItem(category = "Infrastructure")
 @Entity
 public class ServerGroup extends RootConfigurationItem {
 	

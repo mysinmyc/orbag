@@ -1,5 +1,5 @@
 
-import { ConfigurationItemReference } from "./common";
+import { ConfigurationItemReference } from "./reference";
 import axios from "axios";
 
 export type ConfigurationItemList = {

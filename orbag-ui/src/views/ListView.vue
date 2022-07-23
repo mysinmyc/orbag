@@ -22,15 +22,14 @@
 </template>
 
 <script lang="ts">
-import {ConfigurationItemReference} from "@/framework/common"
+import {ConfigurationItemReference} from "@/framework/reference"
 import {listConfigurationItems} from "@/framework/list"
-import {getAvailableActions, SerializableAction,submitAction} from "@/framework/action"
+
 export default {
     data() {
         return {
             cis: Array<ConfigurationItemReference>(),
             selectedCis: Array<ConfigurationItemReference>(),
-            availablableActions: Array<SerializableAction>(),
             messsage: "",
             showMessage:false,
             messageType: "success"
@@ -48,27 +47,6 @@ export default {
         reloadList() {
             listConfigurationItems(this.configurationItemType).then( r => {
                 this.cis = r.cis;
-            });
-        },
-        onRowSelected(items:Array<ConfigurationItemReference>) {
-            this.availablableActions=[];
-            this.selectedCis = items;
-            getAvailableActions(this.selectedCis).then( r=>{
-                this.availablableActions = r;
-            });
-        },
-        onClickAction(action:SerializableAction) {
-            this.showMessage=false;
-            submitAction(action, this.selectedCis).then(r=>{
-                this.messsage = r.message;
-                this.showMessage=true;
-                this.messageType="success";
-                this.reloadList();
-            }).catch ( reason=> {
-                this.messsage = action.displayLabel + " failed: "+reason;
-                this.messageType="warning";
-                this.showMessage=true;
-                this.reloadList();
             });
         }
     }

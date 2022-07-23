@@ -12,7 +12,7 @@ Al momento le azioni sono finte e non è implementata la sicurezza
 
 Il server è una applicazione springboot implementata nel modulo *orbag-server* che espone delle api rest (/api) e un'interfaccia web 
 
-L'interfaccia web è definita nel progetto *orbag-ui* in VUEjs 2 + bootstrap . Il risultato della compilazione (folder [dist](orbag-ui/dist) va copiato nel folder [src/main/resources/public](orbag-server/src/main/resources/public) del progetto orbag-server 
+L'interfaccia web è definita nel progetto *orbag-ui* in VUEjs 2 + bootstrap . Il risultato della compilazione presente nel folder [dist](orbag-ui/dist) va copiato nel folder [src/main/resources/public](orbag-server/src/main/resources/public) del progetto orbag-server 
 
 I dati sono caricati in un H2 inmemory all'avvio e inizializzati con lo script sql [data.sql](orbag-impl/src/main/resources/data.sql)
 
@@ -60,6 +60,13 @@ public class InstallSoftware extends ConfigurationItemActionBase{
 }
 
 ```
+
+## Interfacce di ricerca
+
+
+Esiste un'interfaccia di ricerca generica per tutte le entities che mostra come campi filtro tutti i field marcati con l'annotazione  [@Searcheable](orbag-core/src/main/java/orbag/search/Searcheable.java)
+
+Ricerche più complesse richiedono l'implementazione di un [SearchExecutor](orbag-core/src/main/java/orbag/search/SearchExecutor.java). I search executors sono classi che forniscono i parametri per le ricerche e popoloano il risultato in una tabella. Un esempio è [BrewerySearchExecutor](orbag-impl/src/main/java/orbag/impl/brewery/BrewerySearchExecutor.java)
 
 
 ## Esecuzione locale

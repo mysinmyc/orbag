@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ConfigurationItemReference } from "./common"
+import { ConfigurationItemReference } from "./reference"
 
 export type GetAvailablActionRequest = {
     targetCis: Array<ConfigurationItemReference>

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class ActionUtilsTest {
 
 	@Test
-	public void testAreAlLObjectsOfType() {
+	public void testAreAllObjectsOfType() {
 		assertFalse(ActionUtils.areAllObjectsOfType(Arrays.asList(new Object[]{ new String("ciao"), Integer.valueOf(5)}), Integer.class));
 		assertTrue(ActionUtils.areAllObjectsOfType(Arrays.asList(new Object[]{ new String("ciao"),Integer.valueOf(5)}), Object.class));
 	}

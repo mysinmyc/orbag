@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import orbag.action.ActionRegistry;
 import orbag.action.ActionRequest;
 import orbag.action.ConfigurationItemAction;
-import orbag.dao.Dao;
+import orbag.dao.ConfigurationItemDao;
 import orbag.reference.ConfigurationItemReference;
 import orbag.server.OrbagServerException;
 
@@ -20,7 +20,7 @@ public class ActionService {
 	ActionRegistry actionRegistry;
 	
 	@Autowired
-	Dao dao;
+	ConfigurationItemDao dao;
 	
 	public List<SerializableAction> getAvaiableActionsFor(List<ConfigurationItemReference> cisReferences) {	
 		if (cisReferences == null || cisReferences.isEmpty()) {

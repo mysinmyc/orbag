@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.Manageable;
 import orbag.metadata.MetadataRegistry;
-import orbag.utils.ConversionUtils;
+import orbag.util.ConversionUtils;
 
 @Component
 public class ConfigurationItemReferenceService {
@@ -14,12 +14,20 @@ public class ConfigurationItemReferenceService {
 	@Autowired
 	MetadataRegistry metadataRegistry;
 	
-	public ConfigurationItemReference getReference(ConfigurationItemDescriptor configurationItemDescriptor, Manageable<?> configurationItem) {
-		return ConfigurationItemReference.fromConfigurationItem(configurationItemDescriptor, configurationItem);
+	public ConfigurationItemReferenceExt getReference(Object object) {
+		if (! (object instanceof Manageable<?>)) {
+			return null;
+		}
+		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry.getConfigurationItemDescriptorByClass(object.getClass());
+		if (configurationItemDescriptor==null) {
+			return null;
+		}
+		return ConfigurationItemReferenceExt.fromConfigurationItem(configurationItemDescriptor, (Manageable<?>) object);
 	}
-	
+
 	public Object getIdentifierFromReference(ConfigurationItemReference configurationItemReference) {
 		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry.getConfigurationItemDescriptorByName(configurationItemReference.configurationItemType);
 		return ConversionUtils.convertString(configurationItemReference.getIdentifier(), configurationItemDescriptor.getIdentifierClass());
 	}
+
 }

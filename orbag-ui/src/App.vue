@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <top-bar/>
+    <top-bar/>    
     <b-card overlay>
+
       <b-card-body overlay>
-        <router-view :key="$route.path"/>
+          <router-view :key="$route.path"/>
       </b-card-body>
     </b-card>
   </div>

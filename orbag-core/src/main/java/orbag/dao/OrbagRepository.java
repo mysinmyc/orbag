@@ -1,15 +1,15 @@
 package orbag.dao;
 
-import java.util.List;
+import orbag.data.PaginationInfo;
+import orbag.util.UnsafeConsumer;
 
 
 public interface OrbagRepository {
 
 	boolean isManaged(Class<?> javaClass);
 	
-	<T> List<T> list(Class<T> javaClass);
-
 	<T> T getById(Object identifier, Class<T> javaClass);
 
+	<T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer, PaginationInfo paginationInfo) throws Exception;
 
 }

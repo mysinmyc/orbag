@@ -4,8 +4,15 @@ export type ClassModel = {
     configurationItemDescriptors: Array<ConfigurationItemDescriptor>;
 }
 
+export type ConfigurationItemPropertyDescriptor = {
+    name: string;
+    displayLabel: string;
+}
+
 export type ConfigurationItemDescriptor = {
-    name:string
+    name: string;
+    category: string;
+    properties: Array<ConfigurationItemPropertyDescriptor>;
 }
 
 export function getClassModel(): Promise<ClassModel> {

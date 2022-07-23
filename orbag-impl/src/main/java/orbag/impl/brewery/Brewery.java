@@ -3,9 +3,10 @@ package orbag.impl.brewery;
 import java.time.LocalDateTime;
 
 import orbag.metadata.ConfigurationItem;
+import orbag.metadata.ConfigurationItemProperty;
 import orbag.metadata.Manageable;
 
-@ConfigurationItem
+@ConfigurationItem(category = "After work")
 public class Brewery implements Manageable<String> {
 
 	String id;
@@ -24,7 +25,7 @@ public class Brewery implements Manageable<String> {
 
 	String state;
 
-	String cuntry_province;
+	String country_province;
 
 	String postal_code;
 
@@ -34,7 +35,7 @@ public class Brewery implements Manageable<String> {
 
 	String latitude;
 
-	String phome;
+	String phone;
 
 	String website_url;
 
@@ -59,6 +60,7 @@ public class Brewery implements Manageable<String> {
 		return name;
 	}
 
+	@ConfigurationItemProperty
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -67,6 +69,7 @@ public class Brewery implements Manageable<String> {
 		return brewery_type;
 	}
 
+	@ConfigurationItemProperty
 	public void setBrewery_type(String brewery_type) {
 		this.brewery_type = brewery_type;
 	}
@@ -75,10 +78,12 @@ public class Brewery implements Manageable<String> {
 		return street;
 	}
 
+	@ConfigurationItemProperty
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
+	@ConfigurationItemProperty
 	public String getAddress_2() {
 		return address_2;
 	}
@@ -87,6 +92,7 @@ public class Brewery implements Manageable<String> {
 		this.address_2 = address_2;
 	}
 
+	@ConfigurationItemProperty
 	public String getAddress_3() {
 		return address_3;
 	}
@@ -95,6 +101,7 @@ public class Brewery implements Manageable<String> {
 		this.address_3 = address_3;
 	}
 
+	@ConfigurationItemProperty(highlighted = true)
 	public String getCity() {
 		return city;
 	}
@@ -103,6 +110,7 @@ public class Brewery implements Manageable<String> {
 		this.city = city;
 	}
 
+	@ConfigurationItemProperty
 	public String getState() {
 		return state;
 	}
@@ -111,14 +119,16 @@ public class Brewery implements Manageable<String> {
 		this.state = state;
 	}
 
-	public String getCuntry_province() {
-		return cuntry_province;
+	@ConfigurationItemProperty
+	public String getCountry_province() {
+		return country_province;
 	}
 
-	public void setCuntry_province(String cuntry_province) {
-		this.cuntry_province = cuntry_province;
+	public void setCountry_province(String country_province) {
+		this.country_province = country_province;
 	}
 
+	@ConfigurationItemProperty
 	public String getPostal_code() {
 		return postal_code;
 	}
@@ -127,6 +137,7 @@ public class Brewery implements Manageable<String> {
 		this.postal_code = postal_code;
 	}
 
+	@ConfigurationItemProperty(highlighted = true)
 	public String getCountry() {
 		return country;
 	}
@@ -135,6 +146,7 @@ public class Brewery implements Manageable<String> {
 		this.country = country;
 	}
 
+	@ConfigurationItemProperty
 	public String getLongitude() {
 		return longitude;
 	}
@@ -143,6 +155,7 @@ public class Brewery implements Manageable<String> {
 		this.longitude = longitude;
 	}
 
+	@ConfigurationItemProperty
 	public String getLatitude() {
 		return latitude;
 	}
@@ -151,14 +164,16 @@ public class Brewery implements Manageable<String> {
 		this.latitude = latitude;
 	}
 
-	public String getPhome() {
-		return phome;
+	@ConfigurationItemProperty
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setPhome(String phome) {
-		this.phome = phome;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
+	@ConfigurationItemProperty
 	public String getWebsite_url() {
 		return website_url;
 	}
@@ -167,6 +182,7 @@ public class Brewery implements Manageable<String> {
 		this.website_url = website_url;
 	}
 
+	@ConfigurationItemProperty
 	public LocalDateTime getUpdated_at() {
 		return updated_at;
 	}
@@ -175,6 +191,7 @@ public class Brewery implements Manageable<String> {
 		this.updated_at = updated_at;
 	}
 
+	@ConfigurationItemProperty
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
    
-    Welcome
+    To start select an entity from the top menu
   </div>
 </template>
 

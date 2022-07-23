@@ -2,31 +2,35 @@ package orbag.impl.brewery;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import orbag.dao.OrbagRepository;
+import orbag.data.PaginationInfo;
+import orbag.util.UnsafeConsumer;
 
 @Component
 public class BreweryRepository implements OrbagRepository{
 
-	
-	BreweryClient breweryClient = new BreweryClient();
+	@Autowired
+	BreweryClient breweryClient;
 	
 	@Override
 	public boolean isManaged(Class<?> javaClass) {
 		return  javaClass.equals(Brewery.class);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> List<T> list(Class<T> javaClass) {
-		return (List<T>) breweryClient.list();
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getById(Object identifier, Class<T> javaClass) {
 		return (T) breweryClient.getById((String)identifier);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer,PaginationInfo paginationInfo) throws Exception {
+		consumer.acceptAll( (List<T>) breweryClient.list());
 	}
 
 }

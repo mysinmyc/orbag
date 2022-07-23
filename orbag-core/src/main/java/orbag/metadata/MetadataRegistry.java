@@ -39,14 +39,14 @@ public class MetadataRegistry {
 	
 	public ConfigurationItemDescriptor getConfigurationItemDescriptorByClass(Class<?> configurationItemClass) {
 		for (ConfigurationItemDescriptor currentDescriptor : configurationItemDescriptors) {
-			if (configurationItemClass.isAssignableFrom(configurationItemClass)) {
+			if (currentDescriptor.getJavaClass().isAssignableFrom(configurationItemClass)) {
 				return currentDescriptor;
 			}
 		}
 		return null;
 	}
 
-	public void setManagedClasses(Class<?> managedClasses) {
+	public void setManagedClasses(Class<?>... managedClasses) {
 		setMetadataFromProviders(Arrays.asList(new StaticMetadataProvider(managedClasses)));
 	}
 }
