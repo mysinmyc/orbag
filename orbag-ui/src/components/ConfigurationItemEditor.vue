@@ -9,7 +9,7 @@
             <b-dropdown-item class="m-2" v-for="action in availablableActions" :key="action.name" @click="onClickAction(action)">{{action.displayLabel}}</b-dropdown-item>
         </b-dropdown>
         <br/>
-        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
+        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{message}}</b-alert>
         <br/>
         <configuration-item-property-editor :value="value"/>
     </b-card-body>
@@ -32,7 +32,7 @@ export default {
     data()  {
         return {
             availablableActions: Array<SerializableAction>(),
-            messsage: "",
+            message: "",
             showMessage:false,
             messageType: "success"
         }
@@ -41,11 +41,11 @@ export default {
           onClickAction(action:SerializableAction) {
             this.showMessage=false;
             submitAction(action, [this.value]).then(r=>{
-                this.messsage = r.message;
+                this.message = r.message;
                 this.showMessage=true;
                 this.messageType="success";
             }).catch ( reason=> {
-                this.messsage = action.displayLabel + " failed: "+reason;
+                this.message = action.displayLabel + " failed: "+reason;
                 this.messageType="warning";
                 this.showMessage=true;
             });

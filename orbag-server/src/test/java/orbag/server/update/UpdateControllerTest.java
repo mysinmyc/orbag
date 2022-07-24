@@ -32,7 +32,7 @@ public class UpdateControllerTest {
 	private TestRestTemplate restTemplate;
 	
 	@Test
-	void testCreateWithDefaultExecutor(@Autowired ConfigurationItemDao dao) {
+	void testUpdate(@Autowired ConfigurationItemDao dao) {
 		
 		TestUpdateCi testUpdateCi = new TestUpdateCi();
 		testUpdateCi.setIdentifier("ciao");
