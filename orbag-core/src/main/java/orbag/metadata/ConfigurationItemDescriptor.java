@@ -20,6 +20,8 @@ public class ConfigurationItemDescriptor {
 	String category;
 
 	String displayLabel;
+	
+	boolean allowCreation;
 
 	protected ConfigurationItemDescriptor(Class<?> javaClass, String name, Class<?> identifierClass) {
 		this.javaClass = javaClass;
@@ -57,8 +59,12 @@ public class ConfigurationItemDescriptor {
 
 	public void forEachProperty(Consumer<ConfigurationItemPropertyDescriptor> propertyConsumer) {
 		properties.values().forEach(propertyConsumer);
-	}
+	}	
 
+	public boolean isAllowCreation() {
+		return allowCreation;
+	}
+	
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass) {
 		return fromClass(javaClass, Object.class);
 	}
@@ -68,7 +74,7 @@ public class ConfigurationItemDescriptor {
 			return null;
 		}
 		ConfigurationItem configurationItemAnnotation = javaClass.getAnnotation(ConfigurationItem.class);
-		if (configurationItemAnnotation == null) {
+		if (configurationItemAnnotation == null || configurationItemAnnotation.hidden()) {
 			return null;
 		}
 		ConfigurationItemDescriptor configurationItemDescriptor = new ConfigurationItemDescriptor(javaClass,
@@ -77,6 +83,7 @@ public class ConfigurationItemDescriptor {
 		configurationItemDescriptor.displayLabel = configurationItemAnnotation.displayLabel().isEmpty()
 				? configurationItemDescriptor.getName()
 				: configurationItemAnnotation.displayLabel();
+		configurationItemDescriptor.allowCreation = configurationItemAnnotation.allowCreation();
 		Map<String, ConfigurationItemPropertyDescriptor> properties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
 		MyReflectionUtils.forEachDeclaredMethod(javaClass, m -> {
 			MyReflectionUtils.extractJavaBeanPropertyFromMethodInto(m, (name, setter) -> {
@@ -93,11 +100,12 @@ public class ConfigurationItemDescriptor {
 				}
 				ConfigurationItemProperty propertyAnnotation = m.getAnnotation(ConfigurationItemProperty.class);
 				if (propertyAnnotation != null) {
-					propertyDescriptor.setVisible(true);
+					propertyDescriptor.setVisible(! propertyAnnotation.hidden());
 					propertyDescriptor.setDisplayLabel(
 							propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
 					propertyDescriptor.setDescription(propertyAnnotation.description());
 					propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
+					propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
 				}
 			});
 		});

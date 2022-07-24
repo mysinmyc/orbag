@@ -1,14 +1,17 @@
 package orbag.impl.cis;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import orbag.metadata.ConfigurationItemProperty;
 import orbag.metadata.Manageable;
 import orbag.search.Searcheable;
 
 @MappedSuperclass
 public class RootConfigurationItem implements Manageable<Long>{
 
+	@GeneratedValue
 	@Id
 	Long id;
 	
@@ -29,6 +32,7 @@ public class RootConfigurationItem implements Manageable<Long>{
 		return name;
 	}
 
+	@ConfigurationItemProperty(mandatoryForCreation = true)
 	public void setName(String name) {
 		this.name = name;
 	}

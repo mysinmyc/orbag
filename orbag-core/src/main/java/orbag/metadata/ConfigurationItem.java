@@ -10,7 +10,14 @@ import java.lang.annotation.Target;
 @Inherited
 @Target(ElementType.TYPE)
 public @interface ConfigurationItem {
+	
 	String category() default "Uncategorized";
+	
 	String name() default "";
+	
 	String displayLabel() default "";
+	
+	boolean allowCreation() default true;
+	
+	boolean hidden() default false;
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import orbag.EnableOrbagCore;
 import orbag.data.PaginationInfo;
+import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @SpringBootTest
@@ -40,8 +41,8 @@ public class ConfigurationItemDaoTest {
 		}
 
 		@Override
-		public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer, PaginationInfo paginationInfo)
-				throws Exception {
+		public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
+				throws LimitExceededException {
 		}
 		
 	}

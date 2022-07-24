@@ -9,8 +9,8 @@ import orbag.metadata.Manageable;
 import orbag.search.Searcheable;
 
 @ConfigurationItem
-@PersistedBy(TestRepository.class)
-public class TestCi implements Manageable<String> {
+@PersistedBy(TestSearchRepository.class)
+public class TestSearchCi implements Manageable<String> {
 
 	String identifier;
 

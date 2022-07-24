@@ -7,23 +7,23 @@ import java.util.function.Consumer;
 
 public class MyReflectionUtils {
 	
-	public static void forEachDecladerField(Class<?> sourceClass, Consumer<Field> fieldConsumer) {		
-		for (Field currentField :  sourceClass.getDeclaredFields()) {
-			fieldConsumer.accept(currentField);
-		}
+	public static void forEachDecladerField(Class<?> sourceClass, Consumer<Field> fieldConsumer) {
 		Class<?> superClass = sourceClass.getSuperclass();
 		if (superClass!=null && superClass != Object.class) {
 			forEachDecladerField(superClass, fieldConsumer);
+		}		
+		for (Field currentField :  sourceClass.getDeclaredFields()) {
+			fieldConsumer.accept(currentField);
 		}
 	}
 	
-	public static void forEachDeclaredMethod(Class<?> sourceClass, Consumer<Method> methodConsumer) {		
-		for (Method currentMethod :  sourceClass.getDeclaredMethods()) {
-			methodConsumer.accept(currentMethod);
-		}
+	public static void forEachDeclaredMethod(Class<?> sourceClass, Consumer<Method> methodConsumer) {	
 		Class<?> superClass = sourceClass.getSuperclass();
 		if (superClass!=null && superClass != Object.class) {
 			forEachDeclaredMethod(superClass, methodConsumer);
+		}
+		for (Method currentMethod :  sourceClass.getDeclaredMethods()) {
+			methodConsumer.accept(currentMethod);
 		}
 	}
 		

@@ -4,7 +4,7 @@ import { SerializableFieldGroup } from "./input"
 
 export type SearchRequest = {
     configurationItemName: string,
-    paramters: SerializableFieldGroup
+    parameters: SerializableFieldGroup
     resultType: string;
 }
 

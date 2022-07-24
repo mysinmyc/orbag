@@ -18,6 +18,7 @@ import orbag.dao.OrbagWritableRepository;
 import orbag.data.PaginationInfo;
 import orbag.search.SearchCondition;
 import orbag.search.SearchConditions;
+import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
@@ -32,8 +33,8 @@ public class HibernateRepository implements OrbagWritableRepository, OrbagSearch
 	}
 
 	@Override
-	public <T> void listInto(Class<T> configurationItemClass, UnsafeConsumer<T> consumer, PaginationInfo paginationInfo)
-			throws Exception {
+	public <T> void listInto(Class<T> configurationItemClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
+			throws LimitExceededException {
 		CriteriaQuery<T> query = entityManager.getCriteriaBuilder().createQuery(configurationItemClass);
 		query.from(configurationItemClass);
 		TypedQuery<T> executableQuery = entityManager.createQuery(query);
@@ -84,7 +85,7 @@ public class HibernateRepository implements OrbagWritableRepository, OrbagSearch
 
 	@Override
 	public <T> void searchByConditionsInto(Class<T> configurationItemClass, SearchConditions searchConditions,
-			UnsafeConsumer<T> consumer, PaginationInfo paginationInfo) throws Exception {
+			UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) throws LimitExceededException {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> query = criteriaBuilder.createQuery(configurationItemClass);
 		Root<T> root = query.from(configurationItemClass);
@@ -100,6 +101,12 @@ public class HibernateRepository implements OrbagWritableRepository, OrbagSearch
 		for (T object : entityManager.createQuery(query).getResultList()) {
 			consumer.accept(object);
 		}
+	}
+
+	@Transactional(Transactional.TxType.REQUIRES_NEW)
+	public Object create(Object newObject) {
+		entityManager.persist(newObject);
+		return newObject;
 	}
 
 }

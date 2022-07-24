@@ -48,13 +48,12 @@ public class SearchService {
 		operation.accept((SearchExecutor<E>) searchExecutor, searchContext);
 	}
 
-	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user,
-			PaginationInfo paginationInfo) {
+	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user) {
 		SearchRequest requestTemplate = new SearchRequest();
 		requestTemplate.setConfigurationItemName(configurationItemName);
 		requestTemplate.setResultType(ResultType.HIGHLIGHTED_FIELDS);
 		SerializableFieldGroup parametersBuilder = new SerializableFieldGroup();
-		invokeExecutor(configurationItemName, user, paginationInfo, (e, c) -> {
+		invokeExecutor(configurationItemName, user, null, (e, c) -> {
 			e.buildSearchParameters(parametersBuilder, c);
 		});
 		requestTemplate.setParameters(parametersBuilder);

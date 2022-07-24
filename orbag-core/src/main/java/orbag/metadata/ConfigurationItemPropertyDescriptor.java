@@ -14,6 +14,8 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	boolean highlighted;
 
+	boolean mandatoryForCreation;
+	
 	String displayLabel;
 	
 	String description;
@@ -90,5 +92,13 @@ public class ConfigurationItemPropertyDescriptor {
 
 	protected void setHighlighted(boolean highlighted) {
 		this.highlighted = highlighted;
+	}
+
+	public boolean isMandatoryForCreation() {
+		return mandatoryForCreation;
+	}
+	
+	protected void setMandatoryForCreation(boolean mandatoryForCreation) {
+		this.mandatoryForCreation = mandatoryForCreation;
 	}
 }

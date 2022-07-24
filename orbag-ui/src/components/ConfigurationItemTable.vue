@@ -11,7 +11,7 @@
         
         <b-table responsive sticky-header="true" v-if="value != undefined"  head-variant="light" :items="value.rows" select-mode="multi" selectable  @row-selected="onRowSelected" :fields="fields">
             <template #cell()="data">
-                <configuration-item-link v-if="data.field.nestedColumn.type=='Reference'" v-model="data.value"/>
+                <configuration-item-link v-if="data.field.nestedColumn.type=='Reference' && data.value != ''" v-model="data.value"/>
                 <span v-else>{{data.value}}</span>
             </template>
         </b-table>
@@ -59,7 +59,7 @@ export default {
                     return -1
                 }
                 if (b.key.startsWith("__")) {
-                    return -1
+                    return 1
                 }
                 return a.label.localeCompare(b.label);
             });

@@ -1,18 +1,16 @@
 package orbag.server.search;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import orbag.dao.OrbagRepository;
 import orbag.dao.OrbagSearcheableRepository;
 import orbag.data.PaginationInfo;
-import orbag.metadata.MetadataRegistry;
 import orbag.search.SearchConditions;
+import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
-public class TestRepository implements OrbagRepository, InitializingBean, OrbagSearcheableRepository {
+public class TestSearchRepository implements OrbagRepository, OrbagSearcheableRepository {
 
 	@Override
 	public boolean isManaged(Class<?> javaClass) {
@@ -31,28 +29,21 @@ public class TestRepository implements OrbagRepository, InitializingBean, OrbagS
 	}
 
 	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer, PaginationInfo paginationInfo)
-			throws Exception {
+	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
+			throws LimitExceededException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Autowired
-	MetadataRegistry metadataRegistry;
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		metadataRegistry.setManagedClasses(TestCi.class);		
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> void searchByConditionsInto(Class<T> configurationItemClass, SearchConditions searchConditions,
-			UnsafeConsumer<T> consumer, PaginationInfo paginationInfo) throws Exception {
+			UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) throws LimitExceededException {
 		
-		if (TestCi.class.isAssignableFrom(configurationItemClass)) {
+		if (TestSearchCi.class.isAssignableFrom(configurationItemClass)) {
 			for (int cnt=0;cnt<10;cnt++) {
-				TestCi resultCi = new TestCi();
+				TestSearchCi resultCi = new TestSearchCi();
 				resultCi.setIdentifier("test "+cnt);
 				consumer.accept((T)resultCi);
 			}

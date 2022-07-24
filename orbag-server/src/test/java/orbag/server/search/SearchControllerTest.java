@@ -28,7 +28,7 @@ public class SearchControllerTest {
 	
 	@Test
 	void testSearchWithDefaultExecutor() {
-		ResponseEntity<SearchRequest> responseTemplateEntity = restTemplate.getForEntity("http://localhost:"+localServerPort+"/api/search/template/TestCi",SearchRequest.class);
+		ResponseEntity<SearchRequest> responseTemplateEntity = restTemplate.getForEntity("http://localhost:"+localServerPort+"/api/search/template/TestSearchCi",SearchRequest.class);
 		assertEquals(HttpStatus.OK,responseTemplateEntity.getStatusCode());
 		
 		SearchRequest requestTemplate = responseTemplateEntity.getBody();

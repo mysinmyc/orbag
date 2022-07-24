@@ -10,6 +10,16 @@ public class SerializableConfigurationItemDescriptor {
 	
 	String category;
 	
+	boolean allowCreation;
+	
+	public boolean isAllowCreation() {
+		return allowCreation;
+	}
+
+	public void setAllowCreation(boolean allowCreation) {
+		this.allowCreation = allowCreation;
+	}
+
 	public String getDisplayLabel() {
 		return displayLabel;
 	}

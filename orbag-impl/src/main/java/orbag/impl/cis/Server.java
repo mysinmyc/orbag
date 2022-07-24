@@ -47,7 +47,7 @@ public class Server extends RootConfigurationItem {
 		return address;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(mandatoryForCreation = true)
 	public void setAddress(String address) {
 		this.address = address;
 	}

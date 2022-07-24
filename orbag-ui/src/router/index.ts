@@ -24,7 +24,12 @@ const routes: Array<RouteConfig> = [
     path: '/edit/:configurationItemType/:configurationItemId',
     name: 'edit',
     component: () => import(/* webpackChunkName: "about" */ '../views/EditView.vue')
-  }  
+  },
+  {
+    path: '/create/:configurationItemType',
+    name: 'create',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreateView.vue')
+  },
 ]
 
 const router = new VueRouter({

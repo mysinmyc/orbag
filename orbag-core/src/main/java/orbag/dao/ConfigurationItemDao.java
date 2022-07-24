@@ -2,8 +2,6 @@ package orbag.dao;
 
 import java.util.List;
 
-import javax.naming.LimitExceededException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +11,7 @@ import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReference;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.search.SearchConditions;
+import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
@@ -38,7 +37,7 @@ public class ConfigurationItemDao {
 				.orElseThrow(() -> new RuntimeException("No repostitory avaialble for " + javaClass.getName()));
 	}
 
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer, PaginationInfo paginationInfo) {
+	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) {
 		try {
 			getRepositoryFor(javaClass).listInto(javaClass, consumer, paginationInfo);
 		} catch (LimitExceededException e) {
@@ -76,7 +75,7 @@ public class ConfigurationItemDao {
 	}
 
 	public <T> void searchByConditionsInto(Class<T> javaClass, SearchConditions searchConditions,
-			UnsafeConsumer<T> consumer, PaginationInfo paginationInfo) {
+			UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) {
 		try {
 			OrbagRepository repository = getRepositoryFor(javaClass);
 			if (!(repository instanceof OrbagSearcheableRepository)) {
@@ -88,6 +87,14 @@ public class ConfigurationItemDao {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public Object create(Object newObject) {
+		OrbagRepository repository = getRepositoryFor(newObject.getClass());
+		if (!(repository instanceof OrbagWritableRepository)) {
+			throw new UnsupportedOperationException("Read only repository");
+		}
+		return ((OrbagWritableRepository) repository).create(newObject);
 	}
 
 }

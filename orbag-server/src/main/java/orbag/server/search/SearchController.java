@@ -28,7 +28,7 @@ public class SearchController {
 	@GetMapping("/template/{configurationItemName}")
 	public SearchRequest getSearchTemplate(
 			@PathVariable("configurationItemName") String configurationItemName, Authentication user) {
-		return searchService.getSearchRequestTemplateFor(configurationItemName, user, null);
+		return searchService.getSearchRequestTemplateFor(configurationItemName, user);
 	}
 
 	@PostMapping("/execute")

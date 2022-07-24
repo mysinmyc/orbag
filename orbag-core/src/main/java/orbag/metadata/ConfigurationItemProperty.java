@@ -16,4 +16,8 @@ public @interface ConfigurationItemProperty {
 	String group() default "Base Properties";
 	
 	boolean highlighted() default false;
+	
+	boolean mandatoryForCreation() default false;
+	
+	boolean hidden() default false;
 }

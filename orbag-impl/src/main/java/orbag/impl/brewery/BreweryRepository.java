@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import orbag.dao.OrbagRepository;
 import orbag.data.PaginationInfo;
+import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
@@ -29,7 +30,7 @@ public class BreweryRepository implements OrbagRepository{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T> consumer,PaginationInfo paginationInfo) throws Exception {
+	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer,PaginationInfo paginationInfo) throws LimitExceededException {
 		consumer.acceptAll( (List<T>) breweryClient.list());
 	}
 

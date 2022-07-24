@@ -16,21 +16,21 @@ import {ClassModel,getClassModel} from "@/framework/metadata"
 export default {
     data() {
         return {
-            cisMenu: new Map<string,Array<any>>()
+            cisMenu: new Map<string,Array<unknown>>()
         }
     },
     mounted() {
-        getClassModel().then( (v:ClassModel) =>{
-            let newCisMenu= new Map<string,Array<any>>();
+        getClassModel().then( (classModel:ClassModel) =>{
+            let newCisMenu= new Map<string,Array<unknown>>();
             
-            v.configurationItemDescriptors.forEach( (v,i,a)=>{
-                let currentCategory = newCisMenu.get(v.category);
+            for (let descriptor of classModel.configurationItemDescriptors) {
+                let currentCategory = newCisMenu.get(descriptor.category);
                 if (currentCategory==null )  {
-                    currentCategory = new Array<any>();
-                    newCisMenu.set(v.category,currentCategory);
+                    currentCategory = new Array<unknown>();
+                    newCisMenu.set(descriptor.category,currentCategory);
                 }
-                currentCategory.push( {link: "/search/"+v.name, displayLabel: v.name });
-            })
+                currentCategory.push( {link: "/search/"+descriptor.name, displayLabel: descriptor.displayLabel });
+            }
 
             this.cisMenu = newCisMenu;
         });

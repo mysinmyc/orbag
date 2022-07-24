@@ -2,11 +2,11 @@ package orbag.util;
 
 import java.util.Collection;
 
-public interface UnsafeConsumer<T> {
+public interface UnsafeConsumer<T,E extends Throwable> {
 	
-	void accept(T object) throws Exception;
+	void accept(T object) throws E;
 
-	default void acceptAll(Collection<T> objects) throws Exception {
+	default void acceptAll(Collection<T> objects) throws E {
 		if (objects!=null) {
 			for (T object : objects) {
 				accept(object);

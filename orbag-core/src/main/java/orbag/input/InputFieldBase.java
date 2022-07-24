@@ -44,7 +44,7 @@ public abstract class InputFieldBase<T> {
 
 	@JsonIgnore
 	public boolean isEmpty() {
-		return value != null;
+		return value == null;
 	}
 	
 }
