@@ -69,6 +69,16 @@ Esiste un'interfaccia di ricerca generica per tutte le entities che mostra come 
 Ricerche più complesse richiedono l'implementazione di un [SearchExecutor](orbag-core/src/main/java/orbag/search/SearchExecutor.java). I search executors sono classi che forniscono i parametri per le ricerche e popoloano il risultato in una tabella. Un esempio è [BrewerySearchExecutor](orbag-impl/src/main/java/orbag/impl/brewery/BrewerySearchExecutor.java)
 
 
+## Creazione ConfigurationItems
+
+E' possibile creare nuove istanze di configuration items cliccando sul pulsante *Create new* presente sull'interfaccia di ricerca.
+
+Normalmente la creazione di un configuration item richiede la valorizzazione di tutte le properties annotate con *@ConfigurationItemProperty(mandatoryForCreation=true)*
+
+Nel caso in cui per la creazione del configuration item siano necessari parametri diversi o l'esecuzione di codice custom è possibile implementare un componente di tipo [ConfigurationItemWizard](orbag-core/src/main/java/orbag/create/ConfigurationItemWizard.java). Un esempio è [CreateServerGroupWizard](orbag-impl/src/main/java/orbag/impl/wizards/CreateServerGroupWizard.java)
+
+Per evitare che sia possibile creare nuove istanze di un ConfigurationItem annotarlo con *@ConfigurationItem(allowCreation=false)*
+
 ## Esecuzione locale
 
 In ambiente di sviluppo
