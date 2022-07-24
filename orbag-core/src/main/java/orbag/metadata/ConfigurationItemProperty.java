@@ -20,4 +20,6 @@ public @interface ConfigurationItemProperty {
 	boolean mandatoryForCreation() default false;
 	
 	boolean hidden() default false;
+	
+	boolean readOnly() default false;
 }

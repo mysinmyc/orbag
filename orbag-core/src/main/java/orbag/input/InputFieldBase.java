@@ -18,6 +18,18 @@ public abstract class InputFieldBase<T> {
 
 	T value;
 	
+	boolean readOnly;
+
+	boolean changed;
+	
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -47,4 +59,12 @@ public abstract class InputFieldBase<T> {
 		return value == null;
 	}
 	
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+
 }

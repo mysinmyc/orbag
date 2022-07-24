@@ -20,4 +20,8 @@ public @interface ConfigurationItem {
 	boolean allowCreation() default true;
 	
 	boolean hidden() default false;
+
+	boolean readOnly() default false;
+
+	Class<?> identifierClass() default Object.class;
 }

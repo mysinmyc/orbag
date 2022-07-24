@@ -9,6 +9,8 @@ public class SerializableConfigurationItemPropertyDescriptor {
 	
 	String description;
 
+	boolean readOnly;
+
 	public String getName() {
 		return name;
 	}
@@ -33,4 +35,11 @@ public class SerializableConfigurationItemPropertyDescriptor {
 		this.description = description;
 	}
 
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
 }

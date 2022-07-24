@@ -1,5 +1,5 @@
 <template>
-  <configuration-item-editor v-if=" ci != undefined" v-model="ci"/>
+  <configuration-item-editor v-if=" ci != undefined" :value="ci"/>
 </template>
 <script lang="ts">
 

@@ -9,8 +9,9 @@
             <b-dropdown-item class="m-2" v-for="action in availablableActions" :key="action.name" @click="onClickAction(action)">{{action.displayLabel}}</b-dropdown-item>
         </b-dropdown>
         <br/>
-        <br/>
         <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
+        <br/>
+        <configuration-item-property-editor :value="value"/>
     </b-card-body>
   </b-card>     
 </template>
@@ -19,8 +20,10 @@
 
 import { ConfigurationItemReference } from "@/framework/reference"
 import {getAvailableActions, SerializableAction,submitAction} from "@/framework/action"
+import ConfigurationItemPropertyEditor from './ConfigurationItemPropertyEditor.vue'
 
 export default {
+  components: { ConfigurationItemPropertyEditor },
     props: {
         value: {
             type: Object as () => ConfigurationItemReference

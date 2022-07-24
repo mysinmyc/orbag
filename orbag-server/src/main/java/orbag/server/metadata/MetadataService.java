@@ -22,6 +22,7 @@ public class MetadataService {
 		result.setName(property.getName());
 		result.setDisplayLabel(property.getDisplayLabel());
 		result.setDescription(property.getDescription());
+		result.setReadOnly(property.isReadOnly());
 		return result;
 	}
 
@@ -52,6 +53,7 @@ public class MetadataService {
 		result.setCategory(configurationItemDescriptor.getCategory());
 		result.setDisplayLabel(configurationItemDescriptor.getDisplayLabel());
 		result.setAllowCreation(configurationItemDescriptor.isAllowCreation());
+		result.setReadOnly(configurationItemDescriptor.isReadOnly());
 		if (includeProperties) {
 			List<SerializableConfigurationItemPropertyDescriptor> properties = new ArrayList<SerializableConfigurationItemPropertyDescriptor>();
 			configurationItemDescriptor.forEachProperty(p -> properties.add(serializeProperty(p)));

@@ -31,19 +31,18 @@ public class DefaultConfigurationItemWizard implements ConfigurationItemWizard{
 
 	@Override
 	public Object create(FieldGroupConsumer parameters, CreationContext context) {
-
-		try {
-			
+		try {		
 			Object newObject = context.getConfigurationItemDescriptor().getJavaClass().getDeclaredConstructor().newInstance();
-			
-			for (InputFieldBase<?> parameter : parameters.getFields()) {
-				
-				if (parameter.isEmpty()) {
-					throw new RuntimeException("Missing value for "+parameter.getDisplayLabel());
+			context.getConfigurationItemDescriptor().forEachProperty( p -> {
+				if ( p.isMandatoryForCreation()) {
+					InputFieldBase<?> parameter = parameters.getField(p.getName());
+					
+					if (parameter.isEmpty()) {
+						throw new RuntimeException("Missing value for "+parameter.getDisplayLabel());
+					}
+					p.getSetterMethod().invoke(newObject, parameter.getValue());
 				}
-				context.getConfigurationItemDescriptor().getProperty(parameter.getName()).getSetterMethod().invoke(newObject, parameter.getValue());
-			}
-			
+			});
 			return dao.create(newObject);
 		} catch (Exception e) {
 			throw new RuntimeException(e);

@@ -3,9 +3,9 @@ package orbag.metadata;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import orbag.util.MyReflectionUtils;
+import orbag.util.UnsafeConsumer;
 
 public class ConfigurationItemDescriptor {
 
@@ -20,8 +20,10 @@ public class ConfigurationItemDescriptor {
 	String category;
 
 	String displayLabel;
-	
+
 	boolean allowCreation;
+
+	boolean readOnly;
 
 	protected ConfigurationItemDescriptor(Class<?> javaClass, String name, Class<?> identifierClass) {
 		this.javaClass = javaClass;
@@ -57,16 +59,23 @@ public class ConfigurationItemDescriptor {
 		return properties.values();
 	}
 
-	public void forEachProperty(Consumer<ConfigurationItemPropertyDescriptor> propertyConsumer) {
-		properties.values().forEach(propertyConsumer);
-	}	
+	public <T extends Throwable> void forEachProperty(UnsafeConsumer<ConfigurationItemPropertyDescriptor,T> propertyConsumer) throws T {
+		for (ConfigurationItemPropertyDescriptor propertyDescriptor : properties.values() ) {
+			propertyConsumer.accept(propertyDescriptor);
+		}
+	}
 
 	public boolean isAllowCreation() {
 		return allowCreation;
 	}
+
 	
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass) {
-		return fromClass(javaClass, Object.class);
+		return fromClass(javaClass, null);
 	}
 
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass) {
@@ -78,12 +87,13 @@ public class ConfigurationItemDescriptor {
 			return null;
 		}
 		ConfigurationItemDescriptor configurationItemDescriptor = new ConfigurationItemDescriptor(javaClass,
-				configurationItemAnnotation.name(), identifierClass);
+				configurationItemAnnotation.name(), identifierClass ==null ? configurationItemAnnotation.identifierClass() : identifierClass);
 		configurationItemDescriptor.category = configurationItemAnnotation.category();
 		configurationItemDescriptor.displayLabel = configurationItemAnnotation.displayLabel().isEmpty()
 				? configurationItemDescriptor.getName()
 				: configurationItemAnnotation.displayLabel();
 		configurationItemDescriptor.allowCreation = configurationItemAnnotation.allowCreation();
+		configurationItemDescriptor.readOnly = configurationItemAnnotation.readOnly();
 		Map<String, ConfigurationItemPropertyDescriptor> properties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
 		MyReflectionUtils.forEachDeclaredMethod(javaClass, m -> {
 			MyReflectionUtils.extractJavaBeanPropertyFromMethodInto(m, (name, setter) -> {
@@ -96,21 +106,24 @@ public class ConfigurationItemDescriptor {
 					propertyDescriptor.setSetterMethod(m);
 				} else {
 					propertyDescriptor.setGetterMethod(m);
-					propertyDescriptor.setConfigurationItemReference( m.getReturnType().getAnnotation(ConfigurationItem.class)!=null)	;
+					propertyDescriptor.setConfigurationItemReference(
+							m.getReturnType().getAnnotation(ConfigurationItem.class) != null);
 				}
 				ConfigurationItemProperty propertyAnnotation = m.getAnnotation(ConfigurationItemProperty.class);
 				if (propertyAnnotation != null) {
-					propertyDescriptor.setVisible(! propertyAnnotation.hidden());
+					propertyDescriptor.setVisible(!propertyAnnotation.hidden());
 					propertyDescriptor.setDisplayLabel(
 							propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
 					propertyDescriptor.setDescription(propertyAnnotation.description());
 					propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
 					propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
+					propertyDescriptor.setReadOnly(configurationItemAnnotation.readOnly() || propertyAnnotation.readOnly());
 				}
 			});
 		});
 		Map<String, ConfigurationItemPropertyDescriptor> visibleProperties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
 		properties.forEach((name, property) -> {
+			property.setReadOnly(property.isReadOnly() || property.getSetterMethod() == null);
 			if (property.isVisible() && property.getGetterMethod() != null) {
 				visibleProperties.put(name, property);
 			}

@@ -32,7 +32,7 @@ public class RootConfigurationItem implements Manageable<Long>{
 		return name;
 	}
 
-	@ConfigurationItemProperty(mandatoryForCreation = true)
+	@ConfigurationItemProperty(mandatoryForCreation = true,readOnly = true)
 	public void setName(String name) {
 		this.name = name;
 	}

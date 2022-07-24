@@ -6,7 +6,7 @@ import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
 import orbag.metadata.Manageable;
 
-@ConfigurationItem(category = "After work", allowCreation = false)
+@ConfigurationItem(category = "After work", allowCreation = false, readOnly=true)
 public class Brewery implements Manageable<String> {
 
 	String id;

@@ -1,4 +1,7 @@
-package orbag.server.create;
+package orbag.server.update;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -9,16 +12,23 @@ import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
-public class TestCreateRepository implements OrbagRepository,  OrbagWritableRepository {
+public class TestUpdateRepository implements OrbagRepository,  OrbagWritableRepository {
 
+	
+	Map<String,TestUpdateCi> cis = new HashMap<>();
+	
 	@Override
 	public boolean isManaged(Class<?> javaClass) {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getById(Object identifier, Class<T> javaClass) {
-		throw new UnsupportedOperationException("Not implemented");
+		if ( javaClass.equals(TestUpdateCi.class)) {
+			return (T) cis.get(identifier.toString());
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -34,12 +44,19 @@ public class TestCreateRepository implements OrbagRepository,  OrbagWritableRepo
 
 	@Override
 	public <T> T create(T object) {
-		return object;
+		if ( object  instanceof TestUpdateCi) {
+			cis.put(((TestUpdateCi)object).getIdentifier(), (TestUpdateCi) object);
+			return object;
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <T> T update(T object) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented");
+		if ( object  instanceof TestUpdateCi) {
+			cis.put(((TestUpdateCi)object).getIdentifier(), (TestUpdateCi) object);
+			return object;
+		}
+		throw new UnsupportedOperationException();
 	}
 }

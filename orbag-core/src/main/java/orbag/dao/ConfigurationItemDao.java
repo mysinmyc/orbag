@@ -97,4 +97,12 @@ public class ConfigurationItemDao {
 		return ((OrbagWritableRepository) repository).create(newObject);
 	}
 
+	public Object update(Object object) {
+		OrbagRepository repository = getRepositoryFor(object.getClass());
+		if (!(repository instanceof OrbagWritableRepository)) {
+			throw new UnsupportedOperationException("Read only repository");
+		}
+		return ((OrbagWritableRepository) repository).update(object);
+	}
+
 }

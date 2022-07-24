@@ -48,7 +48,7 @@ public class CreateControllerTest {
 		assertEquals(HttpStatus.OK,responseCreateOk.getStatusCode());
 		ConfigurationItemReferenceExt reference = responseCreateOk.getBody();
 		assertEquals("MyIdentifier", reference.getIdentifier());
-		assertEquals("TestCi", reference.getConfigurationItemType());
+		assertEquals("TestCreateCi", reference.getConfigurationItemType());
 	}
 
 }

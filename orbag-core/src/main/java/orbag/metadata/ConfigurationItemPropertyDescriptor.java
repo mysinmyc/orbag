@@ -24,6 +24,8 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	Method setterMethod;
 	
+	boolean readOnly;
+
 	protected ConfigurationItemPropertyDescriptor(ConfigurationItemDescriptor configurationItem, String name) {
 		this.configurationItem = configurationItem;
 		this.name=name;
@@ -100,5 +102,13 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	protected void setMandatoryForCreation(boolean mandatoryForCreation) {
 		this.mandatoryForCreation = mandatoryForCreation;
+	}
+		
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+	
+	protected void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 }

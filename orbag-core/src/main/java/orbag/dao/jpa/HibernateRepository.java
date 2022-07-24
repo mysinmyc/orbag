@@ -104,9 +104,17 @@ public class HibernateRepository implements OrbagWritableRepository, OrbagSearch
 	}
 
 	@Transactional(Transactional.TxType.REQUIRES_NEW)
-	public Object create(Object newObject) {
+	public <T> T create(T newObject) {
 		entityManager.persist(newObject);
 		return newObject;
+	}
+
+	
+
+	@Transactional(Transactional.TxType.REQUIRES_NEW)
+	public <T> T update(T object) {
+		entityManager.merge(object);
+		return object;
 	}
 
 }

@@ -4,5 +4,7 @@ public interface OrbagWritableRepository extends OrbagRepository {
 
 	void delete(Object object);
 
-	Object create(Object newObject);
+	<T> T create(T newObject);
+
+	<T> T update(T object);
 }
