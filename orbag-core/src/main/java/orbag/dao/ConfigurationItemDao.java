@@ -10,6 +10,7 @@ import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReference;
 import orbag.reference.ConfigurationItemReferenceService;
+import orbag.search.SearchCondition;
 import orbag.search.SearchConditions;
 import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
@@ -47,6 +48,9 @@ public class ConfigurationItemDao {
 	}
 
 	public Object getCi(ConfigurationItemReference reference) {
+		if (reference==null) {
+			return null;
+		}
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(reference.getConfigurationItemType());
 		if (descriptor == null) {
@@ -57,7 +61,7 @@ public class ConfigurationItemDao {
 				descriptor.getJavaClass());
 	}
 
-	public List<?> getCis(List<ConfigurationItemReference> configurationItemReferences) {
+	public  List<?> getCis(List<ConfigurationItemReference> configurationItemReferences) {
 		return configurationItemReferences.stream().map(this::getCi).filter(i -> i != null).toList();
 	}
 
@@ -74,6 +78,10 @@ public class ConfigurationItemDao {
 		return repository instanceof OrbagWritableRepository;
 	}
 
+	public <T> void searchByConditionsInto(Class<T> javaClass,  UnsafeConsumer<T,LimitExceededException> consumer, SearchCondition<?>... conditions) {
+		searchByConditionsInto(javaClass, SearchConditions.and(conditions), consumer, new PaginationInfo());
+	}
+	
 	public <T> void searchByConditionsInto(Class<T> javaClass, SearchConditions searchConditions,
 			UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) {
 		try {

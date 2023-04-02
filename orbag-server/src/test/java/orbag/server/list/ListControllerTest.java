@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import orbag.server.TestClients;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ListControllerTest {
@@ -18,11 +19,11 @@ public class ListControllerTest {
 	Integer localServerPort;
 	
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private TestClients testClients;
 	
 	@Test
 	void testList() {
-		ResponseEntity<ListConfigurationItemResponse> responseListEntity = restTemplate.getForEntity("http://localhost:"+localServerPort+"/api/list/TestListCi?limit=10",ListConfigurationItemResponse.class);
+		ResponseEntity<ListConfigurationItemResponse> responseListEntity = testClients.testUser1RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/list/TestListCi?limit=10",ListConfigurationItemResponse.class);
 		assertEquals(HttpStatus.OK,responseListEntity.getStatusCode());
 
 		assertEquals(10, responseListEntity.getBody().getCis().size());

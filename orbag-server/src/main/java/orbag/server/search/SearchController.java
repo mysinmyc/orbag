@@ -14,6 +14,7 @@ import orbag.data.PaginationInfo;
 import orbag.data.SerializableTable;
 import orbag.data.SerializableTableBuilder;
 import orbag.reference.ConfigurationItemReferenceService;
+import orbag.security.OrbagSecurityException;
 
 @RestController
 @RequestMapping("/api/search")
@@ -27,14 +28,14 @@ public class SearchController {
 
 	@GetMapping("/template/{configurationItemName}")
 	public SearchRequest getSearchTemplate(
-			@PathVariable("configurationItemName") String configurationItemName, Authentication user) {
+			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException {
 		return searchService.getSearchRequestTemplateFor(configurationItemName, user);
 	}
 
 	@PostMapping("/execute")
 	public SerializableTable execute(@RequestBody SearchRequest request,
 			@RequestParam(defaultValue = "50", name = "limit") Integer limit,
-			@RequestParam(defaultValue = "0", name = "offset") Integer offset, Authentication user) {
+			@RequestParam(defaultValue = "0", name = "offset") Integer offset, Authentication user) throws OrbagSecurityException {
 		SerializableTableBuilder<Object> serializableTableBuilder = new SerializableTableBuilder<>(
 				configurationItemReferenceService);
 		searchService.executeSearchInto(request, user, new PaginationInfo(limit,offset), serializableTableBuilder);

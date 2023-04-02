@@ -10,6 +10,26 @@ public class SerializableConfigurationItemPropertyDescriptor {
 	String description;
 
 	boolean readOnly;
+	
+	boolean configurationItemReference;
+	
+	String referencedConfigurationItemType;
+
+	public boolean isConfigurationItemReference() {
+		return configurationItemReference;
+	}
+
+	public void setConfigurationItemReference(boolean configurationItemReference) {
+		this.configurationItemReference = configurationItemReference;
+	}
+
+	public String getReferencedConfigurationItemType() {
+		return referencedConfigurationItemType;
+	}
+
+	public void setReferencedConfigurationItemType(String referencedConfigurationItemType) {
+		this.referencedConfigurationItemType = referencedConfigurationItemType;
+	}
 
 	public String getName() {
 		return name;

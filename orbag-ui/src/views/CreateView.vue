@@ -6,23 +6,17 @@
 
     <b-card-body>        
       <b-form inline v-if=" createRequest != undefined " @submit="onSubmit">
-
         <b-container fluid>
-          <b-row class="my-1" v-for="parameter in createRequest.parameters.fields" :key="parameter.name">
-            <b-col sm="3">
-              <label for="input-none">{{parameter.displayLabel}}</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input v-model="parameter.value"></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="my-1">
-            <b-col sm="3">
-            </b-col>
-            <b-col sm="9">
-              <b-button type="submit" variant="primary">Create</b-button>
-            </b-col>
-          </b-row>
+                <b-row class="my-1">
+                  <input-property-editor :value="createRequest.parameters" @change=" changed=true" />
+                </b-row>
+                <b-row class="my-1">
+                    <b-col sm="3">
+                    </b-col>
+                    <b-col sm="9">
+                    <b-button type="submit" variant="primary" v-show="changed">Create</b-button>
+                    </b-col>
+                </b-row>
         </b-container>
       </b-form>
     </b-card-body>
@@ -32,13 +26,15 @@
 
 import { getCreateRequestTemplate, CreateRequest, createConfigurationItem } from "@/framework/create";
 import { ConfigurationItemDescriptor, getClassMetadata } from '@/framework/metadata';
+import InputPropertyEditor from '../components/InputPropertyEditor.vue';
 
 export default {
-  components: {  },
+  components: {InputPropertyEditor  },
     data() {
         return {
             createRequest: undefined as CreateRequest | undefined,
-            classDescriptor: undefined as ConfigurationItemDescriptor | undefined
+            classDescriptor: undefined as ConfigurationItemDescriptor | undefined,
+            changed: false
         }
     },  
     computed: {

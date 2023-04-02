@@ -25,7 +25,7 @@ public class SearchConditions extends ArrayList<SearchCondition<?>> {
 		add(new SearchCondition<T>(field, operator, value));
 		return this;
 	}
-
+	
 	public static SearchConditions and(SearchCondition<?>... conditions) {
 		return new SearchConditions(true,conditions);
 	}

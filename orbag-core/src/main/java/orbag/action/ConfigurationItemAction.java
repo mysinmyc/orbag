@@ -6,8 +6,14 @@ public interface ConfigurationItemAction extends Displayable{
 
 	String getIdentifier();
 	
-	boolean isAvailableFor(ActionRequest request);
+	default boolean isAvailableFor(ActionRequest request) {
+		return true;
+	}
 	
-	String execute(ActionRequest request);
+	default boolean isChangeInfrastructure() {
+		return true;
+	}
+	
+	ActionResult execute(ActionRequest request);
 	
 }

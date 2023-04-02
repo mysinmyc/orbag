@@ -10,7 +10,7 @@
             
         <b-form inline v-if=" searchRequest != undefined " @submit="onSubmit">
     
-        <b-form-input class="mr-2" v-for=" field in searchRequest.parameters.fields " :key="field.name" :placeholder="field.displayLabel + ' filter'"  v-model="field.value"/>
+        <b-form-input class="mr-2" v-for=" field in searchRequest.parameters.stringFields " :key="field.name" :placeholder="field.displayLabel + ' filter'"  v-model="field.value"/>
 
         <b-select class="mr-2" v-model="searchRequest.resultType">
             <b-select-option value="ROW_REFERENCE">Don't show any field</b-select-option>
@@ -25,7 +25,7 @@
     
     <br/>
 
-    <configuration-item-table v-model="result" v-if="result != undefined"/>
+    <configuration-item-table v-model="result" v-if="result != undefined" @change="doSearch()"/>
 
     </b-card-body>
   </b-card>

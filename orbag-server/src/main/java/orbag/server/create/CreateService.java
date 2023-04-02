@@ -14,6 +14,9 @@ import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReferenceExt;
 import orbag.reference.ConfigurationItemReferenceService;
+import orbag.security.AccessType;
+import orbag.security.OrbagSecurityException;
+import orbag.security.SecurityAssertionService;
 import orbag.util.ObjectHolder;
 import orbag.visibility.FilterContext;
 import orbag.visibility.VisibilityManager;
@@ -33,8 +36,11 @@ public class CreateService {
 	@Autowired
 	VisibilityManager visibilityManager;
 
+	@Autowired
+	SecurityAssertionService securityAssertionService;
+	
 	private <E> void invokeWizard(String configurationItemName, Authentication user,
-			BiConsumer<ConfigurationItemWizard, CreationContext> operation) {
+			BiConsumer<ConfigurationItemWizard, CreationContext> operation) throws OrbagSecurityException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
 		if (descriptor == null) {
@@ -43,6 +49,9 @@ public class CreateService {
 		if (!descriptor.isAllowCreation()) {
 			throw new RuntimeException("Configuration item type " + configurationItemName + " doesn't allows creation");
 		}
+		
+		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(descriptor,user, AccessType.CREATE);
+		
 		ConfigurationItemWizard configurationItemWizard = visibilityManager.findFirstObject(
 				configurationItemWizardRegistry.getWizards(),
 				FilterContext.forTargetClass(descriptor.getJavaClass()).forUser(user));
@@ -52,7 +61,7 @@ public class CreateService {
 		operation.accept(configurationItemWizard, creationContext);
 	}
 
-	public CreateRequest getCreateRequestTemplateFor(String configurationItemName, Authentication user) {
+	public CreateRequest getCreateRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException {
 		CreateRequest request = new CreateRequest();
 		request.setConfigurationItemType(configurationItemName);
 		SerializableFieldGroup parametersBuilder = new SerializableFieldGroup();
@@ -63,7 +72,7 @@ public class CreateService {
 		return request;
 	}
 
-	public ConfigurationItemReferenceExt create(CreateRequest request, Authentication user) {
+	public ConfigurationItemReferenceExt create(CreateRequest request, Authentication user) throws OrbagSecurityException {
 
 		ObjectHolder<Object> holder = new ObjectHolder<>();
 		invokeWizard(request.getConfigurationItemType(), user, (w, c) -> {

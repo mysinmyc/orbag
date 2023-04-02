@@ -53,8 +53,11 @@ public class InstallSoftware extends ConfigurationItemActionBase{
 
 
 	@Override
-	public String execute(ActionRequest request) {
-		return "Software installed on "+request.getTargetCis().size()+" servers";
+	public ActionResult execute(ActionRequest request) {
+		ActionResult result= new ActionResult();
+		result.setMessage("Software istalled on "+ request.getTargetCis().size()+" servers");
+		result.setConsequences(ActionConsequences.UNDEFINED);
+		return result;
 	}
 
 }
@@ -89,6 +92,9 @@ Il server di sviluppo è accessibile all'indirizzo http://localhost:8080
 
 Se si vuole sviluppare lato frontend oltre ad avviare il server java in porta 8080 occorre posizionarsi su *orbag-ui* e eseguire in comando ` npm ci; npm run serve ` ; il comando *npm ci* è necessario solo la prima volta per scaricare le dipendenze . L'applicazione vue sarà accessibile all'url http://localhost:9090
 
+
+Gli endpoint del server sono protetti. All'accesso verrà richiesta l'utenticazione. Alla richiesta di credenziali utilizzare *it_user* password *orbag*.
+La lista degli utenti di test è definita in [CustomSecurityConfiguration](orbag-impl/src/main/java/orbag/impl/security/CustomSecurityConfiguration.java). 
 
 
 ## Compilazione ed esecuzione su container

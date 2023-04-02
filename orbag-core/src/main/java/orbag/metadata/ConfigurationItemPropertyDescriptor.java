@@ -8,7 +8,8 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	ConfigurationItemDescriptor configurationItem;
 	
-	boolean configurationItemReference;
+	ConfigurationItemDescriptor referencedConfigurationItemType;
+	
 
 	boolean visible;
 	
@@ -81,13 +82,21 @@ public class ConfigurationItemPropertyDescriptor {
 
 
 	public boolean isConfigurationItemReference() {
-		return configurationItemReference;
-	}
-
-	protected void setConfigurationItemReference(boolean configurationItemReference) {
-		this.configurationItemReference = configurationItemReference;
+		return referencedConfigurationItemType !=null;
 	}
 	
+	public ConfigurationItemDescriptor getReferencedConfigurationItemType() {
+		return referencedConfigurationItemType;
+	}
+
+	protected void setReferencedConfigurationItemType(ConfigurationItemDescriptor referencedConfigurationItemType) {
+		this.referencedConfigurationItemType = referencedConfigurationItemType;
+	}
+
+	public Class<?> getValueType() {
+		return getterMethod.getReturnType();
+	}
+		
 	public boolean isHighlighted() {
 		return highlighted;
 	}

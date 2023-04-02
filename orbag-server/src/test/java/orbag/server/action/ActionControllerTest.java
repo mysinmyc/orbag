@@ -9,12 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import orbag.action.ActionConsequences;
 import orbag.reference.ConfigurationItemReferenceService;
+import orbag.server.TestClients;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ActionControllerTest {
@@ -23,7 +24,7 @@ public class ActionControllerTest {
 	Integer localServerPort;
 
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private TestClients testClients;
 
 	@Test
 	void testCreateWithDefaultExecutor(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
@@ -33,7 +34,7 @@ public class ActionControllerTest {
 		GetAvailableActionsRequest request = new GetAvailableActionsRequest();
 
 		request.setTargetCis(Arrays.asList(configurationItemReferenceService.getReference(ci)));
-		ResponseEntity<GetAvailableActionsResponse> responseGetAvailable = restTemplate.postForEntity(
+		ResponseEntity<GetAvailableActionsResponse> responseGetAvailable = testClients.testUser1RestTemplate().postForEntity(
 				"http://localhost:" + localServerPort + "/api/action/getAvailable", request,
 				GetAvailableActionsResponse.class);
 		assertEquals(HttpStatus.OK, responseGetAvailable.getStatusCode());
@@ -42,14 +43,18 @@ public class ActionControllerTest {
 				.filter(a -> a.getIdentifier().equals("testAction")).findFirst().orElse(null);
 		assertNotNull(action);
 		
+		assertEquals("Action on label ciao",action.getDisplayLabel());
+		
 		SubmitActionRequest submitActionRequest = new SubmitActionRequest();
 		submitActionRequest.setAction(action);
 		submitActionRequest.setTargetCis(request.getTargetCis());
 		
-		ResponseEntity<SubmitActionResponse> submResponseEntity = restTemplate.postForEntity("http://localhost:" + localServerPort + "/api/action/submit", submitActionRequest,
+		ResponseEntity<SubmitActionResponse> submitActionResponseEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:" + localServerPort + "/api/action/submit", submitActionRequest,
 				SubmitActionResponse.class);
-		assertEquals(HttpStatus.OK, submResponseEntity.getStatusCode());
+		assertEquals(HttpStatus.OK, submitActionResponseEntity.getStatusCode());
 
+		SubmitActionResponse response = submitActionResponseEntity.getBody();
+		assertEquals(ActionConsequences.UPDATED, response.getConsequences());
 		
 	}
 

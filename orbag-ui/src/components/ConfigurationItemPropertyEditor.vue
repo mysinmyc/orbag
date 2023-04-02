@@ -1,19 +1,9 @@
 <template>
-  <b-card header-tag="header">
-    <template #header>
-        Properties
-    </template>
-    <b-card-body>
-        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{message}}</b-alert>
         <b-form inline v-if=" updateRequest != undefined" @submit="onSubmit">
+
             <b-container fluid>
-                <b-row class="my-1" v-for="property in updateRequest.properties.fields " :key="property.name">
-                    <b-col sm="3">
-                    <label for="input-none">{{property.displayLabel}}</label>
-                    </b-col>
-                    <b-col sm="9">
-                    <b-form-input v-model="property.value" :readonly="property.readOnly" @change="update(property)"></b-form-input>
-                    </b-col>
+                <b-row class="my-1">
+                  <input-property-editor :value="updateRequest.properties" @change=" changed=true" />
                 </b-row>
                 <b-row class="my-1">
                     <b-col sm="3">
@@ -23,9 +13,7 @@
                     </b-col>
                 </b-row>
             </b-container>
-        </b-form>
-    </b-card-body>
-  </b-card>     
+    </b-form>
 </template>
 
 <script lang="ts">
@@ -33,8 +21,10 @@
 import { ConfigurationItemReference } from "@/framework/reference"
 import { UpdateRequest, getUpdateRequestTemplate, updateConfigurationItem } from "@/framework/update"
 import { InputFieldBase } from '@/framework/input'
+import InputPropertyEditor from './InputPropertyEditor.vue'
 
 export default {
+  components: { InputPropertyEditor },
     props: {
         value: {
             type: Object as () => ConfigurationItemReference
@@ -50,7 +40,7 @@ export default {
         }
     },
     mounted() {
-        getUpdateRequestTemplate(this.value ).then( (r)=> {
+        getUpdateRequestTemplate(this.value! ).then( (r)=> {
             this.updateRequest = r;
             this.changed =false;
         })
@@ -66,7 +56,7 @@ export default {
                 })                
             )
         },
-        update(property: InputFieldBase) {
+        update(property: InputFieldBase<any>) {
             property.changed =true;
             this.changed = true;
         }

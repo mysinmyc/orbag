@@ -2,10 +2,12 @@ package orbag.search;
 
 import java.lang.reflect.Field;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
+import orbag.input.FieldManagementUtils;
 import orbag.input.InputFieldBase;
 import orbag.input.StringField;
 import orbag.util.MyReflectionUtils;
@@ -13,6 +15,9 @@ import orbag.util.MyReflectionUtils;
 @Component
 public class SearchUtils {
 
+	@Autowired
+	FieldManagementUtils fieldManagementUtils;
+	
 	protected void buildInputFieldFromClassField(Field field, FieldGroupBuilder fieldGroupBuilder) {
 		Searcheable searchableAnnotation = field.getAnnotation(Searcheable.class);
 		if (searchableAnnotation == null) {
@@ -44,11 +49,13 @@ public class SearchUtils {
 		if (field.isEmpty()) {
 			return;
 		}
+		
+		Object value= fieldManagementUtils.fieldToValue(field,Object.class);
 		if (field instanceof StringField && !exactMatch) {
 			condition.withCondition(field.getName(), Operator.LIKE,
-					SearchCondition.WILD_CARD + field.getValue() + SearchCondition.WILD_CARD);
+					SearchCondition.WILDCARD + value +  SearchCondition.WILDCARD);
 		} else {
-			condition.withCondition(field.getName(), Operator.EQUAL, field.getValue());
+			condition.withCondition(field.getName(), Operator.EQUAL, value);
 		}
 	}
 

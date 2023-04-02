@@ -20,6 +20,9 @@ public class ConversionUtils {
 			return targetType.cast(Integer.parseInt(source));
 		}
 
+		if (targetType == Boolean.class) {
+			return targetType.cast(Boolean.parseBoolean(source));
+		}
 		throw new IllegalArgumentException("invalid target type " + targetType);
 	}
 }

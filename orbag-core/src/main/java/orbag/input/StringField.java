@@ -6,4 +6,9 @@ public class StringField extends InputFieldBase<String> {
 	public boolean isEmpty() {
 		return value==null || value.trim().isEmpty();
 	}
+
+	@Override
+	public void parseValue(String value) {
+		setValue(value);
+	}
 }

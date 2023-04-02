@@ -9,27 +9,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import orbag.input.InputFieldBase;
 import orbag.input.StringField;
-import orbag.reference.ConfigurationItemReferenceExt;
+import orbag.reference.ConfigurationItemReference;
+import orbag.server.TestClients;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CreateControllerTest {
+
 
 	@LocalServerPort
 	Integer localServerPort;
 	
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private TestClients testClients;
 	
 	@Test
 	void testCreateWithDefaultExecutor() {
-		ResponseEntity<CreateRequest> responseTemplateEntity = restTemplate.getForEntity("http://localhost:"+localServerPort+"/api/create/template/TestCreateCi",CreateRequest.class);
+		ResponseEntity<CreateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/create/template/TestCreateCi",CreateRequest.class);
 		assertEquals(HttpStatus.OK,responseTemplateEntity.getStatusCode());
 		
 		CreateRequest requestTemplate = responseTemplateEntity.getBody();
@@ -39,14 +40,14 @@ public class CreateControllerTest {
 		assertNotNull(identifier);
 		assertInstanceOf(StringField.class, identifier);
 		
-		ResponseEntity<ConfigurationItemReferenceExt> responseCreateKo = restTemplate.postForEntity("http://localhost:"+localServerPort+"/api/create/execute", requestTemplate, ConfigurationItemReferenceExt.class);
+		ResponseEntity<ConfigurationItemReference> responseCreateKo = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/create/execute", requestTemplate, ConfigurationItemReference.class);
 		assertNotEquals(HttpStatus.OK,responseCreateKo.getStatusCode());
 			
 		((StringField)requestTemplate.getParameters().getField("identifier")).setValue("MyIdentifier");
 		
-		ResponseEntity<ConfigurationItemReferenceExt> responseCreateOk = restTemplate.postForEntity("http://localhost:"+localServerPort+"/api/create/execute", requestTemplate, ConfigurationItemReferenceExt.class);
+		ResponseEntity<ConfigurationItemReference> responseCreateOk = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/create/execute", requestTemplate, ConfigurationItemReference.class);
 		assertEquals(HttpStatus.OK,responseCreateOk.getStatusCode());
-		ConfigurationItemReferenceExt reference = responseCreateOk.getBody();
+		ConfigurationItemReference reference = responseCreateOk.getBody();
 		assertEquals("MyIdentifier", reference.getIdentifier());
 		assertEquals("TestCreateCi", reference.getConfigurationItemType());
 	}

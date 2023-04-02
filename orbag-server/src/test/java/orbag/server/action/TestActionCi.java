@@ -7,7 +7,7 @@ import orbag.metadata.Manageable;
 
 @ConfigurationItem(identifierClass = String.class)
 @PersistedBy(TestActionRepository.class)
-public class TestActionCi implements Manageable<String> {
+public class TestActionCi implements Manageable<String>  {
 
 	String identifier;
 
@@ -20,6 +20,10 @@ public class TestActionCi implements Manageable<String> {
 		this.identifier = identifier;
 	}
 	
+	@Override
+	public String getDisplayLabel() {
+		return "label "+identifier;
+	}
 
 }
 

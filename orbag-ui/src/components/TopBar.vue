@@ -6,17 +6,24 @@
                 <b-dropdown-item v-for=" ciMenu in element[1]" :to="ciMenu.link" :key="ciMenu.name"  >{{ciMenu.displayLabel}}</b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>
+        <b-navbar-nav class="ml-auto">
+        </b-navbar-nav>
+        <b-navbar-nav right>
+            <b-nav-text>Current user: {{userName}}</b-nav-text>
+        </b-navbar-nav>
     </b-navbar>
 </template>
 
 <script lang="ts">
 
 import {ClassModel,getClassModel} from "@/framework/metadata"
+import { whoami, WhoAmIResponse } from "@/framework/security";
 
 export default {
     data() {
         return {
-            cisMenu: new Map<string,Array<unknown>>()
+            cisMenu: new Map<string,Array<any>>(),
+            userName: ""
         }
     },
     mounted() {
@@ -26,7 +33,7 @@ export default {
             for (let descriptor of classModel.configurationItemDescriptors) {
                 let currentCategory = newCisMenu.get(descriptor.category);
                 if (currentCategory==null )  {
-                    currentCategory = new Array<unknown>();
+                    currentCategory = new Array<any>();
                     newCisMenu.set(descriptor.category,currentCategory);
                 }
                 currentCategory.push( {link: "/search/"+descriptor.name, displayLabel: descriptor.displayLabel });
@@ -34,6 +41,9 @@ export default {
 
             this.cisMenu = newCisMenu;
         });
+        whoami().then( (whoami:WhoAmIResponse) => {
+            this.userName = whoami.username;
+        })
     }
 }
 </script>

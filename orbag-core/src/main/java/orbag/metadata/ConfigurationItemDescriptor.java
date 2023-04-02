@@ -59,8 +59,9 @@ public class ConfigurationItemDescriptor {
 		return properties.values();
 	}
 
-	public <T extends Throwable> void forEachProperty(UnsafeConsumer<ConfigurationItemPropertyDescriptor,T> propertyConsumer) throws T {
-		for (ConfigurationItemPropertyDescriptor propertyDescriptor : properties.values() ) {
+	public <T extends Throwable> void forEachProperty(
+			UnsafeConsumer<ConfigurationItemPropertyDescriptor, T> propertyConsumer) throws T {
+		for (ConfigurationItemPropertyDescriptor propertyDescriptor : properties.values()) {
 			propertyConsumer.accept(propertyDescriptor);
 		}
 	}
@@ -69,16 +70,20 @@ public class ConfigurationItemDescriptor {
 		return allowCreation;
 	}
 
-	
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+
 
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass) {
 		return fromClass(javaClass, null);
 	}
 
-	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass) {
+	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass,Class<?> identifierClass) {
+		return fromClass(javaClass, identifierClass,true);
+	}
+	
+	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass,boolean buildProperties) {
 		if (!Manageable.class.isAssignableFrom(javaClass)) {
 			return null;
 		}
@@ -87,7 +92,8 @@ public class ConfigurationItemDescriptor {
 			return null;
 		}
 		ConfigurationItemDescriptor configurationItemDescriptor = new ConfigurationItemDescriptor(javaClass,
-				configurationItemAnnotation.name(), identifierClass ==null ? configurationItemAnnotation.identifierClass() : identifierClass);
+				configurationItemAnnotation.name(),
+				identifierClass == null ? configurationItemAnnotation.identifierClass() : identifierClass);
 		configurationItemDescriptor.category = configurationItemAnnotation.category();
 		configurationItemDescriptor.displayLabel = configurationItemAnnotation.displayLabel().isEmpty()
 				? configurationItemDescriptor.getName()
@@ -106,9 +112,13 @@ public class ConfigurationItemDescriptor {
 					propertyDescriptor.setSetterMethod(m);
 				} else {
 					propertyDescriptor.setGetterMethod(m);
-					propertyDescriptor.setConfigurationItemReference(
-							m.getReturnType().getAnnotation(ConfigurationItem.class) != null);
+					ConfigurationItem annotation = m.getReturnType().getAnnotation(ConfigurationItem.class);
+					if (annotation!=null) {
+						propertyDescriptor
+							.setReferencedConfigurationItemType(ConfigurationItemDescriptor.fromClass(m.getReturnType(),null,false));
+					}
 				}
+				
 				ConfigurationItemProperty propertyAnnotation = m.getAnnotation(ConfigurationItemProperty.class);
 				if (propertyAnnotation != null) {
 					propertyDescriptor.setVisible(!propertyAnnotation.hidden());
@@ -117,7 +127,8 @@ public class ConfigurationItemDescriptor {
 					propertyDescriptor.setDescription(propertyAnnotation.description());
 					propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
 					propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
-					propertyDescriptor.setReadOnly(configurationItemAnnotation.readOnly() || propertyAnnotation.readOnly());
+					propertyDescriptor
+							.setReadOnly(configurationItemAnnotation.readOnly() || propertyAnnotation.readOnly());
 				}
 			});
 		});
@@ -131,4 +142,5 @@ public class ConfigurationItemDescriptor {
 		configurationItemDescriptor.properties = visibleProperties;
 		return configurationItemDescriptor;
 	}
+
 }

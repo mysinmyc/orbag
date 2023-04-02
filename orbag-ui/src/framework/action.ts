@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ConfigurationItemReference } from "./reference"
 
-export type GetAvailablActionRequest = {
+export type GetAvailableActionsRequest = {
     targetCis: Array<ConfigurationItemReference>
 }
 
@@ -10,7 +10,7 @@ export type SerializableAction = {
     displayLabel: string
 }
 
-export type GetAvailableActionResponse = {
+export type GetAvailableActionsResponse = {
     availableActions: Array<SerializableAction>
 }
 
@@ -21,14 +21,15 @@ export type SubmitActionRequest = {
 }
 
 export type SubmitActionResponse = {
+    consequences: string,
     jobId: string,
     message: string
 }
 
 export function getAvailableActions(cis: Array<ConfigurationItemReference>): Promise<Array<SerializableAction>> {
     return new Promise<Array<SerializableAction>>((resolve,reject)=>{
-        const request:GetAvailablActionRequest = { targetCis: cis};
-        axios.post<GetAvailableActionResponse>("/api/action/getAvailable", request).then(r=>
+        const request:GetAvailableActionsRequest = { targetCis: cis};
+        axios.post<GetAvailableActionsResponse>("/api/action/getAvailable", request).then(r=>
             resolve(r.data.availableActions)
         ).catch(reason=> reject(reason));
     })

@@ -2,7 +2,7 @@ package orbag.search;
 
 public class SearchCondition<T> {
 
-	public static String WILD_CARD="%";
+	public static String WILDCARD="%";
 	
 	String field;
 	Operator operator;

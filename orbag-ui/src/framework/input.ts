@@ -1,13 +1,20 @@
+import { ConfigurationItemReference } from "./reference"
 
-export type InputFieldBase = {
+export type InputFieldBase<T> = {
     name: string,
     displayLabel: string
     type: string,
-    value: any ,
+    value: T ,
     changed: boolean,
-    readoOnly: boolean
+    readOnly: boolean
 }
 
+export type configurationItemReferenceField = InputFieldBase<ConfigurationItemReference> & {
+    configurationItemType: string
+}
 export type SerializableFieldGroup = {
-    fields: Array<InputFieldBase>
+    stringFields: Array<InputFieldBase<string>>
+    booleanFields: Array<InputFieldBase<boolean>>
+    numericFields: Array<InputFieldBase<number>>
+    configurationItemReferenceFields: Array<InputFieldBase<ConfigurationItemReference>>
 }

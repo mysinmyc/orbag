@@ -15,6 +15,9 @@ import orbag.search.ResultType;
 import orbag.search.SearchContext;
 import orbag.search.SearchExecutor;
 import orbag.search.SearchExecutorRegistry;
+import orbag.security.AccessType;
+import orbag.security.OrbagSecurityException;
+import orbag.security.SecurityAssertionService;
 import orbag.visibility.FilterContext;
 import orbag.visibility.VisibilityManager;
 
@@ -30,14 +33,18 @@ public class SearchService {
 	@Autowired
 	VisibilityManager visibilityManager;
 
+	@Autowired
+	SecurityAssertionService securityAssertionService;
+	
 	@SuppressWarnings("unchecked")
 	private <E> void invokeExecutor(String configurationItemName, Authentication user, PaginationInfo paginationInfo,
-			BiConsumer<SearchExecutor<E>, SearchContext> operation) {
+			BiConsumer<SearchExecutor<E>, SearchContext> operation) throws OrbagSecurityException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
 		if (descriptor == null) {
 			throw new RuntimeException("Invalid configuration item type " + configurationItemName);
 		}
+		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(descriptor, user, AccessType.USE,AccessType.READ,AccessType.MODIFY);		
 		SearchExecutor<?> searchExecutor = visibilityManager.findFirstObject(
 				searchExecutorRegistry.getAllSearchExecutors(),
 				FilterContext.forTargetClass(descriptor.getJavaClass()).forUser(user));
@@ -48,7 +55,7 @@ public class SearchService {
 		operation.accept((SearchExecutor<E>) searchExecutor, searchContext);
 	}
 
-	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user) {
+	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException {
 		SearchRequest requestTemplate = new SearchRequest();
 		requestTemplate.setConfigurationItemName(configurationItemName);
 		requestTemplate.setResultType(ResultType.HIGHLIGHTED_FIELDS);
@@ -61,7 +68,7 @@ public class SearchService {
 	}
 
 	public <T> void executeSearchInto(SearchRequest request, Authentication user, PaginationInfo paginationInfo,
-			TableBuilder<T> builder) {
+			TableBuilder<T> builder) throws OrbagSecurityException {
 		invokeExecutor(request.getConfigurationItemName(), user, paginationInfo,
 				new BiConsumer<SearchExecutor<T>, SearchContext>() {
 					@Override

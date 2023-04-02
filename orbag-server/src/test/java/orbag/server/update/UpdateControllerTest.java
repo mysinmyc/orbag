@@ -10,17 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import orbag.dao.ConfigurationItemDao;
 import orbag.input.BooleanField;
+import orbag.input.EnumField;
 import orbag.input.InputFieldBase;
 import orbag.input.NumericField;
 import orbag.input.StringField;
-import orbag.reference.ConfigurationItemReferenceExt;
+import orbag.reference.ConfigurationItemReference;
+import orbag.reference.ConfigurationItemReferenceService;
+import orbag.server.TestClients;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class UpdateControllerTest {
@@ -29,20 +31,23 @@ public class UpdateControllerTest {
 	Integer localServerPort;
 	
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private TestClients testClients;
 	
 	@Test
-	void testUpdate(@Autowired ConfigurationItemDao dao) {
+	void testUpdate(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
 		
 		TestUpdateCi testUpdateCi = new TestUpdateCi();
 		testUpdateCi.setIdentifier("ciao");
-		dao.create(testUpdateCi );
+		dao.create(testUpdateCi);
 		
-		ResponseEntity<UpdateRequest> responseTemplateEntity = restTemplate.getForEntity("http://localhost:"+localServerPort+"/api/update/template/TestUpdateCi/"+testUpdateCi.getIdentifier(),UpdateRequest.class);
+		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
+
+
+		ResponseEntity<UpdateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/getTemplate",configurationItemReference,UpdateRequest.class);
 		assertEquals(HttpStatus.OK,responseTemplateEntity.getStatusCode());
 		
 		UpdateRequest requestTemplate = responseTemplateEntity.getBody();
-		assertEquals(5, requestTemplate.getProperties().getFields().size());
+		assertEquals(6, requestTemplate.getProperties().getFields().size());
 		
 		InputFieldBase<?> stringProperty = requestTemplate.getProperties().getField("stringProperty");
 		assertNotNull(stringProperty);
@@ -61,12 +66,18 @@ public class UpdateControllerTest {
 		assertInstanceOf(BooleanField.class, booleanProperty);
 		((BooleanField)booleanProperty).setValue(true);
 		booleanProperty.setChanged(true);
+
+		InputFieldBase<?> enumProperty = requestTemplate.getProperties().getField("enumProperty");
+		assertNotNull(enumProperty);
+		assertInstanceOf(EnumField.class, enumProperty);
+		((EnumField)enumProperty).setValue("VALUEA");
+		enumProperty.setChanged(true);		
 		
 		InputFieldBase<?> readOnlyProperty = requestTemplate.getProperties().getField("readOnlyProperty");
 		assertNotNull(readOnlyProperty);
 		assertTrue(readOnlyProperty.isReadOnly());
 		
-		ResponseEntity<ConfigurationItemReferenceExt> responseUpdateOk = restTemplate.postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReferenceExt.class);
+		ResponseEntity<ConfigurationItemReference> responseUpdateOk = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class);
 		assertEquals(HttpStatus.OK,responseUpdateOk.getStatusCode());
 			
 		TestUpdateCi afterUpdate = (TestUpdateCi) dao.getCi(responseUpdateOk.getBody());
@@ -74,13 +85,48 @@ public class UpdateControllerTest {
 		assertEquals("ciao",afterUpdate.getStringProperty());
 		assertEquals(5,afterUpdate.getIntegerProperty());
 		assertEquals(true,afterUpdate.getBooleanProperty());
+		assertEquals(MyEnum.VALUEA,afterUpdate.getEnumProperty());
 				
 		((StringField)stringProperty).setValue("ciao");
 		readOnlyProperty.setChanged(true);		
 		
-		ResponseEntity<ConfigurationItemReferenceExt> responseUpdateKo = restTemplate.postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReferenceExt.class);
+		ResponseEntity<ConfigurationItemReference> responseUpdateKo = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class);
 		assertNotEquals(HttpStatus.OK,responseUpdateKo.getStatusCode());
 	
+		
+	}
+	
+	
+	@Test
+	void testUpdateSecurity(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+		
+		TestUpdateCi testUpdateCi = new TestUpdateCi();
+		testUpdateCi.setIdentifier("testSercurity");
+		dao.create(testUpdateCi );
+		
+		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
+
+		ResponseEntity<UpdateRequest> responseOkTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/getTemplate",configurationItemReference,UpdateRequest.class);
+		assertEquals(HttpStatus.OK,responseOkTemplateEntity.getStatusCode());
+
+		UpdateRequest requestTemplate = responseOkTemplateEntity.getBody();
+		InputFieldBase<?> stringProperty = requestTemplate.getProperties().getField("stringProperty");
+		assertNotNull(stringProperty);
+		assertInstanceOf(StringField.class, stringProperty);
+		((StringField)stringProperty).setValue("ciao");
+		stringProperty.setChanged(true);
+
+		ResponseEntity<ConfigurationItemReference> responseOkUpdatentity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
+		assertEquals(HttpStatus.OK,responseOkUpdatentity.getStatusCode());
+
+		ResponseEntity<ConfigurationItemReference> responseKoUpdateEntity = testClients.testUser2RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
+		assertNotEquals(HttpStatus.OK,responseKoUpdateEntity.getStatusCode());
+		
+		ResponseEntity<UpdateRequest> responseKoTemplateEntity = testClients.testUser3RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/update/template/TestUpdateCi/"+testUpdateCi.getIdentifier(),UpdateRequest.class);
+		assertNotEquals(HttpStatus.OK,responseKoTemplateEntity.getStatusCode());
+		
+		ResponseEntity<ConfigurationItemReference> responseKo2UpdateEntity = testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
+		assertNotEquals(HttpStatus.OK,responseKo2UpdateEntity.getStatusCode());
 		
 	}
 

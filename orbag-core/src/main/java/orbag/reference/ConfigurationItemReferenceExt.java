@@ -33,6 +33,11 @@ public class ConfigurationItemReferenceExt extends ConfigurationItemReference {
 		this.displayLabel = displayLabel;
 	}
 	
+	public static ConfigurationItemReferenceExt fromConfigurationItemRefence(ConfigurationItemReference reference) {
+		ConfigurationItemReferenceExt result = new ConfigurationItemReferenceExt(reference.getIdentifier(), reference.getConfigurationItemType());
+		return result;
+	}
+	
 	public static ConfigurationItemReferenceExt fromConfigurationItem(ConfigurationItemDescriptor configurationItemDescriptor, Manageable<?> configurationItem) {
 		ConfigurationItemReferenceExt result = new ConfigurationItemReferenceExt(configurationItem.getIdentifier().toString(), configurationItemDescriptor.getName());
 		result.setDisplayLabel(configurationItem.getDisplayLabel());

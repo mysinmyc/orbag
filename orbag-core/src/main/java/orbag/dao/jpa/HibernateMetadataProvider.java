@@ -3,9 +3,9 @@ package orbag.dao.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.EntityType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.metamodel.EntityType;
 
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class HibernateMetadataProvider implements MetadataProvider{
 	public List<ConfigurationItemDescriptor> getClassesMetadata() {
 		List<ConfigurationItemDescriptor> classesMetadata = new ArrayList<>();
 		for (EntityType<?> currentEntityType :  entityManager.getMetamodel().getEntities()) {
-				ConfigurationItemDescriptor currentDescriptor = ConfigurationItemDescriptor.fromClass(currentEntityType.getJavaType(),currentEntityType.getIdType().getJavaType());
+				ConfigurationItemDescriptor currentDescriptor = ConfigurationItemDescriptor.fromClass(currentEntityType.getJavaType(),currentEntityType.getIdType() ==null ? Object.class: currentEntityType.getIdType().getJavaType(),true);
 				if (currentDescriptor!=null) {
 					classesMetadata.add(currentDescriptor);
 				}

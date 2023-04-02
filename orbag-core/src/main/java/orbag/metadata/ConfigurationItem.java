@@ -24,4 +24,5 @@ public @interface ConfigurationItem {
 	boolean readOnly() default false;
 
 	Class<?> identifierClass() default Object.class;
+	
 }

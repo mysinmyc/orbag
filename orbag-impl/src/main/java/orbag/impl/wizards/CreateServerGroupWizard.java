@@ -11,11 +11,18 @@ import orbag.impl.cis.Server;
 import orbag.impl.cis.ServerGroup;
 import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
+import orbag.input.Input;
+import orbag.input.InputField;
 import orbag.visibility.ManagedClasses;
 
 @ManagedClasses(ServerGroup.class)
 @Component
 @Order(0)
+@Input({
+	@InputField(name="groupName", displayLabel="Group Name", type = String.class),
+	@InputField(name="serverPrefix", displayLabel="Server Prefix", type = String.class),
+	@InputField(name="servers", displayLabel="Number of Servers", type = Integer.class, defaultValue="5"),
+})
 public class CreateServerGroupWizard implements ConfigurationItemWizard{
 
 	@Autowired
@@ -28,6 +35,7 @@ public class CreateServerGroupWizard implements ConfigurationItemWizard{
 		parametersBuilder.addNumericField("servers", "Number of Servers").setValue(5);
 	}
 
+	
 	@Override
 	public Object create(FieldGroupConsumer parameters, CreationContext context) {
 		ServerGroup serverGroup = new ServerGroup();

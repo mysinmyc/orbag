@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import orbag.reference.ConfigurationItemReferenceExt;
+import orbag.security.OrbagSecurityException;
 
 @RestController
 @RequestMapping("/api/create")
@@ -20,12 +21,12 @@ public class CreateController {
 	
 	@GetMapping("/template/{configurationItemName}")
 	public CreateRequest getCreateTemplate(
-			@PathVariable("configurationItemName") String configurationItemName, Authentication user) {
+			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException {
 		return createService.getCreateRequestTemplateFor(configurationItemName, user);
 	}
 	
 	@PostMapping("/execute")
-	public ConfigurationItemReferenceExt create(@RequestBody CreateRequest request, Authentication user) {
+	public ConfigurationItemReferenceExt create(@RequestBody CreateRequest request, Authentication user) throws OrbagSecurityException {
 		return  createService.create(request,user);
 	}
 }

@@ -1,8 +1,8 @@
 package orbag.impl.cis;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 import orbag.metadata.ConfigurationItemProperty;
 import orbag.metadata.Manageable;

@@ -9,6 +9,7 @@ import orbag.dao.ConfigurationItemDao;
 import orbag.data.DataUtils;
 import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
+import orbag.input.FieldManagementUtils;
 import orbag.input.InputFieldBase;
 import orbag.visibility.ManagedClasses;
 
@@ -17,6 +18,9 @@ import orbag.visibility.ManagedClasses;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultConfigurationItemWizard implements ConfigurationItemWizard{
 
+	@Autowired
+	FieldManagementUtils fieldManagementUtils;
+	
 	@Autowired
 	ConfigurationItemDao dao;
 	
@@ -40,7 +44,7 @@ public class DefaultConfigurationItemWizard implements ConfigurationItemWizard{
 					if (parameter.isEmpty()) {
 						throw new RuntimeException("Missing value for "+parameter.getDisplayLabel());
 					}
-					p.getSetterMethod().invoke(newObject, parameter.getValue());
+					p.getSetterMethod().invoke(newObject, fieldManagementUtils.fieldToValue(parameter, p.getValueType()));
 				}
 			});
 			return dao.create(newObject);

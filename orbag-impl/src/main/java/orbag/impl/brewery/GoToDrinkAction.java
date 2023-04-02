@@ -2,23 +2,26 @@ package orbag.impl.brewery;
 
 import org.springframework.stereotype.Component;
 
+import orbag.action.ActionConsequences;
 import orbag.action.ActionRequest;
-import orbag.action.ActionUtils;
+import orbag.action.ActionResult;
 import orbag.action.ConfigurationItemActionBase;
 import orbag.metadata.DisplayLabel;
+import orbag.visibility.ManagedClasses;
+
 
 @Component
+@ManagedClasses(Brewery.class)
 @DisplayLabel("Go to drink")
 public class GoToDrinkAction extends ConfigurationItemActionBase{
 
 	@Override
-	public boolean isAvailableFor(ActionRequest request) {
-		return ActionUtils.isSingleObjectOfType(request.getTargetCis(), Brewery.class);
-	}
-
-	@Override
-	public String execute(ActionRequest request) {
-		return " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choice!!!" ;
+	public ActionResult execute(ActionRequest request) {
+		
+		ActionResult result = new ActionResult();
+		result.setConsequences(ActionConsequences.NONE);
+		result.setMessage( " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choice!!!");
+		return result;
 	}
 
 }

@@ -1,17 +1,28 @@
 <template>
   <b-card header-tag="header">
     <template #header>
-        {{value.configurationItemTypeDisplayLabel}}
+        {{value?.displayLabel}}
     </template>
+
     <b-card-body>
-        <b-card-title>{{value.displayLabel}}</b-card-title>
         <b-dropdown class="mx-1" right text="actions">
-            <b-dropdown-item class="m-2" v-for="action in availablableActions" :key="action.name" @click="onClickAction(action)">{{action.displayLabel}}</b-dropdown-item>
+            <b-dropdown-item class="m-2" v-for="action in availablableActions" :key="action.identifier" @click="onClickAction(action)">{{action.displayLabel}}</b-dropdown-item>
         </b-dropdown>
         <br/>
         <b-alert :variant="messageType"  :show="showMessage " dismissible>{{message}}</b-alert>
         <br/>
+        <b-tabs>
+    <b-tab title="Properties" active>
+
         <configuration-item-property-editor :value="value"/>
+    </b-tab>
+    <b-tab v-for="view in availablableViews" :key="view.identifier" :title="view.displayLabel">
+      <configuration-item-view :ci="value" :view="view"/>
+    </b-tab>
+
+
+    </b-tabs>
+
     </b-card-body>
   </b-card>     
 </template>
@@ -20,10 +31,12 @@
 
 import { ConfigurationItemReference } from "@/framework/reference"
 import {getAvailableActions, SerializableAction,submitAction} from "@/framework/action"
+import {getAvailableViews,SerializableView} from "@/framework/view";
 import ConfigurationItemPropertyEditor from './ConfigurationItemPropertyEditor.vue'
+import ConfigurationItemView from './ConfigurationItemView.vue';
 
 export default {
-  components: { ConfigurationItemPropertyEditor },
+  components: { ConfigurationItemPropertyEditor, ConfigurationItemView },
     props: {
         value: {
             type: Object as () => ConfigurationItemReference
@@ -32,6 +45,7 @@ export default {
     data()  {
         return {
             availablableActions: Array<SerializableAction>(),
+            availablableViews: Array<SerializableView>(),
             message: "",
             showMessage:false,
             messageType: "success"
@@ -40,7 +54,7 @@ export default {
     methods: {
           onClickAction(action:SerializableAction) {
             this.showMessage=false;
-            submitAction(action, [this.value]).then(r=>{
+            submitAction(action, [this.value!]).then(r=>{
                 this.message = r.message;
                 this.showMessage=true;
                 this.messageType="success";
@@ -52,8 +66,11 @@ export default {
         }
     },
     mounted() {
-      getAvailableActions([this.value]).then( r=>{
-                this.availablableActions = r;
+      getAvailableActions([this.value!]).then( r=>{
+        this.availablableActions = r;
+      });
+      getAvailableViews(this.value!).then( r=>{
+        this.availablableViews = r;
       });
     }
 }

@@ -4,12 +4,12 @@ import { ConfigurationItemReference } from "./reference";
 
 export type UpdateRequest = {
     configurationItem:ConfigurationItemReference,
-    parameters: SerializableFieldGroup
+    properties: SerializableFieldGroup
 }
 
 export function getUpdateRequestTemplate(configurationItemReference:ConfigurationItemReference): Promise<UpdateRequest> {
     return new Promise<UpdateRequest>((resolve,reject) =>{
-        axios.get<UpdateRequest>("/api/update/template/"+configurationItemReference.configurationItemType+"/"+configurationItemReference.identifier).then(r=> resolve(r.data)).catch(reason=> reject(reason));
+        axios.post<UpdateRequest>("/api/update/getTemplate",configurationItemReference).then(r=> resolve(r.data)).catch(reason=> reject(reason));
     });
 }
 

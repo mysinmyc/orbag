@@ -13,7 +13,7 @@ public class BreweryMetadataProvider implements MetadataProvider {
 
 	@Override
 	public List<ConfigurationItemDescriptor> getClassesMetadata() {
-		return Arrays.asList( ConfigurationItemDescriptor.fromClass(Brewery.class,String.class));
+		return Arrays.asList( ConfigurationItemDescriptor.fromClass(Brewery.class,String.class,true));
 	}
 
 }

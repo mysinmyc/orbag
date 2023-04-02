@@ -16,6 +16,7 @@
 <script lang="ts">
 
 import TopBar from "@/components/TopBar.vue"
+import axios from 'axios'
 
 export default {
   components: {

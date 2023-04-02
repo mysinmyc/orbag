@@ -1,15 +1,16 @@
 package orbag.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+/*
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,include = JsonTypeInfo.As.PROPERTY,property = "type")
 @JsonSubTypes({@Type(value = StringField.class, name = "string"),
 	@Type(value = NumericField.class, name = "numeric"),
-	@Type(value = BooleanField.class, name = "boolean")
+	@Type(value = BooleanField.class, name = "boolean"),
+	@Type(value = EnumField.class, name = "enum"),
+	@Type(value = ConfigurationItemReferenceField.class, name = "reference")
 })
+*/
 public abstract class InputFieldBase<T> {
 	
 	String name;
@@ -67,4 +68,5 @@ public abstract class InputFieldBase<T> {
 		this.changed = changed;
 	}
 
+	public abstract void parseValue(String value);
 }

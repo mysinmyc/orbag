@@ -23,6 +23,8 @@ public class MetadataService {
 		result.setDisplayLabel(property.getDisplayLabel());
 		result.setDescription(property.getDescription());
 		result.setReadOnly(property.isReadOnly());
+		result.setConfigurationItemReference(property.isConfigurationItemReference());
+		result.setReferencedConfigurationItemType(property.getReferencedConfigurationItemType()==null?null: property.getReferencedConfigurationItemType().getName());
 		return result;
 	}
 

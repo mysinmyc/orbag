@@ -1,12 +1,16 @@
 <template>
     <div>
-        <div v-if="value.rows!=undefined && value.rows.length > 0">
+
+
+        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
+        <br/>
+
+        <div v-if="value?.rows !=undefined && value.rows.length > 0">
             
             Select cis from list to show the available actions
         
-            <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
             <br/>
-            <b-button class="m-2" v-for=" action in availablableActions" :key="action.name" @click="onClickAction(action)">{{action.displayLabel}}</b-button>
+            <b-button class="m-2" v-for=" action in availablableActions" :key="action.identifier" @click="onClickAction(action)">{{action.displayLabel}}</b-button>
         </div>
         
         <b-table responsive sticky-header="true" v-if="value != undefined"  head-variant="light" :items="value.rows" select-mode="multi" selectable  @row-selected="onRowSelected" :fields="fields">
@@ -83,6 +87,9 @@ export default {
                 this.messsage = r.message;
                 this.showMessage=true;
                 this.messageType="success";
+                if (r.consequences !='NONE') {
+                    this.$emit("change",this.value);
+                }
             }).catch ( reason=> {
                 this.messsage = action.displayLabel + " failed: "+reason;
                 this.messageType="warning";

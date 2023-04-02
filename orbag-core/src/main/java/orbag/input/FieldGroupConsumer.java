@@ -3,6 +3,8 @@ package orbag.input;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public interface FieldGroupConsumer {
 
 	List<InputFieldBase<?>> getFields();
@@ -36,6 +38,7 @@ public interface FieldGroupConsumer {
 		}
 	}
 
+	@JsonIgnore
 	default boolean isEmpty() {
 		for  (InputFieldBase<?> field : getFields()) {
 			if (!field.isEmpty()) {

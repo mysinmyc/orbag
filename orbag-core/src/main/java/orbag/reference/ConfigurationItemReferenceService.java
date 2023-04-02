@@ -14,7 +14,18 @@ public class ConfigurationItemReferenceService {
 	@Autowired
 	MetadataRegistry metadataRegistry;
 	
+	
 	public ConfigurationItemReferenceExt getReference(Object object) {
+
+		if (object instanceof ConfigurationItemReferenceExt) {
+			return (ConfigurationItemReferenceExt) object;
+		}
+
+		
+		if (object instanceof ConfigurationItemReference) {
+			return ConfigurationItemReferenceExt.fromConfigurationItemRefence((ConfigurationItemReference) object);
+		}
+
 		if (! (object instanceof Manageable<?>)) {
 			return null;
 		}
@@ -26,8 +37,9 @@ public class ConfigurationItemReferenceService {
 	}
 
 	public Object getIdentifierFromReference(ConfigurationItemReference configurationItemReference) {
-		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry.getConfigurationItemDescriptorByName(configurationItemReference.configurationItemType);
+		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry.getConfigurationItemDescriptorByName(configurationItemReference.getConfigurationItemType());
 		return ConversionUtils.convertString(configurationItemReference.getIdentifier(), configurationItemDescriptor.getIdentifierClass());
 	}
+
 
 }

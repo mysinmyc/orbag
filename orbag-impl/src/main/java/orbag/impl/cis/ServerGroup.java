@@ -2,15 +2,19 @@ package orbag.impl.cis;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import org.springframework.context.annotation.Lazy;
 
+
 import orbag.metadata.ConfigurationItem;
+import orbag.security.AccessRestricted;
+import orbag.impl.security.InfrastructureCisPolicy;
 
 @ConfigurationItem(category = "Infrastructure")
 @Entity
+@AccessRestricted(inherts = InfrastructureCisPolicy.class)
 public class ServerGroup extends RootConfigurationItem {
 	
 	@Lazy

@@ -3,13 +3,20 @@ package orbag.impl.actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import orbag.action.ActionConsequences;
 import orbag.action.ActionRequest;
+import orbag.action.ActionResult;
 import orbag.action.ConfigurationItemActionBase;
 import orbag.dao.ConfigurationItemDao;
 import orbag.metadata.DisplayLabel;
+import orbag.security.AccessRestrictedByAccessType;
+import orbag.security.AccessType;
+import orbag.visibility.ManagedClasses;
 
 @Component
-@DisplayLabel("Delete")
+@DisplayLabel("Delete %")
+@ManagedClasses(Object.class)
+@AccessRestrictedByAccessType(AccessType.DELETE)
 public class DeleteCi extends ConfigurationItemActionBase{
 
 	@Autowired
@@ -22,13 +29,16 @@ public class DeleteCi extends ConfigurationItemActionBase{
 	}
 
 	@Override
-	public String execute(ActionRequest request) {
+	public ActionResult execute(ActionRequest request) {
 
 		for (Object ci : request.getTargetCis()) {
 			dao.delete(ci);
 		}
 	
-		return request.getTargetCis().size() + " configuration items successfully deleted";
+		ActionResult result= new ActionResult();
+		result.setMessage(request.getTargetCis().size() + " configuration items successfully deleted");
+		result.setConsequences(ActionConsequences.DELETED);
+		return result;
 	}
 
 }
