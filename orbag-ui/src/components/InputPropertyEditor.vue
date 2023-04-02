@@ -15,7 +15,15 @@
             <b-col sm="9">
             <b-form-checkbox v-model="property.value" :readonly="property.readOnly" @change="update(property)"></b-form-checkbox>
             </b-col>
-        </b-row>    
+        </b-row>
+        <b-row class="my-1" v-for="property in value?.enumFields " :key="property.name">
+            <b-col sm="3">
+            <label for="input-none">{{property.displayLabel}}</label>
+            </b-col>
+            <b-col sm="9">
+            <b-form-select  v-model="property.value" :readonly="property.readOnly" @change="update(property)" :options="property.allowedValues"/>
+            </b-col>
+        </b-row>        
         <b-row class="my-1" v-for="property in value?.numericFields " :key="property.name">
             <b-col sm="3">
             <label for="input-none">{{property.displayLabel}}</label>

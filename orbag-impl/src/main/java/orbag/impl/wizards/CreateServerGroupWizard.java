@@ -9,7 +9,6 @@ import orbag.create.CreationContext;
 import orbag.dao.ConfigurationItemDao;
 import orbag.impl.cis.Server;
 import orbag.impl.cis.ServerGroup;
-import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
 import orbag.input.Input;
 import orbag.input.InputField;
@@ -28,12 +27,14 @@ public class CreateServerGroupWizard implements ConfigurationItemWizard{
 	@Autowired
 	ConfigurationItemDao dao;
 	
+	/*
 	@Override
 	public void buildCreateParameters(FieldGroupBuilder parametersBuilder, CreationContext context) {
 		parametersBuilder.addStringField("groupName", "Group Name");
 		parametersBuilder.addStringField("serverPrefix", "Server Prefix");
 		parametersBuilder.addNumericField("servers", "Number of Servers").setValue(5);
 	}
+	*/
 
 	
 	@Override
