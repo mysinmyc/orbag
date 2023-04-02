@@ -1,5 +1,5 @@
 <template>
-    <configuration-item-table :value="table" v-if="table.rows != undefined"   />
+    <configuration-item-table :value="table" v-if="table.rows != undefined" :sourceCi="ci"  />
 </template>
 
 <script lang="ts">

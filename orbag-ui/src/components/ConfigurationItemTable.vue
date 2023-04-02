@@ -27,7 +27,7 @@
 import {SerializableTable,SerializableRow} from "@/framework/data"
 import ConfigurationItemLink from './ConfigurationItemLink.vue'
 import { ConfigurationItemReference } from '@/framework/reference'
-import {getAvailableActions, SerializableAction,submitAction} from "@/framework/action"
+import {getAvailableActions, getAvailableActionsWithSource, SerializableAction,submitAction, submitActionWithSource} from "@/framework/action"
 
 export default {
   components: {ConfigurationItemLink },
@@ -43,7 +43,11 @@ export default {
     props: {
         value: {
             type: Object as () => SerializableTable | undefined
+        }, 
+        sourceCi: {
+            type: Object as () => ConfigurationItemReference | undefined
         } 
+
     },
     computed: {
         fields() {
@@ -77,13 +81,13 @@ export default {
             for ( let ci  of items ) {
                 this.selectedCis.push (ci.__reference);
             }
-            getAvailableActions(this.selectedCis).then( r=>{
+            getAvailableActionsWithSource(this.sourceCi,this.selectedCis).then( r=>{
                 this.availablableActions = r;
             });
         },
         onClickAction(action:SerializableAction) {
             this.showMessage=false;
-            submitAction(action, this.selectedCis).then(r=>{
+            submitActionWithSource(this.sourceCi,action, this.selectedCis).then(r=>{
                 this.messsage = r.message;
                 this.showMessage=true;
                 this.messageType="success";

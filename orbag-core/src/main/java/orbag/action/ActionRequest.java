@@ -15,6 +15,20 @@ public class ActionRequest {
 	public void setSubmitter(Authentication submitter) {
 		this.submitter = submitter;
 	}
+	
+	Object sourceCi;
+	
+	public boolean hasSourceCi() {
+		return sourceCi !=null;
+	}
+	
+	public Object getSourceCi() {
+		return sourceCi;
+	}
+
+	public void setSourceCi(Object sourceCi) {
+		this.sourceCi = sourceCi;
+	}
 
 	List<?> targetCis;
 

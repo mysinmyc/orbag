@@ -102,6 +102,11 @@ insert into person(id,name,gender) values(-101,'Anita','Female');
 insert into person(id,name,gender) values(-102,'Melissa','Female');
 insert into person(id,name,gender) values(-103,'Diana','Female');
 
+insert into brewery_menu_item(id,name) values(-1,'Bier');
+insert into brewery_menu_item(id,name) values(-2,'Water');
+insert into brewery_menu_item(id,name) values(-3,'Fish');
+insert into brewery_menu_item(id,name) values(-4,'Chips');
+
 
 insert into server_group(id,name) values(-1,'group1');
 insert into server_group(id,name) values(-2,'group2');

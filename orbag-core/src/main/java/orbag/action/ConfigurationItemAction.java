@@ -2,18 +2,14 @@ package orbag.action;
 
 import orbag.metadata.Displayable;
 
-public interface ConfigurationItemAction extends Displayable{
+public interface ConfigurationItemAction extends Displayable {
 
 	String getIdentifier();
-	
+
 	default boolean isAvailableFor(ActionRequest request) {
 		return true;
 	}
-	
-	default boolean isChangeInfrastructure() {
-		return true;
-	}
-	
+
 	ActionResult execute(ActionRequest request);
-	
+
 }

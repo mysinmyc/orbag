@@ -12,8 +12,13 @@ import orbag.action.ActionRequest;
 import orbag.action.ActionResult;
 import orbag.action.ConfigurationItemAction;
 import orbag.dao.ConfigurationItemDao;
+import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.Manageable;
+import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReference;
+import orbag.security.AccessType;
+import orbag.security.OrbagSecurityException;
+import orbag.security.SecurityAssertionService;
 import orbag.server.OrbagServerException;
 import orbag.visibility.FilterContext;
 import orbag.visibility.VisibilityManager;
@@ -30,6 +35,22 @@ public class ActionService {
 	@Autowired
 	ConfigurationItemDao dao;
 	
+	@Autowired
+	SecurityAssertionService securityAssertionService;
+
+	@Autowired
+	MetadataRegistry metadataRegistry;
+	
+	boolean hasUseAccessToSourceCi(ConfigurationItemReference sourceCi,Authentication user) {
+		if (sourceCi==null) {
+			return true;
+		}
+		
+		ConfigurationItemDescriptor sourceCiDescriptor = metadataRegistry.getConfigurationItemDescriptorByName(sourceCi.getConfigurationItemType());
+		
+		return securityAssertionService.hasAuthorizationToConfigurationItemDescriptor(sourceCiDescriptor, user, 
+				AccessType.USE,AccessType.READ,AccessType.MODIFY);
+	}
 	
 	boolean isActionVisibile(ConfigurationItemAction action, List<?> configurationItems, Authentication user) {
 		for (Object ci:  configurationItems) {
@@ -52,16 +73,17 @@ public class ActionService {
 
 	}
 	
-	public List<SerializableAction> getAvaiableActionsFor(List<ConfigurationItemReference> cisReferences, Authentication user) {	
-		if (cisReferences == null || cisReferences.isEmpty()) {
+	public List<SerializableAction> getAvaiableActionsFor(ConfigurationItemReference sourceCiReference, List<ConfigurationItemReference> targetCisReferences, Authentication user) {	
+		if (targetCisReferences == null || targetCisReferences.isEmpty() || !hasUseAccessToSourceCi(sourceCiReference, user)) {
 			return new ArrayList<SerializableAction>();
 		}
-		List<?> cis = dao.getCis(cisReferences);
+		List<?> targetCis = dao.getCis(targetCisReferences);
 		ActionRequest request = new ActionRequest();
-		request.setTargetCis(cis);
+		request.setSourceCi(dao.getCi(sourceCiReference));
+		request.setTargetCis(targetCis);
 		List<ConfigurationItemAction> availableActions = actionRegistry.getAllActions();	
-		return availableActions.stream().filter(a -> isActionVisibile(a, cis,user)).filter(a -> a.isAvailableFor(
-				request)) .map( a -> new SerializableAction(a.getIdentifier(),formatLabel(a.getDisplayLabel(),cisReferences))).toList();
+		return availableActions.stream().filter(a -> isActionVisibile(a, targetCis,user)).filter(a -> a.isAvailableFor(
+				request)) .map( a -> new SerializableAction(a.getIdentifier(),formatLabel(a.getDisplayLabel(),targetCisReferences))).toList();
 	}
 	
 	
@@ -69,15 +91,20 @@ public class ActionService {
 		return	actionRegistry.getAllActions().stream().filter(a -> a.getIdentifier().equals(id)).findAny().orElse(null);
 	}
 	
-	public ActionResult submit(SerializableAction serializableAction, List<ConfigurationItemReference> cisReferences, Authentication user) {
+	public ActionResult submit(ConfigurationItemReference sourceCiReference, SerializableAction serializableAction, List<ConfigurationItemReference> targetCisReferences, Authentication user) throws OrbagSecurityException {
 		ConfigurationItemAction action = getActionFromid(serializableAction.getIdentifier());
 		if (action==null) {
 			throw new OrbagServerException("Invalid action "+serializableAction.getIdentifier());
 		}
-		List<?> cis = dao.getCis(cisReferences);
+		if (!hasUseAccessToSourceCi(sourceCiReference,user)) {
+			throw new OrbagSecurityException(user, sourceCiReference, AccessType.USE);
+		}
+		Object sourceCi = dao.getCi(sourceCiReference);
+		List<?> targetCis = dao.getCis(targetCisReferences);
 		ActionRequest request = new ActionRequest();
-		request.setTargetCis(cis);
-		if ( ! (isActionVisibile(action, cis, user) && action.isAvailableFor(request))) {
+		request.setSourceCi(sourceCi);
+		request.setTargetCis(targetCis);
+		if ( ! (isActionVisibile(action, targetCis, user) && action.isAvailableFor(request))) {
 			throw new OrbagServerException("Action not available");
 		}		
 		ActionResult result= action.execute(request);

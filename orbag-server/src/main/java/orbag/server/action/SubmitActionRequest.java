@@ -17,6 +17,16 @@ public class SubmitActionRequest {
 		this.action = action;
 	}
 
+	ConfigurationItemReference sourceCi;
+	
+	public ConfigurationItemReference getSourceCi() {
+		return sourceCi;
+	}
+
+	public void setSourceCi(ConfigurationItemReference sourceCi) {
+		this.sourceCi = sourceCi;
+	}
+
 	List<ConfigurationItemReference> targetCis;
 
 	public List<ConfigurationItemReference> getTargetCis() {
