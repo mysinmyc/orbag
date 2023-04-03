@@ -37,20 +37,24 @@
             <label for="input-none">{{property.displayLabel}}</label>
             </b-col>
             <b-col sm="9">
-            <configuration-item-link  v-model="property.value" :readonly="property.readOnly" @change="update(property)"></configuration-item-link>
+            <!--<configuration-item-link  v-model="property.value" :readonly="property.readOnly" @change="update(property)"></configuration-item-link>
             <b-button v-if="! property.readOnly">change</b-button>
-            </b-col>
+            
+        -->
+        <single-ci-property   :field="property"  @selectedci="(ci) =>updateCi(property,ci)"/>
+    </b-col>
         </b-row>                                                  
     </b-container>
   </template>
   
   <script lang="ts">
   
-  import { InputFieldBase,SerializableFieldGroup } from '@/framework/input'
-  import ConfigurationItemLink from './ConfigurationItemLink.vue'
+import { InputFieldBase,SerializableFieldGroup } from '@/framework/input'
+import SingleCiProperty from './SingleCiProperty.vue'
+import { ConfigurationItemReference } from '@/framework/reference'
   
   export default {
-    components: { ConfigurationItemLink },
+    components: { SingleCiProperty },
       props: {
           value: {
               type: Object as () => SerializableFieldGroup
@@ -70,6 +74,13 @@
               this.changed =false;
           },
           update(property: InputFieldBase<any>) {
+            property.changed =true;
+            this.changed = true;
+            this.$emit('change',this.value);
+        },
+        updateCi(property: InputFieldBase<any>,ci:ConfigurationItemReference) {
+            console.log(property)
+            property.value = ci
             property.changed =true;
             this.changed = true;
             this.$emit('change',this.value);

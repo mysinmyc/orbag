@@ -21,14 +21,9 @@ public class RestartSingleServer extends ConfigurationItemActionBase {
 	}
 	
 	@Override
-	public ActionResult execute(ActionRequest request) {
-		
-		ActionResult result= new ActionResult();
+	public void execute(ActionRequest request,ActionResult result) {		
 		result.setMessage("Submitted restart of "+ request.getTargetCis().size()+" servers");
 		result.setConsequences(ActionConsequences.UNDEFINED);
-		return result;
-
-		
 	}
 
 }

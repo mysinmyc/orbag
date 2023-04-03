@@ -16,12 +16,9 @@ import orbag.visibility.ManagedClasses;
 public class GoToDrinkAction extends ConfigurationItemActionBase{
 
 	@Override
-	public ActionResult execute(ActionRequest request) {
-		
-		ActionResult result = new ActionResult();
+	public void execute(ActionRequest request, ActionResult result) {
 		result.setConsequences(ActionConsequences.NONE);
 		result.setMessage( " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choice!!!");
-		return result;
 	}
 
 }

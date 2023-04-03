@@ -1,13 +1,10 @@
 package orbag.server.action;
 
-import java.util.List;
+import orbag.input.SerializableFieldGroup;
 
-import orbag.reference.ConfigurationItemReference;
-
-public class SubmitActionRequest {
+public class SubmitActionRequest extends ActionInputBase{
 	
 	SerializableAction action;
-	
 	
 	public SerializableAction getAction() {
 		return action;
@@ -16,24 +13,14 @@ public class SubmitActionRequest {
 	public void setAction(SerializableAction action) {
 		this.action = action;
 	}
-
-	ConfigurationItemReference sourceCi;
 	
-	public ConfigurationItemReference getSourceCi() {
-		return sourceCi;
+	SerializableFieldGroup parameters;
+
+	public SerializableFieldGroup getParameters() {
+		return parameters;
 	}
 
-	public void setSourceCi(ConfigurationItemReference sourceCi) {
-		this.sourceCi = sourceCi;
-	}
-
-	List<ConfigurationItemReference> targetCis;
-
-	public List<ConfigurationItemReference> getTargetCis() {
-		return targetCis;
-	}
-
-	public void setTargetCis(List<ConfigurationItemReference> targetCis) {
-		this.targetCis = targetCis;
+	public void setParameters(SerializableFieldGroup parameters) {
+		this.parameters = parameters;
 	}
 }

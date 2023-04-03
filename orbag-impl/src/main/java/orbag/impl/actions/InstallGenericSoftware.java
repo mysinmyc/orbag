@@ -18,15 +18,9 @@ import orbag.visibility.ManagedClasses;
 public class InstallGenericSoftware extends ConfigurationItemActionBase{
 
 	@Override
-	public ActionResult execute(ActionRequest request) {
-		
-		
-		ActionResult result= new ActionResult();
+	public void execute(ActionRequest request, ActionResult result) {
 		result.setMessage("Software istalled on "+ request.getTargetCis().size()+" servers");
 		result.setConsequences(ActionConsequences.UNDEFINED);
-		return result;
-
-
 	}
 
 }

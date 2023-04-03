@@ -9,11 +9,11 @@ export type InputFieldBase<T> = {
     readOnly: boolean
 }
 
-export type configurationItemReferenceField = InputFieldBase<ConfigurationItemReference> & {
+export type ConfigurationItemReferenceField = InputFieldBase<ConfigurationItemReference> & {
     configurationItemType: string
 }
 
-export type EnumField = InputFieldBase<String> & {
+export type EnumField = InputFieldBase<string> & {
     allowedValues: string
 }
 
@@ -22,5 +22,12 @@ export type SerializableFieldGroup = {
     booleanFields: Array<InputFieldBase<boolean>>
     numericFields: Array<InputFieldBase<number>>
     enumFields: Array<EnumField>
-    configurationItemReferenceFields: Array<InputFieldBase<ConfigurationItemReference>>
+    configurationItemReferenceFields: Array<ConfigurationItemReferenceField>
+}
+
+export function isFieldGroupEmpty (fieldGroup: SerializableFieldGroup): boolean {
+    return fieldGroup.booleanFields.length== 0 &&
+        fieldGroup.configurationItemReferenceFields.length== 0 &&
+        fieldGroup.enumFields.length== 0 &&fieldGroup.numericFields.length== 0 &&
+        fieldGroup.stringFields.length ==0;
 }

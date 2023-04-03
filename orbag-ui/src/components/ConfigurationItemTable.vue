@@ -15,7 +15,12 @@
         
         <b-table responsive sticky-header="true" v-if="value != undefined"  head-variant="light" :items="value.rows" select-mode="multi" selectable  @row-selected="onRowSelected" :fields="fields">
             <template #cell()="data">
-                <configuration-item-link v-if="data.field.nestedColumn.type=='Reference' && data.value != ''" v-model="data.value"/>
+                <span v-if="data.field.nestedColumn.type=='Reference' && data.value != ''">
+                    <b-link v-if="value!=undefined" @click="onReferenceClick(data.field.nestedColumn,data.value)">
+                        <b-icon icon="link"/>
+                            {{data.value.displayLabel}}
+                        </b-link>
+                </span>
                 <span v-else>{{data.value}}</span>
             </template>
         </b-table>
@@ -24,13 +29,13 @@
 
 <script lang="ts">
 
-import {SerializableTable,SerializableRow} from "@/framework/data"
-import ConfigurationItemLink from './ConfigurationItemLink.vue'
+import {SerializableTable,SerializableRow, SerializableColumn} from "@/framework/data"
 import { ConfigurationItemReference } from '@/framework/reference'
-import {getAvailableActions, getAvailableActionsWithSource, SerializableAction,submitAction, submitActionWithSource} from "@/framework/action"
+import {getAvailableActions, getAvailableActionsWithSource, SerializableAction, submitAction, SubmitActionResponse} from "@/framework/action"
+import { smartSubmitAction } from '@/framework/smartDispatcher'
 
 export default {
-  components: {ConfigurationItemLink },
+  components: { },
     data()  {
         return {
             selectedCis: Array<ConfigurationItemReference>(),
@@ -44,7 +49,7 @@ export default {
         value: {
             type: Object as () => SerializableTable | undefined
         }, 
-        sourceCi: {
+        sourceci: {
             type: Object as () => ConfigurationItemReference | undefined
         } 
 
@@ -81,24 +86,22 @@ export default {
             for ( let ci  of items ) {
                 this.selectedCis.push (ci.__reference);
             }
-            getAvailableActionsWithSource(this.sourceCi,this.selectedCis).then( r=>{
+            getAvailableActionsWithSource(this.sourceci,this.selectedCis).then( r=>{
                 this.availablableActions = r;
             });
         },
+        onReferenceClick(column:SerializableColumn,ci:ConfigurationItemReference) {
+            if (column.name=='__reference') {
+                this.$emit("selectedci",ci);
+            } else {
+                this.$emit("selectedotherci",ci);
+            }
+        },
         onClickAction(action:SerializableAction) {
             this.showMessage=false;
-            submitActionWithSource(this.sourceCi,action, this.selectedCis).then(r=>{
-                this.messsage = r.message;
-                this.showMessage=true;
-                this.messageType="success";
-                if (r.consequences !='NONE') {
-                    this.$emit("change",this.value);
-                }
-            }).catch ( reason=> {
-                this.messsage = action.displayLabel + " failed: "+reason;
-                this.messageType="warning";
-                this.showMessage=true;
-            });
+            smartSubmitAction( { action:action,cis:this.selectedCis, sourceCi: this.sourceci, callback: (_:SubmitActionResponse)=>{
+                this.$emit("change");
+            } });
         }
     }
 }

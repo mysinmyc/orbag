@@ -1,5 +1,6 @@
 package orbag.server.action;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -44,10 +45,18 @@ public class ActionControllerTest {
 		assertNotNull(action);
 		
 		assertEquals("Action on label ciao",action.getDisplayLabel());
+
+		BuildActionTemplateRequest buildTemplateRequest = new BuildActionTemplateRequest();
+		buildTemplateRequest.setAction(action);
+		buildTemplateRequest.setTargetCis(request.getTargetCis());
 		
-		SubmitActionRequest submitActionRequest = new SubmitActionRequest();
-		submitActionRequest.setAction(action);
-		submitActionRequest.setTargetCis(request.getTargetCis());
+		ResponseEntity<SubmitActionRequest> responseBuildTemplateEntity = testClients.testUser1RestTemplate().postForEntity(
+				"http://localhost:" + localServerPort + "/api/action/buildTemplate", buildTemplateRequest,
+				SubmitActionRequest.class);
+		
+		assertEquals(HttpStatus.OK, responseBuildTemplateEntity.getStatusCode());
+		SubmitActionRequest submitActionRequest = responseBuildTemplateEntity.getBody();
+		
 		
 		ResponseEntity<SubmitActionResponse> submitActionResponseEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:" + localServerPort + "/api/action/submit", submitActionRequest,
 				SubmitActionResponse.class);

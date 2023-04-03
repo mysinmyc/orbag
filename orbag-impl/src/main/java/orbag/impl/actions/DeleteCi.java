@@ -7,6 +7,7 @@ import orbag.action.ActionConsequences;
 import orbag.action.ActionRequest;
 import orbag.action.ActionResult;
 import orbag.action.ConfigurationItemActionBase;
+import orbag.action.ConfirmationAwareFilter;
 import orbag.dao.ConfigurationItemDao;
 import orbag.metadata.DisplayLabel;
 import orbag.metadata.MetadataRegistry;
@@ -18,7 +19,7 @@ import orbag.visibility.ManagedClasses;
 @DisplayLabel("Delete %")
 @ManagedClasses(Object.class)
 @AccessRestrictedByAccessType(AccessType.DELETE)
-public class DeleteCi extends ConfigurationItemActionBase {
+public class DeleteCi extends ConfigurationItemActionBase implements ConfirmationAwareFilter {
 
 	@Autowired
 	ConfigurationItemDao dao;
@@ -33,16 +34,12 @@ public class DeleteCi extends ConfigurationItemActionBase {
 	}
 
 	@Override
-	public ActionResult execute(ActionRequest request) {
-
+	public void execute(ActionRequest request, ActionResult result) {
 		for (Object ci : request.getTargetCis()) {
 			dao.delete(ci);
 		}
-
-		ActionResult result = new ActionResult();
 		result.setMessage(request.getTargetCis().size() + " configuration items successfully deleted");
 		result.setConsequences(ActionConsequences.DELETED);
-		return result;
 	}
 
 }

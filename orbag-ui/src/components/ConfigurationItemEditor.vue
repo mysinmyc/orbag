@@ -5,17 +5,15 @@
     </template>
 
     <b-card-body>
+
         <b-dropdown class="mx-1" right text="actions">
             <b-dropdown-item class="m-2" v-for="action in availablableActions" :key="action.identifier" @click="onClickAction(action)">{{action.displayLabel}}</b-dropdown-item>
         </b-dropdown>
-        <br/>
-        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{message}}</b-alert>
-        <br/>
         <b-tabs>
-    <b-tab title="Properties" active>
-
-        <configuration-item-property-editor :value="value"/>
-    </b-tab>
+    
+        <b-tab title="Properties" active>
+          <configuration-item-property-editor :value="value"/>
+        </b-tab>
     <b-tab v-for="view in availablableViews" :key="view.identifier" :title="view.displayLabel">
       <configuration-item-view :ci="value" :view="view"/>
     </b-tab>
@@ -34,6 +32,7 @@ import {getAvailableActions, SerializableAction,submitAction} from "@/framework/
 import {getAvailableViews,SerializableView} from "@/framework/view";
 import ConfigurationItemPropertyEditor from './ConfigurationItemPropertyEditor.vue'
 import ConfigurationItemView from './ConfigurationItemView.vue';
+import { smartSubmitAction } from '@/framework/smartDispatcher';
 
 export default {
   components: { ConfigurationItemPropertyEditor, ConfigurationItemView },
@@ -46,23 +45,11 @@ export default {
         return {
             availablableActions: Array<SerializableAction>(),
             availablableViews: Array<SerializableView>(),
-            message: "",
-            showMessage:false,
-            messageType: "success"
         }
     },
     methods: {
-          onClickAction(action:SerializableAction) {
-            this.showMessage=false;
-            submitAction(action, [this.value!]).then(r=>{
-                this.message = r.message;
-                this.showMessage=true;
-                this.messageType="success";
-            }).catch ( reason=> {
-                this.message = action.displayLabel + " failed: "+reason;
-                this.messageType="warning";
-                this.showMessage=true;
-            });
+        onClickAction(action:SerializableAction) {
+          smartSubmitAction( { action:action,cis:[this.value!] });
         }
     },
     mounted() {

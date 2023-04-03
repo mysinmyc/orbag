@@ -10,6 +10,10 @@ public interface ConfigurationItemAction extends Displayable {
 		return true;
 	}
 
-	ActionResult execute(ActionRequest request);
+	default void buildParametersFor(ActionRequest request) {
+		
+	}
+	
+	void execute(ActionRequest request, ActionResult result);
 
 }

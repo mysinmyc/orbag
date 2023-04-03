@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 
+import orbag.input.FieldGroupConsumer;
+
 public class ActionRequest {
 
 	Authentication submitter;
@@ -39,4 +41,16 @@ public class ActionRequest {
 	public void setTargetCis(List<?> targetCis) {
 		this.targetCis = targetCis;
 	}
+	
+	FieldGroupConsumer parameters;
+
+	public FieldGroupConsumer getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(FieldGroupConsumer parameters) {
+		this.parameters = parameters;
+	}
+
+	
 }
