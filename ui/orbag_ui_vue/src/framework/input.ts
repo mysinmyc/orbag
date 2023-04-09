@@ -14,7 +14,7 @@ export type ConfigurationItemReferenceField = InputFieldBase<ConfigurationItemRe
 }
 
 export type EnumField = InputFieldBase<string> & {
-    allowedValues: string
+    allowedValues: Array<string>
 }
 
 export type SerializableFieldGroup = {

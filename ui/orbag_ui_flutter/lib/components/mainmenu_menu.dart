@@ -44,7 +44,7 @@ class _MainMenuState extends State<MainMenu> {
                 child:
                     buildMenuBarFromClassModel(context, snapshot.requireData));
           } else {
-            return Text("Loading...");
+            return const Text("Loading...");
           }
         });
   }

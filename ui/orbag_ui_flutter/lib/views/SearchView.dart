@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:orbag_ui_flutter/components/searchci.dart';
 

@@ -9,7 +9,7 @@ Drawer buildDrawerFromClassModel(BuildContext context, ClassModel classModel) {
     var currentSubMenu = submenus[currentClass.category];
     if (currentSubMenu == null) {
       currentSubMenu =
-          ExpansionTile(children: [], title: Text(currentClass.category));
+          ExpansionTile(title: Text(currentClass.category), children: []);
       submenus[currentClass.category] = currentSubMenu;
     }
     currentSubMenu.children.add(ListTile(

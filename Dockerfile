@@ -8,7 +8,7 @@ FROM mysinmyc/flutter as build_flutter
 COPY --chown=1000:1000 ui/orbag_ui_flutter/ /home/build/src
 RUN rm /home/build/src/web/public/config.json
 RUN flutter pub get -d chrome
-RUN flutter build web  --base-href /ui/flutter/
+RUN flutter build web  --base-href /ui/flutter/  --web-renderer html  --release
 
 FROM maven as build_java
 COPY . /src
