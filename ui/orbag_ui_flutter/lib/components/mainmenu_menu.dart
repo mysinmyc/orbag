@@ -39,8 +39,13 @@ class _MainMenuState extends State<MainMenu> {
     return FutureBuilder<ClassModel>(
         future: _classModelFuture,
         builder: (BuildContext context, AsyncSnapshot<ClassModel> snapshot) {
-          return Expanded(
-              child: buildMenuBarFromClassModel(context, snapshot.requireData));
+          if (snapshot.hasData) {
+            return Expanded(
+                child:
+                    buildMenuBarFromClassModel(context, snapshot.requireData));
+          } else {
+            return Text("Loading...");
+          }
         });
   }
 }

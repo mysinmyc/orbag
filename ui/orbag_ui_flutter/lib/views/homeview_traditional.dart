@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/components/mainmenu.dart';
+import 'package:orbag_ui_flutter/components/mainmenu_menu.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key, this.title = "Home"});
+class HomeViewTraditional extends StatelessWidget {
+  const HomeViewTraditional({super.key, this.title = "Home"});
 
   final String title;
 
