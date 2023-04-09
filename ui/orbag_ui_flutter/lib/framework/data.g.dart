@@ -9,7 +9,7 @@ part of 'data.dart';
 SerializableColumn _$SerializableColumnFromJson(Map<String, dynamic> json) =>
     SerializableColumn(
       json['name'] as String,
-      json['displayLabel'] as String,
+      json['displayLabel'] as String?,
       json['type'] as String,
     );
 

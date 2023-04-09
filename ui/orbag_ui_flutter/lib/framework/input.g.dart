@@ -9,8 +9,7 @@ part of 'input.dart';
 StringField _$StringFieldFromJson(Map<String, dynamic> json) => StringField(
       json['name'] as String,
       json['displayLabel'] as String,
-      json['type'] as String,
-      json['value'] as String,
+      json['value'] as String?,
       json['changed'] as bool,
       json['readOnly'] as bool,
     );
@@ -19,7 +18,6 @@ Map<String, dynamic> _$StringFieldToJson(StringField instance) =>
     <String, dynamic>{
       'name': instance.name,
       'displayLabel': instance.displayLabel,
-      'type': instance.type,
       'value': instance.value,
       'changed': instance.changed,
       'readOnly': instance.readOnly,
@@ -28,8 +26,7 @@ Map<String, dynamic> _$StringFieldToJson(StringField instance) =>
 BooleanField _$BooleanFieldFromJson(Map<String, dynamic> json) => BooleanField(
       json['name'] as String,
       json['displayLabel'] as String,
-      json['type'] as String,
-      json['value'] as bool,
+      json['value'] as bool?,
       json['changed'] as bool,
       json['readOnly'] as bool,
     );
@@ -38,7 +35,6 @@ Map<String, dynamic> _$BooleanFieldToJson(BooleanField instance) =>
     <String, dynamic>{
       'name': instance.name,
       'displayLabel': instance.displayLabel,
-      'type': instance.type,
       'value': instance.value,
       'changed': instance.changed,
       'readOnly': instance.readOnly,
@@ -47,8 +43,7 @@ Map<String, dynamic> _$BooleanFieldToJson(BooleanField instance) =>
 NumericField _$NumericFieldFromJson(Map<String, dynamic> json) => NumericField(
       json['name'] as String,
       json['displayLabel'] as String,
-      json['type'] as String,
-      json['value'] as int,
+      json['value'] as int?,
       json['changed'] as bool,
       json['readOnly'] as bool,
     );
@@ -57,7 +52,6 @@ Map<String, dynamic> _$NumericFieldToJson(NumericField instance) =>
     <String, dynamic>{
       'name': instance.name,
       'displayLabel': instance.displayLabel,
-      'type': instance.type,
       'value': instance.value,
       'changed': instance.changed,
       'readOnly': instance.readOnly,
@@ -68,9 +62,10 @@ ConfigurationItemReferenceField _$ConfigurationItemReferenceFieldFromJson(
     ConfigurationItemReferenceField(
       json['name'] as String,
       json['displayLabel'] as String,
-      json['type'] as String,
-      ConfigurationItemReference.fromJson(
-          json['value'] as Map<String, dynamic>),
+      json['value'] == null
+          ? null
+          : ConfigurationItemReference.fromJson(
+              json['value'] as Map<String, dynamic>),
       json['changed'] as bool,
       json['readOnly'] as bool,
       json['configurationItemType'] as String,
@@ -81,8 +76,7 @@ Map<String, dynamic> _$ConfigurationItemReferenceFieldToJson(
     <String, dynamic>{
       'name': instance.name,
       'displayLabel': instance.displayLabel,
-      'type': instance.type,
-      'value': instance.value.toJson(),
+      'value': instance.value?.toJson(),
       'changed': instance.changed,
       'readOnly': instance.readOnly,
       'configurationItemType': instance.configurationItemType,
@@ -91,8 +85,7 @@ Map<String, dynamic> _$ConfigurationItemReferenceFieldToJson(
 EnumField _$EnumFieldFromJson(Map<String, dynamic> json) => EnumField(
       json['name'] as String,
       json['displayLabel'] as String,
-      json['type'] as String,
-      json['value'] as String,
+      json['value'] as String?,
       json['changed'] as bool,
       json['readOnly'] as bool,
       (json['allowedValues'] as List<dynamic>).map((e) => e as String).toList(),
@@ -101,7 +94,6 @@ EnumField _$EnumFieldFromJson(Map<String, dynamic> json) => EnumField(
 Map<String, dynamic> _$EnumFieldToJson(EnumField instance) => <String, dynamic>{
       'name': instance.name,
       'displayLabel': instance.displayLabel,
-      'type': instance.type,
       'value': instance.value,
       'changed': instance.changed,
       'readOnly': instance.readOnly,

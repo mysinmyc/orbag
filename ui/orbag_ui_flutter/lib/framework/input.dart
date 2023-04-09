@@ -4,20 +4,19 @@ import 'package:orbag_ui_flutter/framework/reference.dart';
 part 'input.g.dart';
 
 class InputFieldBase<T> {
-  InputFieldBase(this.name, this.displayLabel, this.type, this.value,
-      this.changed, this.readOnly);
+  InputFieldBase(
+      this.name, this.displayLabel, this.value, this.changed, this.readOnly);
   String name;
   String displayLabel;
-  String type;
-  T value;
+  T? value;
   bool changed;
   bool readOnly;
 }
 
 @JsonSerializable(explicitToJson: true)
 class StringField extends InputFieldBase<String> {
-  StringField(super.name, super.displayLabel, super.type, super.value,
-      super.changed, super.readOnly);
+  StringField(super.name, super.displayLabel, super.value, super.changed,
+      super.readOnly);
   factory StringField.fromJson(Map<String, dynamic> json) =>
       _$StringFieldFromJson(json);
   Map<String, dynamic> toJson() => _$StringFieldToJson(this);
@@ -25,8 +24,8 @@ class StringField extends InputFieldBase<String> {
 
 @JsonSerializable(explicitToJson: true)
 class BooleanField extends InputFieldBase<bool> {
-  BooleanField(super.name, super.displayLabel, super.type, super.value,
-      super.changed, super.readOnly);
+  BooleanField(super.name, super.displayLabel, super.value, super.changed,
+      super.readOnly);
   factory BooleanField.fromJson(Map<String, dynamic> json) =>
       _$BooleanFieldFromJson(json);
   Map<String, dynamic> toJson() => _$BooleanFieldToJson(this);
@@ -34,8 +33,8 @@ class BooleanField extends InputFieldBase<bool> {
 
 @JsonSerializable(explicitToJson: true)
 class NumericField extends InputFieldBase<int> {
-  NumericField(super.name, super.displayLabel, super.type, super.value,
-      super.changed, super.readOnly);
+  NumericField(super.name, super.displayLabel, super.value, super.changed,
+      super.readOnly);
   factory NumericField.fromJson(Map<String, dynamic> json) =>
       _$NumericFieldFromJson(json);
   Map<String, dynamic> toJson() => _$NumericFieldToJson(this);
@@ -44,8 +43,8 @@ class NumericField extends InputFieldBase<int> {
 @JsonSerializable(explicitToJson: true)
 class ConfigurationItemReferenceField
     extends InputFieldBase<ConfigurationItemReference> {
-  ConfigurationItemReferenceField(super.name, super.displayLabel, super.type,
-      super.value, super.changed, super.readOnly, this.configurationItemType);
+  ConfigurationItemReferenceField(super.name, super.displayLabel, super.value,
+      super.changed, super.readOnly, this.configurationItemType);
   String configurationItemType;
   factory ConfigurationItemReferenceField.fromJson(Map<String, dynamic> json) =>
       _$ConfigurationItemReferenceFieldFromJson(json);
@@ -55,8 +54,8 @@ class ConfigurationItemReferenceField
 
 @JsonSerializable(explicitToJson: true)
 class EnumField extends InputFieldBase<String> {
-  EnumField(super.name, super.displayLabel, super.type, super.value,
-      super.changed, super.readOnly, this.allowedValues);
+  EnumField(super.name, super.displayLabel, super.value, super.changed,
+      super.readOnly, this.allowedValues);
   List<String> allowedValues;
   factory EnumField.fromJson(Map<String, dynamic> json) =>
       _$EnumFieldFromJson(json);

@@ -6,7 +6,7 @@ part 'data.g.dart';
 class SerializableColumn {
   SerializableColumn(this.name, this.displayLabel, this.type);
   String name;
-  String displayLabel;
+  String? displayLabel;
   String type;
   factory SerializableColumn.fromJson(Map<String, dynamic> json) =>
       _$SerializableColumnFromJson(json);
