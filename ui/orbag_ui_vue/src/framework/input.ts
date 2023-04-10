@@ -3,7 +3,7 @@ import { ConfigurationItemReference } from "./reference"
 export type InputFieldBase<T> = {
     name: string,
     displayLabel: string
-    type: string,
+    //type: string,
     value: T ,
     changed: boolean,
     readOnly: boolean

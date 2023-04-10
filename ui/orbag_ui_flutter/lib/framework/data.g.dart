@@ -26,9 +26,7 @@ SerializableTable _$SerializableTableFromJson(Map<String, dynamic> json) =>
           .map((e) => SerializableColumn.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['rows'] as List<dynamic>)
-          .map((e) => (e as Map<String, dynamic>).map(
-                (k, e) => MapEntry(k, e as Object),
-              ))
+          .map((e) => e as Map<String, dynamic>)
           .toList(),
     );
 

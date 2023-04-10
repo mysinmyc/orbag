@@ -1,6 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:orbag_ui_flutter/framework/reference.dart';
 
 part 'data.g.dart';
+
+fixValues(SerializableTable table) {
+  for (SerializableColumn currentColumn in table.columns) {
+    if (currentColumn.type == "Reference") {
+      for (Map<String, Object?> currentRow in table.rows) {
+        Object? currentValue = currentRow[currentColumn.name];
+        if (currentValue != null) {
+          currentRow[currentColumn.name] = ConfigurationItemReference.fromJson(
+              currentValue as Map<String, dynamic>);
+        }
+      }
+    }
+  }
+}
 
 @JsonSerializable(explicitToJson: true)
 class SerializableColumn {
@@ -17,8 +32,13 @@ class SerializableColumn {
 class SerializableTable {
   SerializableTable(this.columns, this.rows);
   List<SerializableColumn> columns;
-  List<Map<String, Object>> rows;
-  factory SerializableTable.fromJson(Map<String, dynamic> json) =>
-      _$SerializableTableFromJson(json);
+  List<Map<String, Object?>> rows;
+  factory SerializableTable.fromJson(Map<String, dynamic> json) {
+    {
+      SerializableTable result = _$SerializableTableFromJson(json);
+      fixValues(result);
+      return result;
+    }
+  }
   Map<String, dynamic> toJson() => _$SerializableTableToJson(this);
 }

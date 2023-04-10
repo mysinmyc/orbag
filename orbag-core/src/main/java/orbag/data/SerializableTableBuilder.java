@@ -85,19 +85,20 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 			row.put(generatedColumn.column.getName(),
 					castValue(generatedColumn.valueProvider.apply(item), generatedColumn.column.getType()));
 		}
-		setReferencesFields(item,row);
+		setReferenceFields(item,row);
 		return new SerializableRowBuilder(configurationItemReferenceService, row);
 	}
 
 	boolean referenceColumnsDefined=false;
 	
-	private void setReferencesFields(T item, Map<String, Object> row) {
+	private void setReferenceFields(T item, Map<String, Object> row) {
 		ConfigurationItemReference reference = configurationItemReferenceService.getReference(item);
 		if (reference ==null) {
 			return;
 		}
 		if (!referenceColumnsDefined) {
 			addColumn(COLUMN__REFERENCE, ColumnType.Reference);
+			referenceColumnsDefined=true;
 		}
 		row.put(COLUMN__REFERENCE, reference);
 	}
