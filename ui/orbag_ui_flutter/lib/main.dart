@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orbag_ui_flutter/views/EditView.dart';
 import 'package:orbag_ui_flutter/views/homeview_material.dart';
 import 'package:orbag_ui_flutter/views/SearchView.dart';
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
         home: const HomeViewMaterial(),
         routes: {
           SearchView.routeName: (context) => const SearchView(),
+          EditView.routeName: (context) => const EditView(),
         });
   }
 }

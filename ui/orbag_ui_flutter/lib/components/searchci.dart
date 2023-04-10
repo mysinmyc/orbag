@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orbag_ui_flutter/components/configurationitemlink.dart';
 import 'package:orbag_ui_flutter/framework/data.dart';
 import 'package:orbag_ui_flutter/framework/input.dart';
 import 'package:orbag_ui_flutter/framework/reference.dart';
@@ -13,10 +14,7 @@ class SerializableTableSource extends DataTableSource {
       return const Text("");
     }
     if (column.type == "Reference") {
-      ConfigurationItemReference reference =
-          value as ConfigurationItemReference;
-      return ElevatedButton(
-          child: Text(reference.displayLabel!), onPressed: () {});
+      return ConfigurationItemLink(value as ConfigurationItemReference);
     } else {
       return Text(value.toString());
     }
@@ -81,7 +79,7 @@ class _SearchCiState extends State<SearchCi> {
       TextFormField currentField = TextFormField(
           decoration:
               InputDecoration(hintText: currentRequestField.displayLabel),
-          onSaved: (newValue) => {
+          onChanged: (newValue) => {
                 currentRequestField.changed = true,
                 currentRequestField.value = newValue
               });
@@ -105,12 +103,13 @@ class _SearchCiState extends State<SearchCi> {
     ));
     filters.add(Padding(
       padding: const EdgeInsets.all(8),
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
           onPressed: () {
             _formKey.currentState!.save();
             submitSearch(searchRequest);
           },
-          child: const Text("Search")),
+          icon: const Icon(Icons.search),
+          label: const Text("Search")),
     ));
 
     return Form(key: _formKey, child: Column(children: filters));
@@ -120,8 +119,9 @@ class _SearchCiState extends State<SearchCi> {
     if (result.columns.isEmpty || result.rows.isEmpty) {
       return const Text("no item found");
     }
-    List<DataColumn> columns = [];
 
+    result.columns.sort((a, b) => a.name.compareTo(b.name));
+    List<DataColumn> columns = [];
     for (SerializableColumn currentDataColumn in result.columns) {
       columns.add(DataColumn(
           label: Text(currentDataColumn.displayLabel == null

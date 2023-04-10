@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orbag_ui_flutter/framework/metadata.dart';
+import 'package:orbag_ui_flutter/views/SearchView.dart';
 
 Drawer buildDrawerFromClassModel(BuildContext context, ClassModel classModel) {
   Map<String, ExpansionTile> submenus = {};
@@ -15,7 +16,7 @@ Drawer buildDrawerFromClassModel(BuildContext context, ClassModel classModel) {
     currentSubMenu.children.add(ListTile(
         title: Text(currentClass.displayLabel),
         onTap: () => {
-              Navigator.pushNamed(context, "/search",
+              Navigator.pushNamed(context, SearchView.routeName,
                   arguments: {"configurationItemType": currentClass.name})
             }));
   }
