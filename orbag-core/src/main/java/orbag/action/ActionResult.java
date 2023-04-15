@@ -1,5 +1,8 @@
 package orbag.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ActionResult {
 
 	public ActionConsequences getConsequences() {
@@ -45,5 +48,29 @@ public class ActionResult {
 	
 	String jobId;
 	
+	List<ValidationError> validationErrors = new ArrayList<ValidationError>();
+
+	public List<ValidationError> getValidationErrors() {
+		return validationErrors;
+	}
+
+	public void setValidationErrors(List<ValidationError> validationErrors) {
+		this.validationErrors = validationErrors;
+	}
+
+	public void addValidationError(String error) {
+		addValidationError(error,null);
+	}
+	
+	public void addValidationError(String error, String fieldName) {
+		ValidationError validationError = new ValidationError();
+		validationError.setError(error);
+		validationError.setField(fieldName);
+		validationErrors.add(validationError);
+	}
+	
+	public boolean isRequestValid() {
+		return validationErrors ==null || validationErrors.isEmpty();
+	}
 	
 }

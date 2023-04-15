@@ -162,7 +162,7 @@ public class ActionService {
 		ActionResult result = new ActionResult();
 		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 			request.setParameters(parameters);
-			if (filterAction(action, request, result)) {
+			if (filterAction(action, request, result) && result.isRequestValid()) {
 				action.execute(request, result);
 			}
 		});

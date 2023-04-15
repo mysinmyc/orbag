@@ -51,6 +51,8 @@ public class ActionController {
 		response.setJobId(result.getJobId());
 		response.setLink(result.getLink());
 		response.setMessage(result.getMessage());
+		response.setRequestValid(result.isRequestValid());
+		response.setValidationErrors(result.getValidationErrors());
 		return response;
 	}
 }

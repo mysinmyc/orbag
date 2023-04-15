@@ -1,6 +1,10 @@
 package orbag.server.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import orbag.action.ActionConsequences;
+import orbag.action.ValidationError;
 
 public class SubmitActionResponse {
 
@@ -11,6 +15,10 @@ public class SubmitActionResponse {
 	String link;
 	
 	String jobId;
+
+	boolean requestValid;
+	
+	List<ValidationError> validationErrors = new ArrayList<ValidationError>();
 
 	public ActionConsequences getConsequences() {
 		return consequences;
@@ -44,4 +52,21 @@ public class SubmitActionResponse {
 		this.jobId = jobId;
 	}
 
+	public boolean getRequestValid() {
+		return requestValid;
+	}
+
+	public void setRequestValid(boolean requestValid) {
+		this.requestValid = requestValid;
+	}
+
+	public List<ValidationError> getValidationErrors() {
+		return validationErrors;
+	}
+
+	public void setValidationErrors(List<ValidationError> validationErrors) {
+		this.validationErrors = validationErrors;
+	}	
+	
+	
 }

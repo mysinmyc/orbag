@@ -24,14 +24,8 @@ public class PurchaseFilter implements ConfigurationItemActionExecutionFilter{
 	}
 
 	@Override
-	public boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionResult result) {
-		double price=((PurchaseAction)action).getPrice(request);
-		PaymentMethod paymentMethod = ((PurchaseAction)action).getPaymentMethod(request);
-		if (price > 10d) {
-			result.setMessage("Payment of "+price+" via "+paymentMethod+" denied");
-			return false;
-		}
-		return true;
+	public boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionResult result) {		
+		return ((PurchaseAction)action).validatePayment(request, result);
 	}
 
 }
