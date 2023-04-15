@@ -27,10 +27,17 @@ export type SubmitActionRequest = ActionInputBase & {
     parameters: SerializableFieldGroup
 }
 
+export type ValidationError = {
+    field?: string,
+    error: string
+}
+
 export type SubmitActionResponse = {
     consequences: string,
     jobId: string,
-    message: string
+    message: string,
+    requestValid: boolean,
+    validationErrors: Array<ValidationError>
 }
 
 export function getAvailableActionsWithSource(sourceCi: ConfigurationItemReference|undefined,targetCis: Array<ConfigurationItemReference>): Promise<Array<SerializableAction>> {

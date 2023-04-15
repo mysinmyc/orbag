@@ -6,17 +6,22 @@
       </template>
       <template #body>
         <input-property-editor :value="request?.parameters"/>
+
+        <b-alert :variant="messageType"  :show="showMessage" dismissible>{{message}}</b-alert>
       </template>
       <template #footer>
         <b-button @click="doSubmit()">Execute</b-button><b-button @click="doCancelAction()">Cancel</b-button>
+
       </template>
+
+      
   </my-modal-container>
-    <b-alert :variant="messageType"  :show="showMessage" dismissible>{{message}}</b-alert>
+  <b-alert :variant="messageType"  :show="showMessage" dismissible>{{message}}</b-alert>
   </span>        
 </template>
   
 <script lang="ts">
-import { buildActionTemplateWithSource, submitAction, SubmitActionRequest } from '@/framework/action'
+import { buildActionTemplateWithSource, submitAction, SubmitActionRequest, ValidationError } from '@/framework/action'
 import InputPropertyEditor from './InputPropertyEditor.vue'
 import { isFieldGroupEmpty } from '@/framework/input'
 import { SmartActionEntry, subscribeSmartSubmitAction } from '@/framework/smartDispatcher'
@@ -39,19 +44,27 @@ import MyModalContainer from './MyModalContainer.vue'
           this.showActionInputProperties=false;
         },
         doSubmit() {
+          this.showMessage=false;
           submitAction(this.request!).then(r=>{
-                this.message = r.message;
-                this.showMessage=true;
-                this.messageType="success";
-                if (this.requestEntry?.callback != undefined) {
-                  this.requestEntry.callback(r);
+                if (r.requestValid) {
+                  this.message = r.message;
+                  this.showMessage=true;
+                  this.messageType="success";
+                  if (this.requestEntry?.callback != undefined) {
+                    this.requestEntry.callback(r);
+                  }
+                  this.showActionInputProperties =false;
+                } else {
+                  r.validationErrors.forEach( (error, index) =>{
+                      this.message = error.error;
+                      this.messageType = "warning";
+                      this.showMessage =true;
+                  });
                 }
             }).catch ( reason=> {
                 this.message = this.request!.action.displayLabel + " failed: "+reason;
                 this.messageType="warning";
                 this.showMessage=true;
-            }).finally(()=>{
-              this.showActionInputProperties =false;
             });
         }
       },
