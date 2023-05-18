@@ -22,7 +22,7 @@ public class SecurityConfiguration {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		http.httpBasic().and()
-				.authorizeHttpRequests(c -> c.requestMatchers("/js/**", "/css/**", "/index.html", "/", "/favicon.ico", "/ui/**", "/public/**")
+				.authorizeHttpRequests(c -> c.requestMatchers("/js/**", "/css/**", "/index.html", "/", "/favicon.ico", "/ui/**", "/public/**", "/error", "/v3/**","/swagger-ui.html", "/swagger-ui/**")
 						.permitAll().requestMatchers("/api/**").authenticated())
 				.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf().disable().httpBasic();
 

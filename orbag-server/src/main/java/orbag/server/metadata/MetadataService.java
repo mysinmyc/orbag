@@ -3,6 +3,7 @@ package orbag.server.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,13 +38,13 @@ public class MetadataService {
 	}
 
 	public SerializableConfigurationItemDescriptor getSerializableConfigurationItemDescriptor(
-			String configurationItem, boolean includeProperties) {
+			String configurationItem, boolean includeProperties) throws UnmanagedObjectException {
 		return serialize(metadataRegistry.getConfigurationItemDescriptorByName(configurationItem),
 				includeProperties);
 	}
 	
 	public SerializableConfigurationItemDescriptor getSerializableConfigurationItemDescriptor(
-			Class<?> configurationItemClass, boolean includeProperties) {
+			Class<?> configurationItemClass, boolean includeProperties) throws UnmanagedObjectException {
 		return serialize(metadataRegistry.getConfigurationItemDescriptorByClass(configurationItemClass),
 				includeProperties);
 	}

@@ -5,7 +5,7 @@ import java.util.List;
 public class ActionUtils {
 
 	public static boolean isSingleObjectOfType(List<?> objects , Class<?>targetType) {
-		return areAllObjectsOfType(objects, targetType) && objects.size()==1; 
+		return objects.size()==1 && areAllObjectsOfType(objects, targetType);
 	}
 	
 	public static boolean areAllObjectsOfType(List<?> objects , Class<?>targetType) {

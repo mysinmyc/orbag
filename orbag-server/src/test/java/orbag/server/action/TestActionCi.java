@@ -3,11 +3,10 @@ package orbag.server.action;
 import orbag.dao.PersistedBy;
 import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
-import orbag.metadata.Manageable;
 
 @ConfigurationItem(identifierClass = String.class)
 @PersistedBy(TestActionRepository.class)
-public class TestActionCi implements Manageable<String>  {
+public class TestActionCi implements orbag.metadata.Identifiable<String>, orbag.metadata.Displayable {
 
 	String identifier;
 

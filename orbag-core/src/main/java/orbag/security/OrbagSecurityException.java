@@ -2,8 +2,11 @@ package orbag.security;
 
 import java.util.stream.Stream;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 @SuppressWarnings("serial")
 public class OrbagSecurityException extends Exception{
 

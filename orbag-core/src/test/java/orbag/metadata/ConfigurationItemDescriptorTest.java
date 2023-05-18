@@ -16,13 +16,10 @@ public class ConfigurationItemDescriptorTest {
 		
 	}
 
-	@ConfigurationItem
-	public static class NoConfigurationItemB {
-		
-	}
+
 
 	@ConfigurationItem
-	public static class WellDefinedConfigurationItem implements Manageable<Long> {
+	public static class WellDefinedConfigurationItem implements Identifiable<Long>, Displayable {
 
 		@Override
 		public Long getIdentifier() {
@@ -35,7 +32,6 @@ public class ConfigurationItemDescriptorTest {
 	@Test
 	public void testMetadata() {
 		assertNull(ConfigurationItemDescriptor.fromClass(NoConfigurationItem.class));
-		assertNull(ConfigurationItemDescriptor.fromClass(NoConfigurationItemB.class));
 		assertNotNull(ConfigurationItemDescriptor.fromClass(WellDefinedConfigurationItem.class));
 	}
 }

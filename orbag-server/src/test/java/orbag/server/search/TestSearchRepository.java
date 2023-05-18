@@ -17,6 +17,7 @@ public class TestSearchRepository implements OrbagRepository, OrbagSearcheableRe
 		return false;
 	}
 
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public <T> T getById(Object identifier, Class<T> javaClass) {
@@ -26,13 +27,6 @@ public class TestSearchRepository implements OrbagRepository, OrbagSearcheableRe
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
-			throws LimitExceededException {
-		// TODO Auto-generated method stub
-		
 	}
 
 

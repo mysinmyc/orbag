@@ -1,5 +1,6 @@
 package orbag.impl.actions;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +30,12 @@ public class DeleteCi extends ConfigurationItemActionBase implements Confirmatio
 
 	@Override
 	public boolean isAvailableFor(ActionRequest request) {
-		return request.getTargetCis().size() == 1 && dao.isWritable(request.getTargetCis().get(0)) && !metadataRegistry
-				.getConfigurationItemDescriptorByClass(request.getTargetCis().get(0).getClass()).isReadOnly();
+		try {
+			return request.getTargetCis().size() == 1 && dao.isWritable(request.getTargetCis().get(0)) && !metadataRegistry
+					.getConfigurationItemDescriptorByClass(request.getTargetCis().get(0).getClass()).isReadOnly();
+		} catch (UnmanagedObjectException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

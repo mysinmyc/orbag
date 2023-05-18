@@ -35,7 +35,7 @@ public class ActionControllerTest {
 
 		request.setTargetCis(Arrays.asList(configurationItemReferenceService.getReference(ci)));
 		ResponseEntity<GetAvailableActionsResponse> responseGetAvailable = testClients.testUser1RestTemplate().postForEntity(
-				"http://localhost:" + localServerPort + "/api/action/getAvailable", request,
+				"http://localhost:" + localServerPort + "/api/action/buildAvailableList", request,
 				GetAvailableActionsResponse.class);
 		assertEquals(HttpStatus.OK, responseGetAvailable.getStatusCode());
 

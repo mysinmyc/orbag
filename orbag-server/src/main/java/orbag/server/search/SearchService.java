@@ -2,6 +2,7 @@ package orbag.server.search;
 
 import java.util.function.BiConsumer;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class SearchService {
 	
 	@SuppressWarnings("unchecked")
 	private <E> void invokeExecutor(String configurationItemName, Authentication user, PaginationInfo paginationInfo,
-			BiConsumer<SearchExecutor<E>, SearchContext> operation) throws OrbagSecurityException {
+			BiConsumer<SearchExecutor<E>, SearchContext> operation) throws OrbagSecurityException, UnmanagedObjectException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
 		if (descriptor == null) {
@@ -55,7 +56,7 @@ public class SearchService {
 		operation.accept((SearchExecutor<E>) searchExecutor, searchContext);
 	}
 
-	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException {
+	public SearchRequest getSearchRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		SearchRequest requestTemplate = new SearchRequest();
 		requestTemplate.setConfigurationItemName(configurationItemName);
 		requestTemplate.setResultType(ResultType.HIGHLIGHTED_FIELDS);
@@ -68,7 +69,7 @@ public class SearchService {
 	}
 
 	public <T> void executeSearchInto(SearchRequest request, Authentication user, PaginationInfo paginationInfo,
-			TableBuilder<T> builder) throws OrbagSecurityException {
+			TableBuilder<T> builder) throws OrbagSecurityException, UnmanagedObjectException {
 		invokeExecutor(request.getConfigurationItemName(), user, paginationInfo,
 				new BiConsumer<SearchExecutor<T>, SearchContext>() {
 					@Override

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.DisplayLabelUtils;
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,6 @@ import orbag.dao.ConfigurationItemDao;
 import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
 import orbag.metadata.ConfigurationItemDescriptor;
-import orbag.metadata.Manageable;
 import orbag.metadata.MetadataRegistry;
 import orbag.reference.ConfigurationItemReference;
 import orbag.security.AccessType;
@@ -45,7 +47,7 @@ public class ActionService {
 	@Autowired
 	MetadataRegistry metadataRegistry;
 
-	boolean hasUseAccessToSourceCi(ConfigurationItemReference sourceCi, Authentication user) {
+	boolean hasUseAccessToSourceCi(ConfigurationItemReference sourceCi, Authentication user) throws UnmanagedObjectException {
 		if (sourceCi == null) {
 			return true;
 		}
@@ -73,20 +75,20 @@ public class ActionService {
 		if (cisReferences.size() > 1) {
 			return label.replace("%", cisReferences.size() + " cis");
 		}
-		String ciLabel = ((Manageable<?>) dao.getCi(cisReferences.get(0))).getDisplayLabel();
+		String ciLabel = cisReferences.get(0).getDisplayLabel();
 		return label.replace("%", ciLabel);
 
 	}
 
 	public List<SerializableAction> getAvaiableActionsFor(ConfigurationItemReference sourceCiReference,
-			List<ConfigurationItemReference> targetCisReferences, Authentication user) {
+			List<ConfigurationItemReference> targetCisReferences, Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		if (targetCisReferences == null || targetCisReferences.isEmpty()
 				|| !hasUseAccessToSourceCi(sourceCiReference, user)) {
 			return new ArrayList<SerializableAction>();
 		}
-		List<?> targetCis = dao.getCis(targetCisReferences);
+		List<?> targetCis = dao.getExistingCisOrThrow(targetCisReferences);
 		ActionRequest request = new ActionRequest();
-		request.setSourceCi(dao.getCi(sourceCiReference));
+		request.setSourceCi(dao.getExistingCiOrThrow(sourceCiReference));
 		request.setTargetCis(targetCis);
 		List<ConfigurationItemAction> availableActions = actionRegistry.getAllActions();
 		return availableActions.stream().filter(a -> isActionVisibile(a, targetCis, user))
@@ -127,28 +129,28 @@ public class ActionService {
 
 	void invokeAction(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
 			List<ConfigurationItemReference> targetCisReferences, Authentication user,
-			BiConsumer<ConfigurationItemAction, ActionRequest> consumer) throws OrbagSecurityException {
+			BiConsumer<ConfigurationItemAction, ActionRequest> consumer) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		ConfigurationItemAction action = getActionFromid(serializableAction.getIdentifier());
 		if (action == null) {
-			throw new OrbagServerException("Invalid action " + serializableAction.getIdentifier());
+			throw new UnmanagedObjectException("Invalid action " + serializableAction.getIdentifier());
 		}
 		if (!hasUseAccessToSourceCi(sourceCiReference, user)) {
 			throw new OrbagSecurityException(user, sourceCiReference, AccessType.USE);
 		}
-		Object sourceCi = dao.getCi(sourceCiReference);
-		List<?> targetCis = dao.getCis(targetCisReferences);
+		Object sourceCi = dao.getExistingCiOrThrow(sourceCiReference);
+		List<?> targetCis = dao.getExistingCisOrThrow(targetCisReferences);
 		ActionRequest request = new ActionRequest();
 		request.setSourceCi(sourceCi);
 		request.setTargetCis(targetCis);
 		if (!(isActionVisibile(action, targetCis, user) && action.isAvailableFor(request))) {
-			throw new OrbagServerException("Action not available");
+			throw new OrbagSecurityException();
 		}
 		consumer.accept(action, request);
 	}
 
 	public void buildParameters(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
 			List<ConfigurationItemReference> targetCisReferences, Authentication user, FieldGroupBuilder builder)
-			throws OrbagSecurityException {
+			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 			for (ConfigurationItemActionExecutionFilter filter : getFiltersFor(action, request)) {
 				filter.setActionParameters(action,builder, request);
@@ -158,7 +160,7 @@ public class ActionService {
 	}
 
 	public ActionResult submit(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
-			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException {
+			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		ActionResult result = new ActionResult();
 		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 			request.setParameters(parameters);

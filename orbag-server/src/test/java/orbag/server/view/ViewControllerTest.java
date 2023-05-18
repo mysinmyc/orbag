@@ -3,6 +3,7 @@ package orbag.server.view;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,7 @@ public class ViewControllerTest {
 	private TestClients testClients;
 
 	@Test
-	void testView(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+	void testView(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) throws UnmanagedObjectException {
 
 		TestViewCi ci = new TestViewCi();
 		ci.setIdentifier("ciao");

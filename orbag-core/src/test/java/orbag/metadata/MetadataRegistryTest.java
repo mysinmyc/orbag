@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class MetadataRegistryTest {
 
 	@ConfigurationItem()
-	static class ParentConfigurationItem implements Manageable<Long>{
+	static class ParentConfigurationItem implements Identifiable<Long>, Displayable {
 
 		@Override
 		public Long getIdentifier() {
@@ -22,7 +22,7 @@ public class MetadataRegistryTest {
 	}
 	
 	@Test
-	public void testDescriptor() {
+	public void testDescriptor() throws UnmanagedObjectException {
 		
 		
 		MetadataRegistry metadataRegistry = new MetadataRegistry();

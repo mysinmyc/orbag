@@ -1,7 +1,10 @@
 package orbag.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import orbag.metadata.UnmanagedObjectException;
+import orbag.util.UnsafeFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,35 +38,77 @@ public class ConfigurationItemDao {
 							"Invalid repository in PersistedBy annotation of " + javaClass.getName()));
 		}
 		return repositories.stream().filter(r -> r.isManaged(javaClass)).findFirst()
-				.orElseThrow(() -> new RuntimeException("No repostitory avaialble for " + javaClass.getName()));
+				.orElseThrow(() -> new RuntimeException("No repository available for " + javaClass.getName()));
 	}
 
 	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo) {
+
 		try {
-			getRepositoryFor(javaClass).listInto(javaClass, consumer, paginationInfo);
+			OrbagRepository repository = getRepositoryFor(javaClass);
+			if (!(repository instanceof OrbagListableRepository)) {
+				throw new UnsupportedOperationException("List not allowed repository");
+			}
+			((OrbagListableRepository) repository).listInto(javaClass, consumer, paginationInfo);
 		} catch (LimitExceededException e) {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public Object getCi(ConfigurationItemReference reference) {
+	public Object getCi(ConfigurationItemReference reference) throws UnmanagedObjectException {
 		if (reference==null) {
 			return null;
 		}
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(reference.getConfigurationItemType());
 		if (descriptor == null) {
-			return null;
+			throw new UnmanagedObjectException();
 		}
 		OrbagRepository repository = getRepositoryFor(descriptor.getJavaClass());
 		return repository.getById(configurationItemReferenceService.getIdentifierFromReference(reference),
 				descriptor.getJavaClass());
 	}
 
-	public  List<?> getCis(List<ConfigurationItemReference> configurationItemReferences) {
-		return configurationItemReferences.stream().map(this::getCi).filter(i -> i != null).toList();
+	public Object getExistingCiOrThrow(ConfigurationItemReference reference) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
+		Object ci = getCi(reference);
+		if (ci==null) {
+			throw new ConfigurationItemNotFoundException();
+		}
+		return ci;
 	}
+
+	public Object getIdentifier(Object ci) throws UnmanagedObjectException {
+		if (ci==null) {
+			return null;
+		}
+		ConfigurationItemDescriptor descriptor = metadataRegistry
+				.getConfigurationItemDescriptorByClass(ci.getClass());
+		if (descriptor == null) {
+			throw new UnmanagedObjectException();
+		}
+		OrbagRepository repository = getRepositoryFor(descriptor.getJavaClass());
+		return repository.getIdentifier(ci);
+	}
+
+
+	public  List<?> getCis(List<ConfigurationItemReference> configurationItemReferences) throws UnmanagedObjectException {
+		List<Object> result = new ArrayList<>();
+		for (ConfigurationItemReference currentReference : configurationItemReferences) {
+			Object ci = getCi(currentReference);
+			result.add(ci);
+		}
+		return result;
+	}
+
+	public  List<?> getExistingCisOrThrow(List<ConfigurationItemReference> configurationItemReferences) throws UnmanagedObjectException,ConfigurationItemNotFoundException {
+		List<Object> result = new ArrayList<>();
+		for (ConfigurationItemReference currentReference : configurationItemReferences) {
+			Object ci = getExistingCiOrThrow(currentReference);
+			result.add(ci);
+		}
+		return result;
+	}
+
 
 	public void delete(Object object) {
 		OrbagRepository repository = getRepositoryFor(object.getClass());

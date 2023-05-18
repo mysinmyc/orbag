@@ -1,5 +1,6 @@
 package orbag.server.search;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +29,14 @@ public class SearchController {
 
 	@GetMapping("/template/{configurationItemName}")
 	public SearchRequest getSearchTemplate(
-			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException {
+			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		return searchService.getSearchRequestTemplateFor(configurationItemName, user);
 	}
 
 	@PostMapping("/execute")
 	public SerializableTable execute(@RequestBody SearchRequest request,
 			@RequestParam(defaultValue = "50", name = "limit") Integer limit,
-			@RequestParam(defaultValue = "0", name = "offset") Integer offset, Authentication user) throws OrbagSecurityException {
+			@RequestParam(defaultValue = "0", name = "offset") Integer offset, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		SerializableTableBuilder<Object> serializableTableBuilder = new SerializableTableBuilder<>(
 				configurationItemReferenceService);
 		searchService.executeSearchInto(request, user, new PaginationInfo(limit,offset), serializableTableBuilder);

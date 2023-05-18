@@ -1,5 +1,7 @@
 package orbag.input;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +28,11 @@ public class ConfigurationItemReferenceFieldConverter implements FieldValueGette
 
 	@Override
 	public void setFieldValue(Object value, ConfigurationItemReferenceField field) {
+		try {
 			field.setValue(configurationItemReferenceService.getReference(value));
+		} catch (UnmanagedObjectException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -39,7 +45,11 @@ public class ConfigurationItemReferenceFieldConverter implements FieldValueGette
 		if (field.getValue()==null) {
 			return null;
 		}
-		return dao.getCi(field.getValue());
+		try {
+			return dao.getExistingCiOrThrow(field.getValue());
+		}catch (UnmanagedObjectException| ConfigurationItemNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

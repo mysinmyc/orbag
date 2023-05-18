@@ -13,7 +13,6 @@ public class DataUtils {
 	protected static Object getValue(ConfigurationItemPropertyDescriptor property, Object object) {
 		try {
 			return property.getGetterMethod().invoke(object);
-
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return null;
 		}	
@@ -33,11 +32,9 @@ public class DataUtils {
 	}
 	
 	public static InputFieldBase<?> buildInputFieldFromConfigurationItemProperty(ConfigurationItemPropertyDescriptor property, FieldGroupBuilder fieldGroupBuilder) {
-		
 		if (property.isConfigurationItemReference()) {
 			return fieldGroupBuilder.addReferenceField(property.getName(), property.getDisplayLabel(), property.getReferencedConfigurationItemType().getName());
 		}
-		
 		InputFieldBase<?> field = fieldGroupBuilder.addFieldOfType(property.getName(), property.getDisplayLabel(), property.getValueType());
 		return field;
 	}

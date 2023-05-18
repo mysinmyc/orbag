@@ -16,16 +16,12 @@ public class TestCreateRepository implements OrbagRepository,  OrbagWritableRepo
 		return false;
 	}
 
+
 	@Override
 	public <T> T getById(Object identifier, Class<T> javaClass) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
-	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
-			throws LimitExceededException {
-		throw new UnsupportedOperationException("Not implemented");
-	}
 
 	@Override
 	public void delete(Object object) {

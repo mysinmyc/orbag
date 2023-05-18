@@ -2,11 +2,10 @@ package orbag.server.list;
 
 import orbag.dao.PersistedBy;
 import orbag.metadata.ConfigurationItem;
-import orbag.metadata.Manageable;
 
 @ConfigurationItem
 @PersistedBy(TestListRepository.class)
-public class TestListCi implements Manageable<Integer> {
+public class TestListCi implements orbag.metadata.Identifiable<Integer>, orbag.metadata.Displayable {
 
 	Integer identifier;
 

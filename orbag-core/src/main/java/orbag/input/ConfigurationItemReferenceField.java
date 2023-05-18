@@ -1,8 +1,8 @@
 package orbag.input;
 
-import orbag.reference.ConfigurationItemReferenceExt;
+import orbag.reference.ConfigurationItemReference;
 
-public class ConfigurationItemReferenceField extends InputFieldBase<ConfigurationItemReferenceExt> {
+public class ConfigurationItemReferenceField extends InputFieldBase<ConfigurationItemReference> {
 
 	@Override
 	public void parseValue(String value) {

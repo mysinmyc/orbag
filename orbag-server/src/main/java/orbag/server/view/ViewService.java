@@ -3,6 +3,9 @@ package orbag.server.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
+import orbag.security.OrbagSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Component;
 import orbag.dao.ConfigurationItemDao;
 import orbag.data.TableBuilder;
 import orbag.reference.ConfigurationItemReference;
-import orbag.reference.ConfigurationItemReferenceService;
-import orbag.server.OrbagServerException;
 import orbag.view.ConfigurationItemView;
 import orbag.view.ViewDataBindRequest;
 import orbag.view.ViewRegistry;
@@ -23,10 +24,7 @@ public class ViewService {
 
 	@Autowired
 	ConfigurationItemDao dao;
-	
-	@Autowired
-	ConfigurationItemReferenceService configurationItemReferenceService;
-	
+
 	@Autowired
 	ViewRegistry viewRegistry;
 	
@@ -34,9 +32,9 @@ public class ViewService {
 	VisibilityManager visibilityManager;
 		
 	public List<SerializableView> getAvailableViews(ConfigurationItemReference configurationItemReference,
-			Authentication user) {
+			Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		ViewDataBindRequest request = new ViewDataBindRequest();
-		request.setCi(dao.getCi(configurationItemReference));
+		request.setCi(dao.getExistingCiOrThrow(configurationItemReference));
 		List<ConfigurationItemView> availableViews = new ArrayList<>();
 		for (ConfigurationItemView view : visibilityManager.filterObjects(viewRegistry.getAllViews(), FilterContext.forTargetObject(request.getCi()).forUser(user))) {
 			if (view.isAvailableFor(request)) {
@@ -47,18 +45,20 @@ public class ViewService {
 				.toList();		
 	}
 
-	ConfigurationItemView getViewFromid(String id) {
+	ConfigurationItemView getViewFromId(String id) {
 		return viewRegistry.getAllViews().stream().filter(a -> a.getIdentifier().equals(id)).findAny().orElse(null);
 	}
 
 	public void bindInto(ConfigurationItemReference configurationItemReference, String viewId, Authentication user,
-			TableBuilder<Object> tableBuilder) {
+			TableBuilder<Object> tableBuilder) throws UnmanagedObjectException, OrbagSecurityException, ConfigurationItemNotFoundException {
 		ViewDataBindRequest request = new ViewDataBindRequest();
-		request.setCi(dao.getCi(configurationItemReference));
-		ConfigurationItemView view = getViewFromid(viewId);
-		
-		if ( view ==null || !visibilityManager.isObjectVisibile(view, FilterContext.forTargetObject(request.getCi()).forUser(user))) {
-			throw new OrbagServerException("View not visibile");
+		request.setCi(dao.getExistingCiOrThrow(configurationItemReference));
+		ConfigurationItemView view = getViewFromId(viewId);
+		if ( view ==null) {
+			throw new UnmanagedObjectException();
+		}
+		if (!visibilityManager.isObjectVisibile(view, FilterContext.forTargetObject(request.getCi()).forUser(user))) {
+			throw new OrbagSecurityException();
 		}
 		view.bindInto(request, tableBuilder);
 		

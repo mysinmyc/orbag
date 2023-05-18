@@ -2,10 +2,9 @@ package orbag.server.metadata;
 
 import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
-import orbag.metadata.Manageable;
 
 @ConfigurationItem
-public class TestMetadataCi implements Manageable<Integer> {
+public class TestMetadataCi implements orbag.metadata.Identifiable<Integer>, orbag.metadata.Displayable {
 
 	Integer identifier;
 

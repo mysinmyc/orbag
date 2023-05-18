@@ -1,5 +1,6 @@
 package orbag.server.list;
 
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class ListController {
 			@PathVariable("configurationItemName") String configurationItemName,
 			@RequestParam(defaultValue = "50", name = "limit") Integer limit,
 			@RequestParam(defaultValue = "0", name = "offset") Integer offset,
-			Authentication user) throws OrbagSecurityException {
+			Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		ListConfigurationItemResponse response = new ListConfigurationItemResponse();
 		response.setCis(listService.list(configurationItemName, new PaginationInfo(limit,offset),user));
 		return response;

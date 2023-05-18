@@ -2,6 +2,8 @@ package orbag.server.create;
 
 import java.util.function.BiConsumer;
 
+import orbag.metadata.UnmanagedObjectException;
+import orbag.reference.ConfigurationItemReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -12,7 +14,6 @@ import orbag.create.CreationContext;
 import orbag.input.SerializableFieldGroup;
 import orbag.metadata.ConfigurationItemDescriptor;
 import orbag.metadata.MetadataRegistry;
-import orbag.reference.ConfigurationItemReferenceExt;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.security.AccessType;
 import orbag.security.OrbagSecurityException;
@@ -40,7 +41,7 @@ public class CreateService {
 	SecurityAssertionService securityAssertionService;
 	
 	private <E> void invokeWizard(String configurationItemName, Authentication user,
-			BiConsumer<ConfigurationItemWizard, CreationContext> operation) throws OrbagSecurityException {
+			BiConsumer<ConfigurationItemWizard, CreationContext> operation) throws OrbagSecurityException, UnmanagedObjectException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
 		if (descriptor == null) {
@@ -61,7 +62,7 @@ public class CreateService {
 		operation.accept(configurationItemWizard, creationContext);
 	}
 
-	public CreateRequest getCreateRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException {
+	public CreateRequest getCreateRequestTemplateFor(String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		CreateRequest request = new CreateRequest();
 		request.setConfigurationItemType(configurationItemName);
 		SerializableFieldGroup parametersBuilder = new SerializableFieldGroup();
@@ -72,7 +73,7 @@ public class CreateService {
 		return request;
 	}
 
-	public ConfigurationItemReferenceExt create(CreateRequest request, Authentication user) throws OrbagSecurityException {
+	public ConfigurationItemReference create(CreateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 
 		ObjectHolder<Object> holder = new ObjectHolder<>();
 		invokeWizard(request.getConfigurationItemType(), user, (w, c) -> {

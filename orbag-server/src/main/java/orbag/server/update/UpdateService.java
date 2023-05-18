@@ -1,5 +1,7 @@
 package orbag.server.update;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -41,15 +43,12 @@ public class UpdateService {
 	FieldManagementUtils fieldManagementUtils;
 
 	public UpdateRequest getUpdateRequestTemplateFor(ConfigurationItemReference configurationItemReference,
-			Authentication user) throws OrbagSecurityException {
-		Object ci = dao.getCi(configurationItemReference);
-		if (ci == null) {
-			throw new OrbagServerException("Object not found");
-		}
+			Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+		Object ci = dao.getExistingCiOrThrow(configurationItemReference);
 		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry
 				.getConfigurationItemDescriptorByClass(ci.getClass());
 		if (configurationItemDescriptor == null) {
-			throw new OrbagServerException("No access to properties");
+			throw new UnmanagedObjectException();
 		}
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(configurationItemDescriptor, user,
 				AccessType.READ, AccessType.MODIFY);
@@ -83,16 +82,11 @@ public class UpdateService {
 	}
 
 	protected ConfigurationItemReference update(UpdateRequest request, Authentication user)
-			throws OrbagSecurityException {
-		Object ci = dao.getCi(request.getConfigurationItem());
-		if (ci == null) {
-			throw new OrbagServerException("Object not found");
-		}
+			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+		Object ci = dao.getExistingCiOrThrow(request.getConfigurationItem());
 		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry
 				.getConfigurationItemDescriptorByClass(ci.getClass());
-		if (configurationItemDescriptor == null) {
-			throw new OrbagServerException("No access to properties");
-		}
+
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(configurationItemDescriptor, user,
 				AccessType.MODIFY);
 		for (InputFieldBase<?> parameter : request.getProperties().getFields()) {

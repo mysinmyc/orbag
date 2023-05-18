@@ -1,5 +1,7 @@
 package orbag.server.create;
 
+import orbag.metadata.UnmanagedObjectException;
+import orbag.reference.ConfigurationItemReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import orbag.reference.ConfigurationItemReferenceExt;
 import orbag.security.OrbagSecurityException;
 
 @RestController
@@ -21,12 +22,12 @@ public class CreateController {
 	
 	@GetMapping("/template/{configurationItemName}")
 	public CreateRequest getCreateTemplate(
-			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException {
+			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		return createService.getCreateRequestTemplateFor(configurationItemName, user);
 	}
 	
 	@PostMapping("/execute")
-	public ConfigurationItemReferenceExt create(@RequestBody CreateRequest request, Authentication user) throws OrbagSecurityException {
+	public ConfigurationItemReference create(@RequestBody CreateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
 		return  createService.create(request,user);
 	}
 }

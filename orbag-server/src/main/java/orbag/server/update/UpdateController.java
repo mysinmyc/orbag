@@ -1,5 +1,7 @@
 package orbag.server.update;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +19,14 @@ public class UpdateController {
 	@Autowired
 	UpdateService updateService;
 	
-	@PostMapping("/getTemplate")
+	@PostMapping("/buildTemplate")
 	public UpdateRequest getUpdateTemplate(
-			@RequestBody ConfigurationItemReference configurationItemReference, Authentication user) throws OrbagSecurityException {
+			@RequestBody ConfigurationItemReference configurationItemReference, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		return updateService.getUpdateRequestTemplateFor(configurationItemReference, user);
 	}
 	
 	@PostMapping("/execute")
-	public ConfigurationItemReference update(@RequestBody UpdateRequest request, Authentication user) throws OrbagSecurityException {
+	public ConfigurationItemReference update(@RequestBody UpdateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		return updateService.update(request,user);
 	}
 }

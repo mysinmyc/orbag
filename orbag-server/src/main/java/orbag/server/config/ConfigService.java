@@ -12,13 +12,9 @@ public class ConfigService {
 	String serverAddress;
 	
 	public String getServerAddress(HttpServletRequest httpServletRequest) {
-
 		if ("UNDEFINED".equals(serverAddress)) {
 			//return httpServletRequest.getScheme()+"://"+httpServletRequest.getServerName()+":"+httpServletRequest.getLocalPort();
-			
 			return httpServletRequest.getRequestURL().toString().replaceAll("(.*://[^/]+)/.*$","$1");
-			
-			
 		} else {
 			return serverAddress;
 		}

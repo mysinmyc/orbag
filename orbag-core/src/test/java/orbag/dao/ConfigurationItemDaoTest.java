@@ -36,14 +36,15 @@ public class ConfigurationItemDaoTest {
 		}
 
 		@Override
-		public <T> T getById(Object identifier, Class<T> javaClass) {
+		public Object getIdentifier(Object ci) {
 			return null;
 		}
 
 		@Override
-		public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
-				throws LimitExceededException {
+		public <T> T getById(Object identifier, Class<T> javaClass) {
+			return null;
 		}
+
 		
 	}
 

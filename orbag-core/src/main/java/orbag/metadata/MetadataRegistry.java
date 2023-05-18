@@ -28,22 +28,22 @@ public class MetadataRegistry {
 		this.configurationItemDescriptors = newConfigurationItemDescriptors;
 	}
 
-	public ConfigurationItemDescriptor getConfigurationItemDescriptorByName(String configurationItemName) {
+	public ConfigurationItemDescriptor getConfigurationItemDescriptorByName(String configurationItemName) throws UnmanagedObjectException {
 		for (ConfigurationItemDescriptor currentDescriptor : configurationItemDescriptors) {
 			if (currentDescriptor.getName().equals(configurationItemName)) {
 				return currentDescriptor;
 			}
 		}
-		return null;
+		throw new UnmanagedObjectException();
 	}
 	
-	public ConfigurationItemDescriptor getConfigurationItemDescriptorByClass(Class<?> configurationItemClass) {
+	public ConfigurationItemDescriptor getConfigurationItemDescriptorByClass(Class<?> configurationItemClass) throws UnmanagedObjectException {
 		for (ConfigurationItemDescriptor currentDescriptor : configurationItemDescriptors) {
 			if (currentDescriptor.getJavaClass().isAssignableFrom(configurationItemClass)) {
 				return currentDescriptor;
 			}
 		}
-		return null;
+		throw new UnmanagedObjectException();
 	}
 
 	public void setManagedClasses(Class<?>... managedClasses) {

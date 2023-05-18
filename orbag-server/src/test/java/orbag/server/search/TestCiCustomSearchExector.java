@@ -1,11 +1,10 @@
 package orbag.server.search;
 
 import orbag.metadata.ConfigurationItem;
-import orbag.metadata.Manageable;
 import orbag.search.Searcheable;
 
 @ConfigurationItem
-public class TestCiCustomSearchExector implements Manageable<String> {
+public class TestCiCustomSearchExector implements orbag.metadata.Identifiable<String>, orbag.metadata.Displayable {
 
 	String identifier;
 

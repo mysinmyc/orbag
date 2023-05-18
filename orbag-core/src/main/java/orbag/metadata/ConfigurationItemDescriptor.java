@@ -84,9 +84,6 @@ public class ConfigurationItemDescriptor {
 	}
 	
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass,boolean buildProperties) {
-		if (!Manageable.class.isAssignableFrom(javaClass)) {
-			return null;
-		}
 		ConfigurationItem configurationItemAnnotation = javaClass.getAnnotation(ConfigurationItem.class);
 		if (configurationItemAnnotation == null || configurationItemAnnotation.hidden()) {
 			return null;

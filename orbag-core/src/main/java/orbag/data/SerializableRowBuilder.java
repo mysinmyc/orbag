@@ -2,7 +2,7 @@ package orbag.data;
 
 import java.util.Map;
 
-import orbag.metadata.Manageable;
+import orbag.metadata.UnmanagedObjectException;
 import orbag.reference.ConfigurationItemReferenceService;
 
 public class SerializableRowBuilder implements PartialRow{
@@ -24,7 +24,7 @@ public class SerializableRowBuilder implements PartialRow{
 	}
 
 	@Override
-	public PartialRow withReference(String columnName, Manageable<?> configurationItem) {
+	public PartialRow withReference(String columnName, Object configurationItem) throws UnmanagedObjectException {
 		this.fields.put(columnName, configurationItemReferenceService.getReference(configurationItem));
 		return this;
 	}

@@ -3,7 +3,6 @@ package orbag.server.update;
 import orbag.dao.PersistedBy;
 import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
-import orbag.metadata.Manageable;
 import orbag.security.AccessPolicy;
 import orbag.security.AccessRestricted;
 import orbag.security.AccessType;
@@ -12,7 +11,7 @@ import orbag.security.AccessType;
 @PersistedBy(TestUpdateRepository.class)
 @AccessRestricted({ @AccessPolicy(authorities = "test1", grants = { AccessType.MODIFY }),
 		@AccessPolicy(authorities = "test2", grants = { AccessType.READ }) })
-public class TestUpdateCi implements Manageable<String> {
+public class TestUpdateCi implements orbag.metadata.Identifiable<String>, orbag.metadata.Displayable {
 
 	String identifier;
 

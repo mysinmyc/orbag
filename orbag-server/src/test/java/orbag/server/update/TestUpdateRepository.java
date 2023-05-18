@@ -14,7 +14,7 @@ import orbag.util.UnsafeConsumer;
 @Component
 public class TestUpdateRepository implements OrbagRepository,  OrbagWritableRepository {
 
-	
+
 	Map<String,TestUpdateCi> cis = new HashMap<>();
 	
 	@Override
@@ -31,11 +31,6 @@ public class TestUpdateRepository implements OrbagRepository,  OrbagWritableRepo
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
-			throws LimitExceededException {
-		throw new UnsupportedOperationException("Not implemented");
-	}
 
 	@Override
 	public void delete(Object object) {

@@ -1,5 +1,6 @@
 package orbag.impl.actions;
 
+import orbag.metadata.DisplayLabelUtils;
 import org.springframework.stereotype.Component;
 
 import orbag.action.ActionConsequences;
@@ -10,7 +11,6 @@ import orbag.impl.brewery.Brewery;
 import orbag.impl.brewery.PurchaseAction;
 import orbag.impl.cis.BreweryMenuItem;
 import orbag.metadata.DisplayLabel;
-import orbag.metadata.Manageable;
 import orbag.visibility.ManagedClasses;
 
 @Component
@@ -29,9 +29,9 @@ public class OrderFromMenu extends ConfigurationItemActionBase implements Purcha
 		result.setMessage(
 				"You have ordered: "
 						+ String.join(",",
-								request.getTargetCis().stream().map(i -> ((Manageable<?>) i).getDisplayLabel())
+								request.getTargetCis().stream().map(DisplayLabelUtils::getDisplayLabel)
 										.toList())
-						+ " on " + ((Manageable<?>) request.getSourceCi()).getDisplayLabel()+
+						+ " on " + DisplayLabelUtils.getDisplayLabel( request.getSourceCi())+
 				", price: "+getPrice(request)+" payment method: "+getPaymentMethod(request));
 	}
 

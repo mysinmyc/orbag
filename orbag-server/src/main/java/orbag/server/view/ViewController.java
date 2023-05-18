@@ -1,5 +1,8 @@
 package orbag.server.view;
 
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
+import orbag.security.OrbagSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,14 +25,14 @@ public class ViewController {
 
 	@PostMapping("/getAvailable")
 	public GetAvailableViewsResponse getAvailableViews(@RequestBody GetAvailableViewsRequest request,
-			Authentication user) {
+			Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		GetAvailableViewsResponse response = new GetAvailableViewsResponse();
 		response.setAvailableViews(viewService.getAvailableViews(request.getTargetCi(), user));
 		return response;
 	}
 
 	@PostMapping("/bind")
-	public BindViewResponse bind(@RequestBody BindViewRequest request, Authentication user) {
+	public BindViewResponse bind(@RequestBody BindViewRequest request, Authentication user) throws UnmanagedObjectException, OrbagSecurityException, ConfigurationItemNotFoundException {
 		SerializableTableBuilder<Object> serializableTableBuilder = new SerializableTableBuilder<>(
 				configurationItemReferenceService);
 		viewService.bindInto(request.getTargetCi(), request.getView().getIdentifier(), user, serializableTableBuilder);

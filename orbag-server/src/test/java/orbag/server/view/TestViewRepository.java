@@ -28,11 +28,7 @@ public class TestViewRepository implements OrbagRepository  {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public <T> void listInto(Class<T> javaClass, UnsafeConsumer<T,LimitExceededException> consumer, PaginationInfo paginationInfo)
-			throws LimitExceededException {
-		throw new UnsupportedOperationException("Not implemented");
-	}
+
 
 
 }

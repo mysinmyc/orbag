@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
+import orbag.dao.OrbagListableRepository;
 import org.springframework.stereotype.Component;
 
 import orbag.dao.OrbagSearcheableRepository;
@@ -22,7 +23,7 @@ import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
-public class HibernateRepository implements OrbagWritableRepository, OrbagSearcheableRepository {
+public class HibernateRepository implements OrbagWritableRepository, OrbagSearcheableRepository, OrbagListableRepository {
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -30,6 +31,11 @@ public class HibernateRepository implements OrbagWritableRepository, OrbagSearch
 	@Override
 	public boolean isManaged(Class<?> configurationItemClass) {
 		return configurationItemClass.getAnnotation(Entity.class) != null;
+	}
+
+	@Override
+	public Object getIdentifier(Object ci) {
+		return entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(ci);
 	}
 
 	@Override

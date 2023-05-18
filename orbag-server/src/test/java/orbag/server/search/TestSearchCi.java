@@ -5,12 +5,11 @@ import java.util.Map;
 
 import orbag.dao.PersistedBy;
 import orbag.metadata.ConfigurationItem;
-import orbag.metadata.Manageable;
 import orbag.search.Searcheable;
 
 @ConfigurationItem
 @PersistedBy(TestSearchRepository.class)
-public class TestSearchCi implements Manageable<String> {
+public class TestSearchCi implements orbag.metadata.Identifiable<String>, orbag.metadata.Displayable {
 
 	String identifier;
 

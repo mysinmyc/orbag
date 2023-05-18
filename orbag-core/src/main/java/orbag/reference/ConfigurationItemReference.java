@@ -4,7 +4,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 import orbag.metadata.ConfigurationItemDescriptor;
-import orbag.metadata.Manageable;
 
 @MappedSuperclass
 public class ConfigurationItemReference {
@@ -59,9 +58,9 @@ public class ConfigurationItemReference {
 		this.displayLabel = displayLabel;
 	}
 	
-	public static ConfigurationItemReference fromConfigurationItem(ConfigurationItemDescriptor configurationItemDescriptor, Manageable<?> configurationItem) {
-		ConfigurationItemReference result = new ConfigurationItemReference(configurationItem.getIdentifier().toString(), configurationItemDescriptor.getName());
-		result.setDisplayLabel(configurationItem.getDisplayLabel());
+	public static ConfigurationItemReference fromConfigurationItem(ConfigurationItemDescriptor configurationItemDescriptor, Object identifier, String displayLabel) {
+		ConfigurationItemReference result = new ConfigurationItemReference(identifier.toString(), configurationItemDescriptor.getName());
+		result.setDisplayLabel(displayLabel);
 		result.setConfigurationItemTypeDisplayLabel(configurationItemDescriptor.getDisplayLabel());
 		return result;
 	}

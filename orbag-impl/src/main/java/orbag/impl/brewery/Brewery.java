@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 
 import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
-import orbag.metadata.Manageable;
 
 @ConfigurationItem(category = "After work", allowCreation = false, readOnly=true)
-public class Brewery implements Manageable<String> {
+public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metadata.Displayable {
 
 	String id;
 

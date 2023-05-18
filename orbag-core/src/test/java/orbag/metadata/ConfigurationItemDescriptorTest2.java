@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class ConfigurationItemDescriptorTest2 {
 
 	@ConfigurationItem
-	static class ConfigurationItemClass implements Manageable<Integer> {
+	static class ConfigurationItemClass implements Identifiable<Integer>, Displayable {
 	
 		String prova;
 

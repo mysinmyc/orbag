@@ -2,7 +2,7 @@ package orbag.server;
 
 
 @SuppressWarnings("serial")
-public class OrbagServerException extends RuntimeException{
+public class OrbagServerException extends Exception{
 
 	public OrbagServerException() {
 		super();

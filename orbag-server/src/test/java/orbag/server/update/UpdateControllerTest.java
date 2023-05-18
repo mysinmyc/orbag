@@ -1,11 +1,7 @@
 package orbag.server.update;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.metadata.UnmanagedObjectException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +19,11 @@ import orbag.input.StringField;
 import orbag.reference.ConfigurationItemReference;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.server.TestClients;
+import org.springframework.web.client.ResourceAccessException;
+
+import java.io.IOError;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class UpdateControllerTest {
@@ -34,7 +35,7 @@ public class UpdateControllerTest {
 	private TestClients testClients;
 	
 	@Test
-	void testUpdate(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+	void testUpdate(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		
 		TestUpdateCi testUpdateCi = new TestUpdateCi();
 		testUpdateCi.setIdentifier("ciao");
@@ -43,7 +44,7 @@ public class UpdateControllerTest {
 		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
 
 
-		ResponseEntity<UpdateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/getTemplate",configurationItemReference,UpdateRequest.class);
+		ResponseEntity<UpdateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate",configurationItemReference,UpdateRequest.class);
 		assertEquals(HttpStatus.OK,responseTemplateEntity.getStatusCode());
 		
 		UpdateRequest requestTemplate = responseTemplateEntity.getBody();
@@ -80,7 +81,7 @@ public class UpdateControllerTest {
 		ResponseEntity<ConfigurationItemReference> responseUpdateOk = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class);
 		assertEquals(HttpStatus.OK,responseUpdateOk.getStatusCode());
 			
-		TestUpdateCi afterUpdate = (TestUpdateCi) dao.getCi(responseUpdateOk.getBody());
+		TestUpdateCi afterUpdate = (TestUpdateCi) dao.getExistingCiOrThrow(responseUpdateOk.getBody());
 		
 		assertEquals("ciao",afterUpdate.getStringProperty());
 		assertEquals(5,afterUpdate.getIntegerProperty());
@@ -98,7 +99,7 @@ public class UpdateControllerTest {
 	
 	
 	@Test
-	void testUpdateSecurity(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+	void testUpdateSecurity(@Autowired ConfigurationItemDao dao, @Autowired ConfigurationItemReferenceService configurationItemReferenceService) throws UnmanagedObjectException {
 		
 		TestUpdateCi testUpdateCi = new TestUpdateCi();
 		testUpdateCi.setIdentifier("testSercurity");
@@ -106,7 +107,7 @@ public class UpdateControllerTest {
 		
 		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
 
-		ResponseEntity<UpdateRequest> responseOkTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/getTemplate",configurationItemReference,UpdateRequest.class);
+		ResponseEntity<UpdateRequest> responseOkTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate",configurationItemReference,UpdateRequest.class);
 		assertEquals(HttpStatus.OK,responseOkTemplateEntity.getStatusCode());
 
 		UpdateRequest requestTemplate = responseOkTemplateEntity.getBody();
@@ -116,18 +117,15 @@ public class UpdateControllerTest {
 		((StringField)stringProperty).setValue("ciao");
 		stringProperty.setChanged(true);
 
-		ResponseEntity<ConfigurationItemReference> responseOkUpdatentity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
+		ResponseEntity<ConfigurationItemReference> responseOkUpdatentity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class);
 		assertEquals(HttpStatus.OK,responseOkUpdatentity.getStatusCode());
 
-		ResponseEntity<ConfigurationItemReference> responseKoUpdateEntity = testClients.testUser2RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
-		assertNotEquals(HttpStatus.OK,responseKoUpdateEntity.getStatusCode());
-		
-		ResponseEntity<UpdateRequest> responseKoTemplateEntity = testClients.testUser3RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/update/template/TestUpdateCi/"+testUpdateCi.getIdentifier(),UpdateRequest.class);
-		assertNotEquals(HttpStatus.OK,responseKoTemplateEntity.getStatusCode());
-		
-		ResponseEntity<ConfigurationItemReference> responseKo2UpdateEntity = testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", responseOkTemplateEntity, ConfigurationItemReference.class);
-		assertNotEquals(HttpStatus.OK,responseKo2UpdateEntity.getStatusCode());
-		
+		assertThrows(ResourceAccessException.class,()-> testClients.testUser2RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute",requestTemplate, ConfigurationItemReference.class));
+
+
+		assertThrows(ResourceAccessException.class,()-> testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate", responseOkUpdatentity.getBody(),UpdateRequest.class));
+		assertThrows(ResourceAccessException.class,()-> testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class));
+
 	}
 
 }

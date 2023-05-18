@@ -1,5 +1,6 @@
 package orbag.server.list;
 
+import orbag.dao.OrbagListableRepository;
 import org.springframework.stereotype.Component;
 
 import orbag.dao.OrbagRepository;
@@ -8,7 +9,7 @@ import orbag.util.LimitExceededException;
 import orbag.util.UnsafeConsumer;
 
 @Component
-public class TestListRepository implements OrbagRepository {
+public class TestListRepository implements OrbagRepository, OrbagListableRepository {
 
 	@Override
 	public boolean isManaged(Class<?> javaClass) {

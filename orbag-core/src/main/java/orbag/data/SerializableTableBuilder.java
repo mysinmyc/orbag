@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import orbag.metadata.UnmanagedObjectException;
 import orbag.reference.ConfigurationItemReference;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.util.LimitExceededException;
@@ -69,7 +70,11 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 			return null;
 		}
 		if (columnType.equals(ColumnType.Reference)) {
-			return configurationItemReferenceService.getReference(value);
+			try {
+				return configurationItemReferenceService.getReference(value);
+			} catch (UnmanagedObjectException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		return value;
 	}
@@ -85,13 +90,16 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 			row.put(generatedColumn.column.getName(),
 					castValue(generatedColumn.valueProvider.apply(item), generatedColumn.column.getType()));
 		}
-		setReferenceFields(item,row);
+		try {
+			setReferenceFields(item,row);
+		} catch (UnmanagedObjectException e) {
+		}
 		return new SerializableRowBuilder(configurationItemReferenceService, row);
 	}
 
 	boolean referenceColumnsDefined=false;
 	
-	private void setReferenceFields(T item, Map<String, Object> row) {
+	private void setReferenceFields(T item, Map<String, Object> row) throws UnmanagedObjectException {
 		ConfigurationItemReference reference = configurationItemReferenceService.getReference(item);
 		if (reference ==null) {
 			return;

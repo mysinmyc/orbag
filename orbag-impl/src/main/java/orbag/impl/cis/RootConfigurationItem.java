@@ -5,11 +5,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 import orbag.metadata.ConfigurationItemProperty;
-import orbag.metadata.Manageable;
 import orbag.search.Searcheable;
 
 @MappedSuperclass
-public class RootConfigurationItem implements Manageable<Long>{
+public class RootConfigurationItem implements orbag.metadata.Identifiable<Long>, orbag.metadata.Displayable {
 
 	@GeneratedValue
 	@Id
