@@ -17,7 +17,7 @@
 <script lang="ts">
 
 import {ClassModel,getClassModel} from "@/framework/metadata"
-import { whoami, WhoAmIResponse } from "@/framework/security";
+import { whoami, WhoAmIResponse } from "@/framework/authentication";
 
 export default {
     data() {

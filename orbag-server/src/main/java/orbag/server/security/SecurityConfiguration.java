@@ -29,7 +29,7 @@ public class SecurityConfiguration  {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(c -> c.requestMatchers("/js/**", "/css/**", "/index.html", "/", "/favicon.ico", "/ui/**", "/public/**", "/error", "/v3/**","/swagger-ui.html", "/swagger-ui/**", "/api/authentication/**")
+		http.authorizeHttpRequests(c -> c.requestMatchers("/js/**", "/css/**", "/index.html", "/", "/favicon.ico", "/ui/**", "/public/**", "/error", "/v3/**","/swagger-ui.html", "/swagger-ui/**", "/api/authentication/login")
 						.permitAll().requestMatchers("/api/**").authenticated())
 				.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf().disable();
 		http.addFilterBefore( jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

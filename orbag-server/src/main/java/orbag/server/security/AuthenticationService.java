@@ -41,7 +41,7 @@ public class AuthenticationService {
 
     public Authentication loginByToken(String token) throws OrbagSecurityException {
         try {
-            String user = jwtEncodingService.decodeToken(token).getToken();
+            String user = jwtEncodingService.decodeToken(token).getSubject();
             UserDetails userDetails = userDetailsService.loadUserByUsername(user);
             return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
         } catch (JWTVerificationException e) {

@@ -35,6 +35,7 @@ public class AuthenticationController {
 		loginResponse.setToken(token);
 		if (request.isPersistent()) {
 			Cookie cookie =new Cookie(JwtAuthenticationFilter.COOKIE, token);
+			cookie.setPath("/api");
 			response.addCookie(cookie);
 		}
 		return loginResponse;
