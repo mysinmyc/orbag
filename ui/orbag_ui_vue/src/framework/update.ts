@@ -9,7 +9,7 @@ export type UpdateRequest = {
 
 export function getUpdateRequestTemplate(configurationItemReference:ConfigurationItemReference): Promise<UpdateRequest> {
     return new Promise<UpdateRequest>((resolve,reject) =>{
-        axios.post<UpdateRequest>("/api/update/getTemplate",configurationItemReference).then(r=> resolve(r.data)).catch(reason=> reject(reason));
+        axios.post<UpdateRequest>("/api/update/buildUpdateTemplate",configurationItemReference).then(r=> resolve(r.data)).catch(reason=> reject(reason));
     });
 }
 

@@ -13,7 +13,19 @@ public class OrbagSecurityException extends Exception{
 	public OrbagSecurityException() {
 		
 	}
-	
+
+	public OrbagSecurityException(String message) {
+		super(message);
+	}
+
+	public OrbagSecurityException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public OrbagSecurityException(Throwable cause) {
+		super(cause);
+	}
+
 	Authentication user;
 	
 	Object target;
@@ -21,14 +33,11 @@ public class OrbagSecurityException extends Exception{
 	AccessType[] accessTypes;
 	
 	public OrbagSecurityException(Authentication user, Object target, AccessType... accessTypes) {
+		super("Access "+ String.join(" or ",Stream.of(accessTypes).map(Object::toString).toList()) +" denied on "+target+" to "+user);
 		this.user = user;
 		this.target = target;
 		this.accessTypes = accessTypes;
-	}
-	
-	@Override
-	public String getMessage() {
-		return "Acces "+ String.join(" or ",Stream.of(accessTypes).map(Object::toString).toList()) +" denied on "+target+" to "+user;
+
 	}
 
 }

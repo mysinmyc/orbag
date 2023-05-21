@@ -46,7 +46,7 @@ public class ConfigurationItemDao {
 		try {
 			OrbagRepository repository = getRepositoryFor(javaClass);
 			if (!(repository instanceof OrbagListableRepository)) {
-				throw new UnsupportedOperationException("List not allowed repository");
+				throw new UnsupportedOperationException("List not allowed in repository");
 			}
 			((OrbagListableRepository) repository).listInto(javaClass, consumer, paginationInfo);
 		} catch (LimitExceededException e) {
@@ -132,7 +132,7 @@ public class ConfigurationItemDao {
 		try {
 			OrbagRepository repository = getRepositoryFor(javaClass);
 			if (!(repository instanceof OrbagSearcheableRepository)) {
-				throw new UnsupportedOperationException("Search not allowed repository");
+				throw new UnsupportedOperationException("Search not allowed in repository");
 			}
 			((OrbagSearcheableRepository) repository).searchByConditionsInto(javaClass, searchConditions, consumer,
 					paginationInfo);

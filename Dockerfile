@@ -13,12 +13,12 @@ RUN flutter build web  --base-href /ui/flutter/  --web-renderer html  --release
 FROM maven as build_java
 COPY . /src
 RUN rm -fr /src/orbag-server/src/main/resources/public/ui/
-COPY  --from=build_vueapp /src/dist /src/orbag-server/src/main/resources/public/ui/vue
-COPY  --from=build_flutter /home/build/src/build/web /src/orbag-server/src/main/resources/public/ui/flutter
+COPY  --from=build_vueapp /src/dist /src/orbag-samples-server/src/main/resources/public/ui/vue
+COPY  --from=build_flutter /home/build/src/build/web /src/orbag-samples-server/src/main/resources/public/ui/flutter
 WORKDIR /src
 RUN mvn -DskipTests=true clean package 
 
 FROM  openjdk:17-oraclelinux8
-COPY  --from=build_java /src/orbag-server/target/*.jar /app.jar
+COPY  --from=build_java /src/orbag-samples-server/target/*.jar /app.jar
 EXPOSE 8080/tcp
 CMD ["java", "-jar", "/app.jar"]

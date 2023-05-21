@@ -6,11 +6,13 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>orbag-core</module>
-		<module>orbag-impl</module>
+		<module>orbag-samples</module>
 		<module>orbag-server</module>
         <module>orbag-api</module>
         <module>orbag-orchestration</module>
-    </modules>
+		<module>orbag-samples-server</module>
+		<module>orbag-jpa</module>
+	</modules>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

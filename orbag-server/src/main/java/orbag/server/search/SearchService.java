@@ -42,9 +42,6 @@ public class SearchService {
 			BiConsumer<SearchExecutor<E>, SearchContext> operation) throws OrbagSecurityException, UnmanagedObjectException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
-		if (descriptor == null) {
-			throw new RuntimeException("Invalid configuration item type " + configurationItemName);
-		}
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(descriptor, user, AccessType.USE,AccessType.READ,AccessType.MODIFY);		
 		SearchExecutor<?> searchExecutor = visibilityManager.findFirstObject(
 				searchExecutorRegistry.getAllSearchExecutors(),

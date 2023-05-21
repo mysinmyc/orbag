@@ -19,8 +19,8 @@ public class UpdateController {
 	@Autowired
 	UpdateService updateService;
 	
-	@PostMapping("/buildTemplate")
-	public UpdateRequest getUpdateTemplate(
+	@PostMapping("/buildUpdateTemplate")
+	public UpdateRequest buildUpdateTemplate(
 			@RequestBody ConfigurationItemReference configurationItemReference, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		return updateService.getUpdateRequestTemplateFor(configurationItemReference, user);
 	}

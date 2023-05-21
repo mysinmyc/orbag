@@ -88,7 +88,9 @@ public class ActionService {
 		}
 		List<?> targetCis = dao.getExistingCisOrThrow(targetCisReferences);
 		ActionRequest request = new ActionRequest();
-		request.setSourceCi(dao.getExistingCiOrThrow(sourceCiReference));
+		if (sourceCiReference!=null) {
+			request.setSourceCi(dao.getExistingCiOrThrow(sourceCiReference));
+		}
 		request.setTargetCis(targetCis);
 		List<ConfigurationItemAction> availableActions = actionRegistry.getAllActions();
 		return availableActions.stream().filter(a -> isActionVisibile(a, targetCis, user))
@@ -137,7 +139,7 @@ public class ActionService {
 		if (!hasUseAccessToSourceCi(sourceCiReference, user)) {
 			throw new OrbagSecurityException(user, sourceCiReference, AccessType.USE);
 		}
-		Object sourceCi = dao.getExistingCiOrThrow(sourceCiReference);
+		Object sourceCi = sourceCiReference==null ? null: dao.getExistingCiOrThrow(sourceCiReference);
 		List<?> targetCis = dao.getExistingCisOrThrow(targetCisReferences);
 		ActionRequest request = new ActionRequest();
 		request.setSourceCi(sourceCi);

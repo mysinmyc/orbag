@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
-import orbag.server.OrbagServerException;
 import orbag.server.util.ErrorPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,9 +34,9 @@ public class ActionController {
 					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound")
 			}
 	)
-	@PostMapping("/buildAvailableList")
-	public GetAvailableActionsResponse getAvailable(@RequestBody GetAvailableActionsRequest request,
-			Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
+	@PostMapping("/getAvailable")
+	public GetAvailableActionsResponse buildAvailableList(@RequestBody GetAvailableActionsRequest request,
+														  Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		GetAvailableActionsResponse response = new GetAvailableActionsResponse();
 		response.setAvailableActions(
 				actionService.getAvaiableActionsFor(request.getSourceCi(), request.getTargetCis(), user));
@@ -53,8 +52,8 @@ public class ActionController {
 					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound")
 			}
 	)
-	@PostMapping("/buildTemplate")
-	public SubmitActionRequest buildTemplate(@RequestBody BuildActionTemplateRequest buildActionTemplateRequest,
+	@PostMapping("/buildExecutionTemplate")
+	public SubmitActionRequest buildExecutionTemplate(@RequestBody BuildActionTemplateRequest buildActionTemplateRequest,
 			Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
 		SerializableFieldGroup parameters = new SerializableFieldGroup();
 		actionService.buildParameters(buildActionTemplateRequest.getAction(), buildActionTemplateRequest.getSourceCi(),

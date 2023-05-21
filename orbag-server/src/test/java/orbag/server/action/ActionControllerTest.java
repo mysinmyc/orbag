@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 
+import orbag.dao.ConfigurationItemDao;
+import orbag.metadata.UnmanagedObjectException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,13 +26,17 @@ public class ActionControllerTest {
 	Integer localServerPort;
 
 	@Autowired
+	ConfigurationItemDao dao;
+
+	@Autowired
 	private TestClients testClients;
 
 	@Test
-	void testCreateWithDefaultExecutor(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+	void testCreateWithDefaultExecutor(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) throws UnmanagedObjectException {
 
 		TestActionCi ci = new TestActionCi();
 		ci.setIdentifier("ciao");
+
 		GetAvailableActionsRequest request = new GetAvailableActionsRequest();
 
 		request.setTargetCis(Arrays.asList(configurationItemReferenceService.getReference(ci)));

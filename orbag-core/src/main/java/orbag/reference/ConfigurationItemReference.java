@@ -1,17 +1,12 @@
 package orbag.reference;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
 
 import orbag.metadata.ConfigurationItemDescriptor;
 
-@MappedSuperclass
 public class ConfigurationItemReference {
 	
-	@Id
 	String identifier;
 
-	@Id
 	String configurationItemType;
 	
 	public ConfigurationItemReference() {	

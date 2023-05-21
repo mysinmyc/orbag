@@ -56,7 +56,7 @@ export function getAvailableActions(targetCis: Array<ConfigurationItemReference>
 export function buildActionTemplateWithSource( action:SerializableAction,sourceCi: ConfigurationItemReference|undefined, cis: Array<ConfigurationItemReference>): Promise<SubmitActionRequest> {
     return new Promise<SubmitActionRequest>((resolve,reject)=>{
         const request:BuildActionTemplateRequest = { action:action, sourceCi: sourceCi,  targetCis: cis};
-        axios.post<SubmitActionRequest>("/api/action/buildTemplate", request).then(r=>
+        axios.post<SubmitActionRequest>("/api/action/buildExecutionTemplate", request).then(r=>
             resolve(r.data)
         ).catch(reason=> reject(reason));
     })

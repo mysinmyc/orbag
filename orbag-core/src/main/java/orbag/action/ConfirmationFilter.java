@@ -25,7 +25,7 @@ public class ConfirmationFilter implements ConfigurationItemActionExecutionFilte
 	public boolean filterAction(ConfigurationItemAction action, ActionRequest request, ActionResult result) {
 		Boolean confirmed = ((BooleanField)request.getParameters().getField("_confirm")).getValue();
 		if (! Boolean.TRUE.equals(confirmed)) {
-			result.setMessage("Action aborted");
+			result.addValidationError("Action not confirmed");
 			return false;
 		}
 		return true;
