@@ -19,7 +19,7 @@ public class AuthenticationController {
 	@GetMapping("/whoami")
 	public WhoAmIResponse whoAmI(Authentication user) {
 		WhoAmIResponse whoAmIResponse = new WhoAmIResponse();
-		whoAmIResponse.setUsername(user.getName());
+		whoAmIResponse.setUserName(user.getName());
 		whoAmIResponse.setAuthorities(
 				user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
 		);
@@ -27,12 +27,16 @@ public class AuthenticationController {
 	}
 
 
-	@PostMapping("/login")
+	@PostMapping("/login")	
 	public LoginResponse login(@RequestBody LoginRequest request, HttpServletResponse response) throws OrbagSecurityException {
 		LoginResponse loginResponse = new LoginResponse();
 		Authentication authentication = authenticationService.authenticate(request.getUserName(),request.getPassword());
 		String token = authenticationService.generateToken(authentication);
 		loginResponse.setToken(token);
+		loginResponse.setUsername(authentication.getName());
+		loginResponse.setAuthorities(
+				authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
+		);
 		if (request.isPersistent()) {
 			Cookie cookie =new Cookie(JwtAuthenticationFilter.COOKIE, token);
 			cookie.setPath("/api");

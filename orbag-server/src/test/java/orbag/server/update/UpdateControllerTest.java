@@ -44,7 +44,7 @@ public class UpdateControllerTest {
 		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
 
 
-		ResponseEntity<UpdateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate",configurationItemReference,UpdateRequest.class);
+		ResponseEntity<UpdateRequest> responseTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildUpdateTemplate",configurationItemReference,UpdateRequest.class);
 		assertEquals(HttpStatus.OK,responseTemplateEntity.getStatusCode());
 		
 		UpdateRequest requestTemplate = responseTemplateEntity.getBody();
@@ -107,7 +107,7 @@ public class UpdateControllerTest {
 		
 		ConfigurationItemReference configurationItemReference = configurationItemReferenceService.getReference(testUpdateCi);
 
-		ResponseEntity<UpdateRequest> responseOkTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate",configurationItemReference,UpdateRequest.class);
+		ResponseEntity<UpdateRequest> responseOkTemplateEntity = testClients.testUser1RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildUpdateTemplate",configurationItemReference,UpdateRequest.class);
 		assertEquals(HttpStatus.OK,responseOkTemplateEntity.getStatusCode());
 
 		UpdateRequest requestTemplate = responseOkTemplateEntity.getBody();
@@ -123,7 +123,7 @@ public class UpdateControllerTest {
 		assertThrows(ResourceAccessException.class,()-> testClients.testUser2RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute",requestTemplate, ConfigurationItemReference.class));
 
 
-		assertThrows(ResourceAccessException.class,()-> testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildTemplate", responseOkUpdatentity.getBody(),UpdateRequest.class));
+		assertThrows(ResourceAccessException.class,()-> testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/buildUpdateTemplate", responseOkUpdatentity.getBody(),UpdateRequest.class));
 		assertThrows(ResourceAccessException.class,()-> testClients.testUser3RestTemplate().postForEntity("http://localhost:"+localServerPort+"/api/update/execute", requestTemplate, ConfigurationItemReference.class));
 
 	}

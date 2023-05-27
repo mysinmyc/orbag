@@ -41,7 +41,7 @@ public class ActionControllerTest {
 
 		request.setTargetCis(Arrays.asList(configurationItemReferenceService.getReference(ci)));
 		ResponseEntity<GetAvailableActionsResponse> responseGetAvailable = testClients.testUser1RestTemplate().postForEntity(
-				"http://localhost:" + localServerPort + "/api/action/buildAvailableList", request,
+				"http://localhost:" + localServerPort + "/api/action/getAvailable", request,
 				GetAvailableActionsResponse.class);
 		assertEquals(HttpStatus.OK, responseGetAvailable.getStatusCode());
 
@@ -56,7 +56,7 @@ public class ActionControllerTest {
 		buildTemplateRequest.setTargetCis(request.getTargetCis());
 		
 		ResponseEntity<SubmitActionRequest> responseBuildTemplateEntity = testClients.testUser1RestTemplate().postForEntity(
-				"http://localhost:" + localServerPort + "/api/action/buildTemplate", buildTemplateRequest,
+				"http://localhost:" + localServerPort + "/api/action/buildExecutionTemplate", buildTemplateRequest,
 				SubmitActionRequest.class);
 		
 		assertEquals(HttpStatus.OK, responseBuildTemplateEntity.getStatusCode());

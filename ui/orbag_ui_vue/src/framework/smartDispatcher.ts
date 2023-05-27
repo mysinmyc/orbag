@@ -1,6 +1,5 @@
-import {Observer, Subject, Subscription } from "rxjs";
+import {Subject, Subscription } from "rxjs";
 import { ConfigurationItemReference } from "./reference";
-import { Action } from "rxjs/internal/scheduler/Action";
 import { SerializableAction, SubmitActionResponse } from "./action";
 
 
@@ -31,3 +30,5 @@ export function smartSubmitAction(actionToSubmit:SmartActionEntry):void {
 export function subscribeSmartSubmitAction(callback:(_:SmartActionEntry)=>void):Subscription {
     return _executeActionSubject.asObservable().subscribe(callback);
 }
+
+

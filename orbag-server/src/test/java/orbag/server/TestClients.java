@@ -1,5 +1,7 @@
 package orbag.server;
 
+import orbag.security.OrbagSecurityException;
+import orbag.server.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,14 +23,22 @@ public class TestClients {
 	Map<String, TestRestTemplate> restTemplates = new HashMap<>();
 
 	@Autowired
+	AuthenticationService authenticationService;
+
+	@Autowired
 	TestRestTemplate restTemplate;
 
 	public TestRestTemplate getOrCreate(String user, Supplier<String> password) {
 		TestRestTemplate result = restTemplates.get(user);
 		if (result ==null)  {
-			result= new TestRestTemplate(new RestTemplateBuilder()).withBasicAuth(user,password.get());
-			result.setUriTemplateHandler(restTemplate.getRestTemplate().getUriTemplateHandler());
-			restTemplates.put(user,result);
+			try {
+				Authentication authentication = authenticationService.authenticate(user, password.get());
+				result = new TestRestTemplate(new RestTemplateBuilder().defaultHeader("Authorization", "Bearer " + authenticationService.generateToken(authentication)));
+				result.setUriTemplateHandler(restTemplate.getRestTemplate().getUriTemplateHandler());
+				restTemplates.put(user, result);
+			} catch (OrbagSecurityException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		return result;

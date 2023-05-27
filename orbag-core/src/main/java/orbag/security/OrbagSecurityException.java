@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 @SuppressWarnings("serial")
-public class OrbagSecurityException extends Exception{
+public class OrbagSecurityException extends Exception {
 
 	public OrbagSecurityException() {
 		

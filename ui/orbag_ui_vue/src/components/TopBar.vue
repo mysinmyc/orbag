@@ -42,7 +42,7 @@ export default {
             this.cisMenu = newCisMenu;
         });
         whoami().then( (whoami:WhoAmIResponse) => {
-            this.userName = whoami.username;
+            this.userName = whoami.userName;
         })
     }
 }

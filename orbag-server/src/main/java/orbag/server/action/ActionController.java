@@ -35,7 +35,7 @@ public class ActionController {
 			}
 	)
 	@PostMapping("/getAvailable")
-	public GetAvailableActionsResponse buildAvailableList(@RequestBody GetAvailableActionsRequest request,
+	public GetAvailableActionsResponse getAvailable(@RequestBody GetAvailableActionsRequest request,
 														  Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
 		GetAvailableActionsResponse response = new GetAvailableActionsResponse();
 		response.setAvailableActions(

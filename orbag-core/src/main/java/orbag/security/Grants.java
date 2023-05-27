@@ -38,6 +38,9 @@ public class Grants {
 	}
 	
 	public boolean hasAnyAccess(AccessType... accessTypes) {
+		if (accessTypes.length==0) {
+			throw new UnsupportedOperationException("Wrong security test");
+		}
 		for (AccessType accessType : accessTypes) {
 			if (hasAccess(accessType)) {
 				return true;

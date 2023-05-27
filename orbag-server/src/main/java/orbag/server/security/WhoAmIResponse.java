@@ -4,17 +4,18 @@ import java.util.List;
 
 public class WhoAmIResponse {
 
-	String username;
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	String userName;
 	
 	List<String> authorities;
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public List<String> getAuthorities() {
 		return authorities;

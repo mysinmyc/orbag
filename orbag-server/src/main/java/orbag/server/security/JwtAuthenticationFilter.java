@@ -33,17 +33,27 @@ public class JwtAuthenticationFilter extends GenericFilterBean
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String token = extractTokenFromRequest((HttpServletRequest)request);
-        if (token!=null && !token.isEmpty()) {
-            try {
-                Authentication authentication = authenticationService.loginByToken(token.replace(TOKEN_PREFIX,""));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }catch (OrbagSecurityException e) {
-                ((HttpServletResponse)response).setStatus(403);
-                return;
+            String token = extractTokenFromRequest((HttpServletRequest) request);
+            if (token != null && !token.isEmpty()) {
+                try {
+                    Authentication authentication = authenticationService.loginByToken(token.replace(TOKEN_PREFIX, ""));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } catch (OrbagSecurityException e) {
+                    ((HttpServletResponse) response).setStatus(403);
+                    return;
+                }
+            } else {
+                String tokenFromCookie=extactTokenFromCookie((HttpServletRequest) request);
+                if (tokenFromCookie!=null && ! tokenFromCookie.isEmpty()){
+                    try {
+                        Authentication authentication = authenticationService.loginByToken(tokenFromCookie);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    } catch (OrbagSecurityException e) {
+                    }
+                }
             }
-        }
-        chain.doFilter(request,response);
+
+            chain.doFilter(request,response);
     }
 
     private String extractTokenFromRequest(HttpServletRequest request) {
@@ -51,6 +61,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean
         if ( tokenHeader !=null && tokenHeader.startsWith(TOKEN_PREFIX)) {
             return tokenHeader.replace(TOKEN_PREFIX,"");
         }
+        return null;
+    }
+
+    private String extactTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies =request.getCookies();
         if (cookies!=null) {
             for (Cookie cookie : request.getCookies()) {
@@ -61,5 +75,4 @@ public class JwtAuthenticationFilter extends GenericFilterBean
         }
         return null;
     }
-
 }

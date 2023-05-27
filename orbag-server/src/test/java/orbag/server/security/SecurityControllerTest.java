@@ -23,11 +23,11 @@ public class SecurityControllerTest {
 	
 	@Test
 	void testWhoAmI() {
-		ResponseEntity<WhoAmIResponse> responseWhoAmiEntity = testClients.testUser1RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/security/whoami", WhoAmIResponse.class);
+		ResponseEntity<WhoAmIResponse> responseWhoAmiEntity = testClients.testUser1RestTemplate().getForEntity("http://localhost:"+localServerPort+"/api/authentication/whoami", WhoAmIResponse.class);
 		assertEquals(HttpStatus.OK,responseWhoAmiEntity.getStatusCode());
 		
 		WhoAmIResponse response = responseWhoAmiEntity.getBody();
-		assertEquals("test1", response.getUsername());
+		assertEquals("test1", response.getUserName());
 	}
 
 }

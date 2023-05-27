@@ -23,6 +23,9 @@ public class ConfigurationItemReferenceService {
 
 
 	public ConfigurationItemReference getReference(Object object) throws UnmanagedObjectException {
+		if (object==null) {
+			return null;
+		}
 		if (object instanceof ConfigurationItemReference) {
 			return (ConfigurationItemReference) object;
 		}
