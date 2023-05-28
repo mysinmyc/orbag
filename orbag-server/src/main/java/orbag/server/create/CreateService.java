@@ -44,15 +44,10 @@ public class CreateService {
 			BiConsumer<ConfigurationItemWizard, CreationContext> operation) throws OrbagSecurityException, UnmanagedObjectException {
 		ConfigurationItemDescriptor descriptor = metadataRegistry
 				.getConfigurationItemDescriptorByName(configurationItemName);
-		if (descriptor == null) {
-			throw new RuntimeException("Invalid configuration item type " + configurationItemName);
-		}
 		if (!descriptor.isAllowCreation()) {
 			throw new RuntimeException("Configuration item type " + configurationItemName + " doesn't allows creation");
 		}
-		
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(descriptor,user, AccessType.CREATE);
-		
 		ConfigurationItemWizard configurationItemWizard = visibilityManager.findFirstObject(
 				configurationItemWizardRegistry.getWizards(),
 				FilterContext.forTargetClass(descriptor.getJavaClass()).forUser(user));
@@ -74,12 +69,10 @@ public class CreateService {
 	}
 
 	public ConfigurationItemReference create(CreateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
-
 		ObjectHolder<Object> holder = new ObjectHolder<>();
 		invokeWizard(request.getConfigurationItemType(), user, (w, c) -> {
 			holder.setValue(w.create(request.getParameters(), c));
 		});
-
 		return configurationItemReferenceService.getReference(holder.getValue());
 	}
 

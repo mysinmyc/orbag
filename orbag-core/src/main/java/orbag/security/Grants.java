@@ -14,7 +14,17 @@ public class Grants {
 	
 	
 	boolean grants[] = new boolean[AccessType.values().length];
-	
+
+	boolean explicit = true;
+
+	public boolean isExplicit() {
+		return explicit;
+	}
+
+	public void setExplicit(boolean explicit) {
+		this.explicit = explicit;
+	}
+
 	public void add(AccessType... grantsToAdd) {
 		for (AccessType grantToAdd : grantsToAdd) {
 			grants[grantToAdd.ordinal()] = true;

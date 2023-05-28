@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
+import orbag.server.ApiInfo;
 import orbag.server.util.ErrorPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,12 +24,13 @@ import orbag.security.OrbagSecurityException;
 
 @RestController
 @RequestMapping("/api/action")
+@SecurityRequirements({@SecurityRequirement(name = ApiInfo.JWT)})
 public class ActionController {
 
 	@Autowired
 	ActionService actionService;
 
-	@Operation(description = "Build available actions list")
+	@Operation(summary = "Build available actions list",  description = "Return list of actions that user can executed on specified CIs")
 	@ApiResponses(
 			{
 					@ApiResponse(responseCode = "200", description = "OK"),
@@ -43,12 +47,12 @@ public class ActionController {
 		return response;
 	}
 
-	@Operation(description = "Build the request template to execute specified action")
+	@Operation(summary = "Build action template", description = "Build the request template to execute specified action")
 	@ApiResponses(
 			{
 					@ApiResponse(responseCode = "200", description = "OK"),
 					@ApiResponse(responseCode = "400", description = "Reference contains invalid objects", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
-					@ApiResponse(responseCode = "403", description = "Access denied"),
+					@ApiResponse(responseCode = "401", description = "Access denied"),
 					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound")
 			}
 	)
@@ -66,12 +70,12 @@ public class ActionController {
 		return response;
 	}
 
-	@Operation(description = "Execute an action")
+	@Operation(summary = "Submit the action")
 	@ApiResponses(
 			{
 					@ApiResponse(responseCode = "200", description = "Action submitted"),
 					@ApiResponse(responseCode = "400", description = "Invalid objects in request", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
-					@ApiResponse(responseCode = "403", description = "Access denied"),
+					@ApiResponse(responseCode = "401", description = "Access denied"),
 					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound")
 			}
 	)

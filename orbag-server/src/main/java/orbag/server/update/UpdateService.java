@@ -2,6 +2,7 @@ package orbag.server.update;
 
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
+import orbag.security.Grants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -47,18 +48,17 @@ public class UpdateService {
 		Object ci = dao.getExistingCiOrThrow(configurationItemReference);
 		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry
 				.getConfigurationItemDescriptorByClass(ci.getClass());
-		if (configurationItemDescriptor == null) {
-			throw new UnmanagedObjectException();
-		}
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(configurationItemDescriptor, user,
 				AccessType.READ, AccessType.MODIFY);
-
 		UpdateRequest updateRequest = new UpdateRequest();
 		SerializableFieldGroup fieldGroup = new SerializableFieldGroup();
 		configurationItemDescriptor.getProperties().forEach(p -> {
-			if (securityAssertionService.hasAuthorizationToConfigurationItemPropertyDescriptor(p, user, AccessType.READ,
-					AccessType.MODIFY)) {
-				addProperty(ci, p, fieldGroup);
+			Grants propertyGrants=securityAssertionService.getAccessRightsToConfigurationItemPropertyDescriptor(p, user);
+			if (propertyGrants.hasAnyAccess(AccessType.READ,AccessType.MODIFY)) {
+				InputFieldBase<?> field =addProperty(ci, p, fieldGroup);
+				if (! propertyGrants.hasAccess(AccessType.MODIFY)) {
+					field.setReadOnly(true);
+				}
 			}
 		});
 		updateRequest.setProperties(fieldGroup);
@@ -67,7 +67,7 @@ public class UpdateService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> void addProperty(Object ci, ConfigurationItemPropertyDescriptor p, SerializableFieldGroup fieldGroup) {
+	private <T> InputFieldBase<T> addProperty(Object ci, ConfigurationItemPropertyDescriptor p, SerializableFieldGroup fieldGroup) {
 		InputFieldBase<T> field = (InputFieldBase<T>) DataUtils.buildInputFieldFromConfigurationItemProperty(p,
 				fieldGroup);
 		if (field != null) {
@@ -79,6 +79,7 @@ public class UpdateService {
 				throw new RuntimeException(e);
 			}
 		}
+		return field;
 	}
 
 	protected ConfigurationItemReference update(UpdateRequest request, Authentication user)
@@ -86,32 +87,33 @@ public class UpdateService {
 		Object ci = dao.getExistingCiOrThrow(request.getConfigurationItem());
 		ConfigurationItemDescriptor configurationItemDescriptor = metadataRegistry
 				.getConfigurationItemDescriptorByClass(ci.getClass());
-
 		securityAssertionService.assertAuthorizationToConfigurationItemDescriptor(configurationItemDescriptor, user,
-				AccessType.MODIFY);
+				AccessType.READ,AccessType.MODIFY);
+		boolean changed=false;
 		for (InputFieldBase<?> parameter : request.getProperties().getFields()) {
 			if (!parameter.isChanged()) {
 				continue;
 			}
-			ConfigurationItemPropertyDescriptor property = configurationItemDescriptor.getProperty(parameter.getName());
-			if (property == null) {
+			changed=true;
+			ConfigurationItemPropertyDescriptor propertyDescriptor = configurationItemDescriptor.getProperty(parameter.getName());
+			if (propertyDescriptor == null) {
 				throw new RuntimeException("Invalid property " + parameter.getName());
 			}
-			if (property.isReadOnly()) {
+			if (propertyDescriptor.isReadOnly()) {
 				throw new RuntimeException("ReadOnly property " + parameter.getName());
 			}
+			securityAssertionService.assertAuthorizationToConfigurationItemPropertyDescriptor(propertyDescriptor,
+					user, AccessType.MODIFY);
 			try {
-				ConfigurationItemPropertyDescriptor propertyDescriptor = configurationItemDescriptor
-						.getProperty(parameter.getName());
-				securityAssertionService.assertAuthorizationToConfigurationItemPropertyDescriptor(propertyDescriptor,
-						user, AccessType.MODIFY);
 				propertyDescriptor.getSetterMethod().invoke(ci,
 						fieldManagementUtils.fieldToValue(parameter, propertyDescriptor.getValueType()));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
-		dao.update(ci);
+		if (changed) {
+			dao.update(ci);
+		}
 		return configurationItemReferenceService.getReference(ci);
 	}
 

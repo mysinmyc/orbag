@@ -35,28 +35,42 @@ public class SecurityAssertionService {
 		return PermissionsUtils.getAccessToMethods(user, methodToTest);
 	}
 
-	public boolean hasAuthorizationToConfigurationItemDescriptor(ConfigurationItemDescriptor descriptor,
-			Authentication user, AccessType...accessTypes) {
-		return getAccessRightsToClassFor(user,descriptor.getJavaClass()).hasAnyAccess(accessTypes);
+	public Grants getAccessRightsToConfigurationItemDescriptor(ConfigurationItemDescriptor configurationItemDescriptor,
+										 Authentication user) {
+		return getAccessRightsToClassFor(user,configurationItemDescriptor.getJavaClass());
 	}
 
-	public void assertAuthorizationToConfigurationItemDescriptor(ConfigurationItemDescriptor descriptor,
+	public boolean hasAuthorizationToConfigurationItemDescriptor(ConfigurationItemDescriptor configurationItemDescriptor,
+			Authentication user, AccessType...accessTypes) {
+		return getAccessRightsToConfigurationItemDescriptor(configurationItemDescriptor,user).hasAnyAccess(accessTypes);
+	}
+
+	public void assertAuthorizationToConfigurationItemDescriptor(ConfigurationItemDescriptor configurationItemDescriptor,
 			Authentication user, AccessType... accessTypes) throws OrbagSecurityException {
-		if (!hasAuthorizationToConfigurationItemDescriptor(descriptor,user, accessTypes)) {
-			throw new OrbagSecurityException(user, descriptor, accessTypes);
+		if (!hasAuthorizationToConfigurationItemDescriptor(configurationItemDescriptor,user, accessTypes)) {
+			throw new OrbagSecurityException(user, configurationItemDescriptor, accessTypes);
 		}
 	}
 
-	public boolean hasAuthorizationToConfigurationItemPropertyDescriptor(ConfigurationItemPropertyDescriptor descriptor,
-			Authentication user, AccessType... accessTypes) {
-		return getAccessRightsToMethodsFor(user, descriptor.getGetterMethod(), descriptor.getSetterMethod())
-				.hasAnyAccess(accessTypes);
+	public Grants getAccessRightsToConfigurationItemPropertyDescriptor(ConfigurationItemPropertyDescriptor configurationItemPropertyDescriptor,
+																	   Authentication user) {
+		Grants result = getAccessRightsToMethodsFor(user, configurationItemPropertyDescriptor.getGetterMethod(), configurationItemPropertyDescriptor.getSetterMethod());
+		if (result.isExplicit()) {
+			return result;
+		} else {
+			return getAccessRightsToConfigurationItemDescriptor(configurationItemPropertyDescriptor.getConfigurationItem(),user);
+		}
 	}
 
-	public void assertAuthorizationToConfigurationItemPropertyDescriptor(ConfigurationItemPropertyDescriptor descriptor,
+	public boolean hasAuthorizationToConfigurationItemPropertyDescriptor(ConfigurationItemPropertyDescriptor configurationItemPropertyDescriptor,
+			Authentication user, AccessType... accessTypes) {
+		return getAccessRightsToConfigurationItemPropertyDescriptor(configurationItemPropertyDescriptor,user).hasAnyAccess(accessTypes);
+	}
+
+	public void assertAuthorizationToConfigurationItemPropertyDescriptor(ConfigurationItemPropertyDescriptor configurationItemPropertyDescriptor,
 			Authentication user, AccessType... accessTypes) throws OrbagSecurityException {
-		if (!hasAuthorizationToConfigurationItemPropertyDescriptor(descriptor, user, accessTypes)) {
-			throw new OrbagSecurityException(user, descriptor, accessTypes);
+		if (!hasAuthorizationToConfigurationItemPropertyDescriptor(configurationItemPropertyDescriptor, user, accessTypes)) {
+			throw new OrbagSecurityException(user, configurationItemPropertyDescriptor, accessTypes);
 		}
 	}
 

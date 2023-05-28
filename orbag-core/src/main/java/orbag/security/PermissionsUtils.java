@@ -28,7 +28,10 @@ public class PermissionsUtils {
 	public static Grants getAccess(Authentication user, Class<?> classToTest) {
 		Grants result = new Grants();
 		if ( ! mergeClassGrantsInto(result, user, classToTest) ) {
+			result.setExplicit(false);
 			result.addAll();			
+		} else {
+			result.setExplicit(true);
 		}
 		return result;
 	}
@@ -43,6 +46,7 @@ public class PermissionsUtils {
 				}
 			}
 		}
+		result.setExplicit(foundRestrictions);
 		if (!foundRestrictions) {
 			result.addAll();
 		}
