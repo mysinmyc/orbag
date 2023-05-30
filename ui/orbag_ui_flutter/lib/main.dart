@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orbag_ui_flutter/views/EditView.dart';
+import 'package:orbag_ui_flutter/views/LoginView.dart';
 import 'package:orbag_ui_flutter/views/homeview_material.dart';
 import 'package:orbag_ui_flutter/views/SearchView.dart';
 
@@ -13,12 +14,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Orbag UI',
-        home: const HomeViewMaterial(),
-        routes: {
-          SearchView.routeName: (context) => const SearchView(),
-          EditView.routeName: (context) => const EditView(),
-        });
+    return MaterialApp(title: 'Orbag UI', home: const LoginView(), routes: {
+      HomeViewMaterial.routeName: (context) => const HomeViewMaterial(),
+      LoginView.routeName: (context) => const LoginView(),
+      SearchView.routeName: (context) => const SearchView(),
+      EditView.routeName: (context) => const EditView(),
+    });
   }
 }

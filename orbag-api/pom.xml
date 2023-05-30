@@ -29,11 +29,11 @@
                     <outputDir>${project.basedir}/src/main/resources/</outputDir>
                 </configuration>
             </plugin>
-            <!--
+
                         <plugin>
-                            <groupId>io.swagger.codegen.v3</groupId>
-                            <artifactId>swagger-codegen-maven-plugin</artifactId>
-                            <version>3.0.41</version>
+                            <groupId>org.openapitools</groupId>
+                            <artifactId>openapi-generator-maven-plugin</artifactId>
+                            <version>6.6.0</version>
                             <executions>
                                 <execution>
                                     <goals>
@@ -41,20 +41,15 @@
                                     </goals>
                                     <configuration>
                                         <inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
-                                        <language>java</language>
-                                        <library>resttemplate</library>
-                                        <output>${project.build.directory}/generated-sources</output>
-                                        <apiPackage>${default.package}.handler</apiPackage>
-                                        <modelPackage>${default.package}.model</modelPackage>
-                                        <invokerPackage>${default.package}.handler</invokerPackage>
+                                        <output>${project.basedir}/../ui/orbag_ui_flutter/generated/client</output>
+                                        <generatorName>dart</generatorName>
                                         <configOptions>
-                                            <sourceFolder>src/gen/java/main</sourceFolder>
+                                            <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
                                         </configOptions>
                                     </configuration>
                                 </execution>
                             </executions>
                         </plugin>
-            -->
         </plugins>
     </build>
 </project>

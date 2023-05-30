@@ -10,7 +10,7 @@ public class SerializableTable {
 	List<SerializableColumn> columns = new ArrayList<SerializableColumn>();
 
 	
-	List<Map<String,Object>> rows = new ArrayList<Map<String,Object>>();
+	List<SerializableRow> rows = new ArrayList<SerializableRow>();
 	
 	public List<SerializableColumn> getColumns() {
 		return columns;
@@ -20,11 +20,11 @@ public class SerializableTable {
 		this.columns = columns;
 	}
 
-	public List<Map<String, Object>> getRows() {
+	public List<SerializableRow> getRows() {
 		return rows;
 	}
 
-	public void setRows(List<Map<String, Object>> rows) {
+	public void setRows(List<SerializableRow> rows) {
 		this.rows = rows;
 	}
 

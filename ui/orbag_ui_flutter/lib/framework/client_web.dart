@@ -5,7 +5,5 @@ import 'package:js/js.dart';
 external String getServerAddress();
 
 class MyHttpClientImpl extends MyHttpClient {
-  MyHttpClientImpl() {
-    serverAddress = getServerAddress();
-  }
+  MyHttpClientImpl() : super(getServerAddress());
 }

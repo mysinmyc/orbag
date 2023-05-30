@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 
-@OpenAPIDefinition(info = @Info(title = "orbag API"))
+@OpenAPIDefinition(info = @Info(title = "orbag API", version = "v0-alpha"))
 @SecuritySchemes({
         @SecurityScheme(name = ApiInfo.JWT, description = "Authentication via X-Api-Token header", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 })

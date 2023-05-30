@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:orbag_ui_flutter/components/mainmenu_drawer.dart';
 
 class HomeViewMaterial extends StatelessWidget {
+  static const routeName = "/home";
+
   const HomeViewMaterial({super.key, this.title = "Home"});
 
   final String title;

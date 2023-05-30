@@ -132,6 +132,9 @@ public class ActionService {
 	void invokeAction(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
 			List<ConfigurationItemReference> targetCisReferences, Authentication user,
 			BiConsumer<ConfigurationItemAction, ActionRequest> consumer) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+		if (serializableAction  ==null) {
+			throw new UnmanagedObjectException("Missing action");
+		}
 		ConfigurationItemAction action = getActionFromid(serializableAction.getIdentifier());
 		if (action == null) {
 			throw new UnmanagedObjectException("Invalid action " + serializableAction.getIdentifier());

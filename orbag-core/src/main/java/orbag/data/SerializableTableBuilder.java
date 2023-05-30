@@ -84,7 +84,7 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 		if (table.getRows().size()>=limit) {
 			throw new LimitExceededException();
 		}
-		Map<String, Object> row = new HashMap<String, Object>();
+		SerializableRow row = new SerializableRow();
 		table.getRows().add(row);
 		for (GeneratedColumn generatedColumn : generatedcolumns) {
 			row.put(generatedColumn.column.getName(),

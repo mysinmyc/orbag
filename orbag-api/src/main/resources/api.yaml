@@ -1,0 +1,841 @@
+openapi: 3.0.1
+info:
+  title: orbag API
+  version: v0-alpha
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/view/getAvailable:
+    post:
+      tags:
+      - view-controller
+      operationId: getAvailableViews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAvailableViewsRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetAvailableViewsResponse'
+  /api/view/bind:
+    post:
+      tags:
+      - view-controller
+      operationId: bind
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BindViewRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BindViewResponse'
+  /api/update/execute:
+    post:
+      tags:
+      - update-controller
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigurationItemReference'
+  /api/update/buildUpdateTemplate:
+    post:
+      tags:
+      - update-controller
+      operationId: buildUpdateTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationItemReference'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateRequest'
+  /api/search/execute:
+    post:
+      tags:
+      - search-controller
+      operationId: execute
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SerializableTable'
+  /api/create/execute:
+    post:
+      tags:
+      - create-controller
+      summary: Execute the configuration item creation
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequest'
+        required: true
+      responses:
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        "401":
+          description: Creation denied due to missing privileges
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigurationItemReference'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigurationItemReference'
+      security:
+      - JWT: []
+  /api/authentication/login:
+    post:
+      tags:
+      - authentication-controller
+      description: Try to login the user
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /api/action/submit:
+    post:
+      tags:
+      - action-controller
+      summary: Submit the action
+      operationId: submit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitActionRequest'
+        required: true
+      responses:
+        "401":
+          description: Access denied
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
+        "404":
+          description: ConfigurationItemNotFound
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
+        "200":
+          description: Action submitted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
+        "400":
+          description: Invalid objects in request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+      security:
+      - JWT: []
+  /api/action/getAvailable:
+    post:
+      tags:
+      - action-controller
+      summary: Build available actions list
+      description: Return list of actions that user can executed on specified CIs
+      operationId: getAvailable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAvailableActionsRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetAvailableActionsResponse'
+        "404":
+          description: ConfigurationItemNotFound
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetAvailableActionsResponse'
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+      security:
+      - JWT: []
+  /api/action/buildExecutionTemplate:
+    post:
+      tags:
+      - action-controller
+      summary: Build action template
+      description: Build the request template to execute specified action
+      operationId: buildExecutionTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildActionTemplateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionRequest'
+        "401":
+          description: Access denied
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionRequest'
+        "404":
+          description: ConfigurationItemNotFound
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionRequest'
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+      security:
+      - JWT: []
+  /public/config.json:
+    get:
+      tags:
+      - config-controller
+      summary: Get application configurations
+      operationId: getConfig
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+  /api/search/template/{configurationItemName}:
+    get:
+      tags:
+      - search-controller
+      operationId: getSearchTemplate
+      parameters:
+      - name: configurationItemName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SearchRequest'
+  /api/reference/{configurationItemType}/{configurationItemId}:
+    get:
+      tags:
+      - reference-controller
+      operationId: getConfigurationItem
+      parameters:
+      - name: configurationItemType
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: configurationItemId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConfigurationItemReference'
+  /api/metadata:
+    get:
+      tags:
+      - metadata-controller
+      summary: Get class model
+      operationId: getClassModel
+      parameters:
+      - name: properties
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetClassModelResponse'
+      security:
+      - JWT: []
+  /api/metadata/{configurationItemType}:
+    get:
+      tags:
+      - metadata-controller
+      operationId: getClassMetadata
+      parameters:
+      - name: configurationItemType
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: properties
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SerializableConfigurationItemDescriptor'
+      security:
+      - JWT: []
+  /api/list/{configurationItemName}:
+    get:
+      tags:
+      - list-controller
+      description: List configuration items of the specified type
+      operationId: listConfigurationItems
+      parameters:
+      - name: configurationItemName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      responses:
+        "401":
+          description: List denied due to missing privileged
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListConfigurationItemResponse'
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListConfigurationItemResponse'
+      security:
+      - JWT: []
+  /api/create/template/{configurationItemName}:
+    get:
+      tags:
+      - create-controller
+      summary: Get configuration item creation template
+      operationId: getCreateTemplate
+      parameters:
+      - name: configurationItemName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "401":
+          description: Missing privileges
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateRequest'
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateRequest'
+      security:
+      - JWT: []
+  /api/authentication/whoami:
+    get:
+      tags:
+      - authentication-controller
+      description: Return authenticated user
+      operationId: whoAmI
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WhoAmIResponse'
+      security:
+      - JWT: []
+components:
+  schemas:
+    ConfigurationItemReference:
+      type: object
+      properties:
+        identifier:
+          type: string
+        configurationItemType:
+          type: string
+        displayLabel:
+          type: string
+        configurationItemTypeDisplayLabel:
+          type: string
+    GetAvailableViewsRequest:
+      type: object
+      properties:
+        targetCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+    GetAvailableViewsResponse:
+      type: object
+      properties:
+        availableViews:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableView'
+    SerializableView:
+      type: object
+      properties:
+        identifier:
+          type: string
+        displayLabel:
+          type: string
+    BindViewRequest:
+      type: object
+      properties:
+        targetCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        view:
+          $ref: '#/components/schemas/SerializableView'
+    BindViewResponse:
+      type: object
+      properties:
+        resultTable:
+          $ref: '#/components/schemas/SerializableTable'
+    SerializableColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - Primitive
+          - Reference
+        displayLabel:
+          type: string
+    SerializableRow:
+      type: object
+      properties:
+        empty:
+          type: boolean
+      additionalProperties:
+        type: object
+    SerializableTable:
+      type: object
+      properties:
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableColumn'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableRow'
+    BooleanField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        value:
+          type: boolean
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+    ConfigurationItemReferenceField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        value:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+        configurationItemType:
+          type: string
+    EnumField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        value:
+          type: string
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+        allowedValues:
+          type: array
+          items:
+            type: string
+    NumericField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        value:
+          type: integer
+          format: int32
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+    SerializableFieldGroup:
+      type: object
+      properties:
+        booleanFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/BooleanField'
+        configurationItemReferenceFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReferenceField'
+        enumFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumField'
+        numericFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/NumericField'
+        stringFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/StringField'
+    StringField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        value:
+          type: string
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+    UpdateRequest:
+      type: object
+      properties:
+        configurationItem:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        properties:
+          $ref: '#/components/schemas/SerializableFieldGroup'
+    SearchRequest:
+      type: object
+      properties:
+        configurationItemName:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/SerializableFieldGroup'
+        resultType:
+          type: string
+          enum:
+          - ROW_REFERENCE
+          - HIGHLIGHTED_FIELDS
+          - ALL_FIELDS
+    CreateRequest:
+      type: object
+      properties:
+        configurationItemType:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/SerializableFieldGroup'
+    ErrorPayload:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        error:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+        password:
+          type: string
+        persistent:
+          type: boolean
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        username:
+          type: string
+        authorities:
+          type: array
+          items:
+            type: string
+    SerializableAction:
+      type: object
+      properties:
+        identifier:
+          type: string
+        displayLabel:
+          type: string
+    SubmitActionRequest:
+      type: object
+      properties:
+        sourceCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        targetCis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+        action:
+          $ref: '#/components/schemas/SerializableAction'
+        parameters:
+          $ref: '#/components/schemas/SerializableFieldGroup'
+    SubmitActionResponse:
+      type: object
+      properties:
+        consequences:
+          type: string
+          enum:
+          - NONE
+          - UNDEFINED
+          - DELETED
+          - UPDATED
+        message:
+          type: string
+        link:
+          type: string
+        jobId:
+          type: string
+        requestValid:
+          type: boolean
+        validationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+    GetAvailableActionsRequest:
+      type: object
+      properties:
+        sourceCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        targetCis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+    GetAvailableActionsResponse:
+      type: object
+      properties:
+        availableActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableAction'
+    BuildActionTemplateRequest:
+      type: object
+      properties:
+        sourceCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        targetCis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+        action:
+          $ref: '#/components/schemas/SerializableAction'
+    ConfigResponse:
+      type: object
+      properties:
+        address:
+          type: string
+    GetClassModelResponse:
+      type: object
+      properties:
+        configurationItemDescriptors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableConfigurationItemDescriptor'
+    SerializableConfigurationItemDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        category:
+          type: string
+        allowCreation:
+          type: boolean
+        readOnly:
+          type: boolean
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableConfigurationItemPropertyDescriptor'
+    SerializableConfigurationItemPropertyDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        description:
+          type: string
+        readOnly:
+          type: boolean
+        configurationItemReference:
+          type: boolean
+        referencedConfigurationItemType:
+          type: string
+    ListConfigurationItemResponse:
+      type: object
+      properties:
+        cis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+    WhoAmIResponse:
+      type: object
+      properties:
+        userName:
+          type: string
+        authorities:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Authentication via X-Api-Token header
+      scheme: bearer
+      bearerFormat: JWT
