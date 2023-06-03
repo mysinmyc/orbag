@@ -44,7 +44,6 @@
                                         <output>${project.basedir}/../ui/orbag_ui_flutter/generated/client</output>
                                         <generatorName>dart</generatorName>
                                         <configOptions>
-                                            <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
                                         </configOptions>
                                     </configuration>
                                 </execution>

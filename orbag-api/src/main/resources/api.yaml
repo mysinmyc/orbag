@@ -124,12 +124,6 @@ paths:
               $ref: '#/components/schemas/CreateRequest'
         required: true
       responses:
-        "400":
-          description: Invalid configuration item
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "401":
           description: Creation denied due to missing privileges
           content:
@@ -142,6 +136,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ConfigurationItemReference'
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/authentication/login:
@@ -188,18 +188,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
-        "200":
-          description: Action submitted
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/SubmitActionResponse'
         "400":
           description: Invalid objects in request
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorPayload'
+        "200":
+          description: Action submitted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
       security:
       - JWT: []
   /api/action/getAvailable:
@@ -411,18 +411,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ListConfigurationItemResponse'
-        "400":
-          description: Invalid configuration item
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ListConfigurationItemResponse'
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/create/template/{configurationItemName}:
@@ -444,18 +444,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CreateRequest'
-        "400":
-          description: Invalid configuration item
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CreateRequest'
+        "400":
+          description: Invalid configuration item
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/authentication/whoami:
@@ -532,10 +532,15 @@ components:
     SerializableRow:
       type: object
       properties:
-        empty:
-          type: boolean
-      additionalProperties:
-        type: object
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+        tags:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
     SerializableTable:
       type: object
       properties:

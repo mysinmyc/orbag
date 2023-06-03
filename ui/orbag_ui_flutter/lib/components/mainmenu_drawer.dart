@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/framework/metadata.dart';
+import 'package:openapi/api.dart';
+import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/SearchView.dart';
 
-Drawer buildDrawerFromClassModel(BuildContext context, ClassModel classModel) {
+Drawer buildDrawerFromClassModel(
+    BuildContext context, GetClassModelResponse classModel) {
   Map<String, ExpansionTile> submenus = {};
 
-  for (ConfigurationItemDescriptor currentClass
+  for (SerializableConfigurationItemDescriptor currentClass
       in classModel.configurationItemDescriptors) {
     var currentSubMenu = submenus[currentClass.category];
     if (currentSubMenu == null) {
       currentSubMenu =
-          ExpansionTile(title: Text(currentClass.category), children: []);
-      submenus[currentClass.category] = currentSubMenu;
+          ExpansionTile(title: Text(currentClass.category!), children: []);
+      submenus[currentClass.category!] = currentSubMenu;
     }
     currentSubMenu.children.add(ListTile(
-        title: Text(currentClass.displayLabel),
+        title: Text(currentClass.displayLabel!),
         onTap: () => {
               Navigator.pushNamed(context, SearchView.routeName,
-                  arguments: {"configurationItemType": currentClass.name})
+                  arguments: {"configurationItemType": currentClass.name!})
             }));
   }
 
@@ -43,15 +45,17 @@ class MainMenuDrawer extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenuDrawer> {
-  final Future<ClassModel> _classModelFuture = getClassModel();
+  final Future<GetClassModelResponse?> _classModelFuture =
+      MyHttpClient.instance.metadataApi.getClassModel();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ClassModel>(
+    return FutureBuilder<GetClassModelResponse?>(
         future: _classModelFuture,
-        builder: (BuildContext context, AsyncSnapshot<ClassModel> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<GetClassModelResponse?> snapshot) {
           if (snapshot.hasData) {
-            return buildDrawerFromClassModel(context, snapshot.requireData);
+            return buildDrawerFromClassModel(context, snapshot.requireData!);
           } else {
             return const Text("Loading...");
           }

@@ -2,7 +2,7 @@
     <div>
 
 
-        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{messsage}}</b-alert>
+        <b-alert :variant="messageType"  :show="showMessage " dismissible>{{message}}</b-alert>
         <br/>
 
         <div v-if="value?.rows !=undefined && value.rows.length > 0">
@@ -15,13 +15,13 @@
         
         <b-table responsive sticky-header="true" v-if="value != undefined"  head-variant="light" :items="value.rows" select-mode="multi" selectable  @row-selected="onRowSelected" :fields="fields">
             <template #cell()="data">
-                <span v-if="data.field.nestedColumn.type=='Reference' && data.value != ''">
-                    <b-link v-if="value!=undefined" @click="onReferenceClick(data.field.nestedColumn,data.value)">
+                <span v-if="data.field.nestedColumn.type=='Reference' && data.item.fields[data.field.nestedColumn.name] != ''">
+                    <b-link v-if="value!=undefined" @click="onReferenceClick(data.field.nestedColumn,data.item.fields[data.field.nestedColumn.name])">
                         <b-icon icon="link"/>
-                            {{data.value.displayLabel}}
+                            {{data.item.fields[data.field.nestedColumn.name].displayLabel}}
                         </b-link>
                 </span>
-                <span v-else>{{data.value}}</span>
+                <span v-else>{{data.item.fields[data.field.nestedColumn.name]}}</span>
             </template>
         </b-table>
     </div>
@@ -40,7 +40,7 @@ export default {
         return {
             selectedCis: Array<ConfigurationItemReference>(),
             availablableActions: Array<SerializableAction>(),
-            messsage: "",
+            message: "",
             showMessage:false,
             messageType: "success"
         }
@@ -84,7 +84,7 @@ export default {
             this.availablableActions=[];
             this.selectedCis =  new Array<ConfigurationItemReference>();
             for ( let ci  of items ) {
-                this.selectedCis.push (ci.__reference);
+                this.selectedCis.push (ci.fields.__reference);
             }
             getAvailableActionsWithSource(this.sourceci,this.selectedCis).then( r=>{
                 this.availablableActions = r;

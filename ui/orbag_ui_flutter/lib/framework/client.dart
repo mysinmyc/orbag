@@ -12,7 +12,7 @@ class MyHttpClient {
 
   MyHttpClient(this.serverAddress);
 
-  static MyHttpClient getInstance() {
+  static MyHttpClient get instance {
     return _instance;
   }
 
@@ -37,8 +37,16 @@ class MyHttpClient {
     return AuthenticationControllerApi(_apiClient());
   }
 
-  MetadataControllerApi metadataApi() {
+  MetadataControllerApi get metadataApi {
     return MetadataControllerApi(_apiClient());
+  }
+
+  SearchControllerApi get searchApi {
+    return SearchControllerApi(_apiClient());
+  }
+
+  UpdateControllerApi get updateApi {
+    return UpdateControllerApi(_apiClient());
   }
 
   Future<LoginResponse> login(String userName, String password) async {

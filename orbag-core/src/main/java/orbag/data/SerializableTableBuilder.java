@@ -1,9 +1,6 @@
 package orbag.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import orbag.metadata.UnmanagedObjectException;
@@ -85,13 +82,15 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 			throw new LimitExceededException();
 		}
 		SerializableRow row = new SerializableRow();
+		row.setFields(new HashMap<>());
+		row.setTags(new HashSet<>());
 		table.getRows().add(row);
 		for (GeneratedColumn generatedColumn : generatedcolumns) {
-			row.put(generatedColumn.column.getName(),
+			row.getFields().put(generatedColumn.column.getName(),
 					castValue(generatedColumn.valueProvider.apply(item), generatedColumn.column.getType()));
 		}
 		try {
-			setReferenceFields(item,row);
+			setReferenceFields(item,row.getFields());
 		} catch (UnmanagedObjectException e) {
 		}
 		return new SerializableRowBuilder(configurationItemReferenceService, row);

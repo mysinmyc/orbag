@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/configurationitemlink.dart';
-import 'package:orbag_ui_flutter/framework/data.dart';
-import 'package:orbag_ui_flutter/framework/input.dart';
-import 'package:orbag_ui_flutter/framework/reference.dart';
-import 'package:orbag_ui_flutter/framework/search.dart';
+import 'package:orbag_ui_flutter/framework/client.dart';
 
 class SerializableTableSource extends DataTableSource {
   SerializableTable table;
@@ -13,8 +11,9 @@ class SerializableTableSource extends DataTableSource {
     if (value == null) {
       return const Text("");
     }
-    if (column.type == "Reference") {
-      return ConfigurationItemLink(value as ConfigurationItemReference);
+    if (column.type == SerializableColumnTypeEnum.reference) {
+      var reference = ConfigurationItemReference.fromJson(value)!;
+      return ConfigurationItemLink(reference);
     } else {
       return Text(value.toString());
     }
@@ -22,12 +21,12 @@ class SerializableTableSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    Map<String, Object?> currentDataRow = table.rows[index];
+    SerializableRow currentDataRow = table.rows[index];
 
     List<DataCell> cells = [];
     for (SerializableColumn currentDataColumn in table.columns) {
       cells.add(DataCell(buildCellContent(
-          currentDataColumn, currentDataRow[currentDataColumn.name])));
+          currentDataColumn, currentDataRow.fields[currentDataColumn.name])));
     }
     return DataRow(cells: cells);
   }
@@ -52,13 +51,14 @@ class SearchCi extends StatefulWidget {
 
 class _SearchCiState extends State<SearchCi> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Future<SearchRequest>? _requestTemplate;
-  Future<SerializableTable>? _searchResult;
+  Future<SearchRequest?>? _requestTemplate;
+  Future<SerializableTable?>? _searchResult;
 
   @override
   void initState() {
     super.initState();
-    _requestTemplate = getSearchTemplate(widget.configurationItemType);
+    _requestTemplate = MyHttpClient.instance.searchApi
+        .getSearchTemplate(widget.configurationItemType);
   }
 
   submitSearch(SearchRequest request) async {
@@ -67,7 +67,7 @@ class _SearchCiState extends State<SearchCi> {
     });
 
     setState(() {
-      _searchResult = executeSearch(request);
+      _searchResult = MyHttpClient.instance.searchApi.execute(request);
     });
   }
 
@@ -75,7 +75,7 @@ class _SearchCiState extends State<SearchCi> {
     List<Widget> filters = [];
 
     for (StringField currentRequestField
-        in searchRequest.parameters.stringFields) {
+        in searchRequest.parameters!.stringFields) {
       TextFormField currentField = TextFormField(
           decoration:
               InputDecoration(hintText: currentRequestField.displayLabel),
@@ -89,11 +89,14 @@ class _SearchCiState extends State<SearchCi> {
     filters.add(DropdownButtonFormField(
       items: const [
         DropdownMenuItem(
-            value: "ROW_REFERENCE", child: Text("Don't show any field")),
+            value: SearchRequestResultTypeEnum.ROW_REFERENCE,
+            child: Text("Don't show any field")),
         DropdownMenuItem(
-            value: "HIGHLIGHTED_FIELDS",
+            value: SearchRequestResultTypeEnum.HIGHLIGHTED_FIELDS,
             child: Text("Show highlighted fields")),
-        DropdownMenuItem(value: "ALL_FIELDS", child: Text("Show all fields"))
+        DropdownMenuItem(
+            value: SearchRequestResultTypeEnum.ALL_FIELDS,
+            child: Text("Show all fields"))
       ],
       value: searchRequest.resultType,
       onChanged: (newValue) => {},
@@ -120,7 +123,7 @@ class _SearchCiState extends State<SearchCi> {
       return const Text("no item found");
     }
 
-    result.columns.sort((a, b) => a.name.compareTo(b.name));
+    result.columns.sort((a, b) => a.name!.compareTo(b.name!));
     List<DataColumn> columns = [];
     for (SerializableColumn currentDataColumn in result.columns) {
       columns.add(DataColumn(
@@ -138,12 +141,12 @@ class _SearchCiState extends State<SearchCi> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      FutureBuilder<SearchRequest>(
+      FutureBuilder<SearchRequest?>(
           future: _requestTemplate,
           builder:
-              (BuildContext context, AsyncSnapshot<SearchRequest> snapshot) {
+              (BuildContext context, AsyncSnapshot<SearchRequest?> snapshot) {
             if (snapshot.hasData) {
-              return buildFilters(context, snapshot.requireData);
+              return buildFilters(context, snapshot.requireData!);
             } else {
               return const Text("Loading...");
             }
@@ -151,9 +154,9 @@ class _SearchCiState extends State<SearchCi> {
       FutureBuilder(
           future: _searchResult,
           builder: (BuildContext context,
-              AsyncSnapshot<SerializableTable> snapshot) {
+              AsyncSnapshot<SerializableTable?> snapshot) {
             if (snapshot.hasData) {
-              return buildResults(context, snapshot.requireData);
+              return buildResults(context, snapshot.requireData!);
             } else {
               return const Text("waiting for results");
             }

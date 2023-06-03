@@ -4,7 +4,7 @@
 
 <script lang="ts">
 
-import {SerializableTable,SerializableRow} from "@/framework/data"
+import {SerializableTable} from "@/framework/data"
 import { ConfigurationItemReference } from '@/framework/reference'
 import { SerializableView, bindView } from "@/framework/view"
 import ConfigurationItemTable from './ConfigurationItemTable.vue'

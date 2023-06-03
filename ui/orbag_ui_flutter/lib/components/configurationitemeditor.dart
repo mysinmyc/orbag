@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/inputpropertyeditor.dart';
-
-import 'package:orbag_ui_flutter/framework/reference.dart';
-import 'package:orbag_ui_flutter/framework/update.dart';
+import 'package:orbag_ui_flutter/framework/client.dart';
 
 class ConfigurationItemEditor extends StatefulWidget {
   final ConfigurationItemReference ci;
@@ -14,28 +13,31 @@ class ConfigurationItemEditor extends StatefulWidget {
 }
 
 class _ConfigurationItemEditorState extends State<ConfigurationItemEditor> {
-  late Future<UpdateRequest> _updateRequest;
+  late Future<UpdateRequest?> _updateRequest;
 
   @override
   void initState() {
     super.initState();
-    _updateRequest = getUpdateRequestTemplate(widget.ci);
+    _updateRequest =
+        MyHttpClient.instance.updateApi.buildUpdateTemplate(widget.ci);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _updateRequest,
-      builder: (BuildContext context, AsyncSnapshot<UpdateRequest> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<UpdateRequest?> snapshot) {
         if (snapshot.hasData) {
           return InputPropertyEditor(
-              snapshot.data!.properties,
+              snapshot.data!.properties!,
               (fields) => {
-                    updateConfigurationItem(UpdateRequest(widget.ci, fields))
+                    MyHttpClient.instance.updateApi
+                        .update(UpdateRequest(
+                            configurationItem: widget.ci, properties: fields))
                         .whenComplete(() => {
                               setState(() {
-                                _updateRequest =
-                                    getUpdateRequestTemplate(widget.ci);
+                                _updateRequest = MyHttpClient.instance.updateApi
+                                    .buildUpdateTemplate(widget.ci);
                               })
                             })
                   });

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/framework/metadata.dart';
+import 'package:openapi/api.dart';
+import 'package:orbag_ui_flutter/framework/client.dart';
 
 MenuBar buildMenuBarFromClassModel(
-    BuildContext context, ClassModel classModel) {
+    BuildContext context, GetClassModelResponse classModel) {
   Map<String, SubmenuButton> submenus = {};
 
-  for (ConfigurationItemDescriptor currentClass
+  for (SerializableConfigurationItemDescriptor currentClass
       in classModel.configurationItemDescriptors) {
     var currentSubMenu = submenus[currentClass.category];
     if (currentSubMenu == null) {
       currentSubMenu = SubmenuButton(
-          menuChildren: [], child: MenuAcceleratorLabel(currentClass.category));
-      submenus[currentClass.category] = currentSubMenu;
+          menuChildren: [],
+          child: MenuAcceleratorLabel(currentClass.category!));
+      submenus[currentClass.category!] = currentSubMenu;
     }
     currentSubMenu.menuChildren.add(MenuItemButton(
-        child: MenuAcceleratorLabel(currentClass.displayLabel),
+        child: MenuAcceleratorLabel(currentClass.displayLabel!),
         onPressed: () => {
               Navigator.pushNamed(context, "/search",
                   arguments: {"configurationItemType": currentClass.name})
@@ -32,17 +34,19 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  final Future<ClassModel> _classModelFuture = getClassModel();
+  final Future<GetClassModelResponse?> _classModelFuture =
+      MyHttpClient.instance.metadataApi.getClassModel();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ClassModel>(
+    return FutureBuilder<GetClassModelResponse?>(
         future: _classModelFuture,
-        builder: (BuildContext context, AsyncSnapshot<ClassModel> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<GetClassModelResponse?> snapshot) {
           if (snapshot.hasData) {
             return Expanded(
                 child:
-                    buildMenuBarFromClassModel(context, snapshot.requireData));
+                    buildMenuBarFromClassModel(context, snapshot.requireData!));
           } else {
             return const Text("Loading...");
           }

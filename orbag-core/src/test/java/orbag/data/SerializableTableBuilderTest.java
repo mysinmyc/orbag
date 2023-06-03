@@ -34,7 +34,7 @@ public class SerializableTableBuilderTest {
 		assertEquals(2,table.getColumns().size());
 		assertEquals(10,table.getRows().size());
 		
-		assertEquals("ciao0",table.getRows().get(0).get("generated"));
+		assertEquals("ciao0",table.getRows().get(0).getFields().get("generated"));
 	}
 	
 

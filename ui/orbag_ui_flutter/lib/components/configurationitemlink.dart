@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/framework/reference.dart';
+import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/views/EditView.dart';
 
 class ConfigurationItemLink extends StatelessWidget {

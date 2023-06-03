@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/configurationitemlink.dart';
-import 'package:orbag_ui_flutter/framework/input.dart';
 
 typedef InputPropertyEditorSaveCallback = void Function(
     SerializableFieldGroup value);
@@ -30,7 +30,7 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
 
     for (StringField currentRequestField in fields.stringFields) {
       TextFormField currentField = TextFormField(
-          readOnly: currentRequestField.readOnly,
+          readOnly: currentRequestField.readOnly!,
           initialValue: currentRequestField.value,
           decoration:
               InputDecoration(labelText: currentRequestField.displayLabel),
@@ -53,6 +53,21 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
       }
     }
 
+    for (EnumField currentRequestEnumField in fields.enumFields) {
+      filters.add(InputDecorator(
+          decoration:
+              InputDecoration(labelText: currentRequestEnumField.displayLabel),
+          child: DropdownButtonFormField<String>(
+            value: currentRequestEnumField.value,
+            items: currentRequestEnumField.allowedValues
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
+            onChanged: (String? newValue) => {
+              currentRequestEnumField.changed = true,
+              currentRequestEnumField.value = newValue
+            },
+          )));
+    }
     if (changed) {
       filters.add(Padding(
         padding: const EdgeInsets.all(8),

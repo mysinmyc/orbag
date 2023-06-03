@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/configurationitemeditor.dart';
-import 'package:orbag_ui_flutter/framework/reference.dart';
+import 'package:orbag_ui_flutter/components/mainmenu_drawer.dart';
 
 class EditView extends StatefulWidget {
   static const routeName = "/edit";

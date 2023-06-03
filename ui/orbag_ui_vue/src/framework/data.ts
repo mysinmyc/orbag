@@ -6,6 +6,9 @@ export type SerializableColumn = {
 }
 
 export type SerializableRow = {
+    fields: SerializableFields;
+}
+export type SerializableFields ={
     [key: string]: any;
 }
 

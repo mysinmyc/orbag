@@ -13,36 +13,32 @@ part of openapi.api;
 class SerializableRow {
   /// Returns a new [SerializableRow] instance.
   SerializableRow({
-    this.empty,
+    this.fields = const {},
+    this.tags = const {},
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? empty;
+  Map<String, Object> fields;
+
+  Set<String> tags;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is SerializableRow &&
-     other.empty == empty;
+     other.fields == fields &&
+     other.tags == tags;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (empty == null ? 0 : empty!.hashCode);
+    (fields.hashCode) +
+    (tags.hashCode);
 
   @override
-  String toString() => 'SerializableRow[empty=$empty]';
+  String toString() => 'SerializableRow[fields=$fields, tags=$tags]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.empty != null) {
-      json[r'empty'] = this.empty;
-    } else {
-      json[r'empty'] = null;
-    }
+      json[r'fields'] = this.fields;
+      json[r'tags'] = this.tags;
     return json;
   }
 
@@ -65,7 +61,10 @@ class SerializableRow {
       }());
 
       return SerializableRow(
-        empty: mapValueOfType<bool>(json, r'empty'),
+        fields: mapCastOfType<String, Object>(json, r'fields') ?? const {},
+        tags: json[r'tags'] is Set
+            ? (json[r'tags'] as Set).cast<String>()
+            : const {},
       );
     }
     return null;
