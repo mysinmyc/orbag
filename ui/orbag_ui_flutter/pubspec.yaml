@@ -36,6 +36,7 @@ dependencies:
 
   openapi:
     path: generated/client
+  flutter_conditional_rendering: ^2.0.0
 
 dev_dependencies:
   flutter_test:

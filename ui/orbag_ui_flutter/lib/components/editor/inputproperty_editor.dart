@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/configurationitemlink.dart';
+import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
 
 typedef InputPropertyEditorSaveCallback = void Function(
     SerializableFieldGroup value);
@@ -84,9 +84,7 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
     return Form(
       key: _formKey,
       child: Column(children: filters),
-      onChanged: () => {
-        setState(() => {changed = true})
-      },
+      onChanged: () => {setState(() => changed = true)},
     );
   }
 

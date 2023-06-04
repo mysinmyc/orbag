@@ -10,7 +10,7 @@ void main() {
     test("TestApi", () async {
       await MyHttpClient.instance.login("it_user", "orbag");
 
-      const api_instance = MyHttpClient.instance.metadataApi;
+      var api_instance = MyHttpClient.instance.metadataApi;
 
       GetClassModelResponse? response = await api_instance.getClassModel();
 

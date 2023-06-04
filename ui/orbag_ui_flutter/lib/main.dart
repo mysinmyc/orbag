@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/views/EditView.dart';
-import 'package:orbag_ui_flutter/views/LoginView.dart';
-import 'package:orbag_ui_flutter/views/homeview_material.dart';
-import 'package:orbag_ui_flutter/views/SearchView.dart';
+import 'package:orbag_ui_flutter/views/edit_view.dart';
+import 'package:orbag_ui_flutter/views/login_view.dart';
+import 'package:orbag_ui_flutter/views/home_view_material.dart';
+import 'package:orbag_ui_flutter/views/search_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       HomeViewMaterial.routeName: (context) => const HomeViewMaterial(),
       LoginView.routeName: (context) => const LoginView(),
       SearchView.routeName: (context) => const SearchView(),
-      EditView.routeName: (context) => const EditView(),
+      EditView.routeName: (context) => EditView(),
     });
   }
 }

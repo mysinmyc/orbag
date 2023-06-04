@@ -1,45 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/configurationitemlink.dart';
+import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
-
-class SerializableTableSource extends DataTableSource {
-  SerializableTable table;
-  SerializableTableSource(this.table);
-
-  Widget buildCellContent(SerializableColumn column, Object? value) {
-    if (value == null) {
-      return const Text("");
-    }
-    if (column.type == SerializableColumnTypeEnum.reference) {
-      var reference = ConfigurationItemReference.fromJson(value)!;
-      return ConfigurationItemLink(reference);
-    } else {
-      return Text(value.toString());
-    }
-  }
-
-  @override
-  DataRow? getRow(int index) {
-    SerializableRow currentDataRow = table.rows[index];
-
-    List<DataCell> cells = [];
-    for (SerializableColumn currentDataColumn in table.columns) {
-      cells.add(DataCell(buildCellContent(
-          currentDataColumn, currentDataRow.fields[currentDataColumn.name])));
-    }
-    return DataRow(cells: cells);
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => table.rows.length;
-
-  @override
-  int get selectedRowCount => 0;
-}
 
 class SearchCi extends StatefulWidget {
   final String configurationItemType;
@@ -69,6 +31,10 @@ class _SearchCiState extends State<SearchCi> {
     setState(() {
       _searchResult = MyHttpClient.instance.searchApi.execute(request);
     });
+  }
+
+  refreshActions() {
+    setState(() {});
   }
 
   Widget buildFilters(BuildContext context, SearchRequest searchRequest) {
@@ -122,20 +88,7 @@ class _SearchCiState extends State<SearchCi> {
     if (result.columns.isEmpty || result.rows.isEmpty) {
       return const Text("no item found");
     }
-
-    result.columns.sort((a, b) => a.name!.compareTo(b.name!));
-    List<DataColumn> columns = [];
-    for (SerializableColumn currentDataColumn in result.columns) {
-      columns.add(DataColumn(
-          label: Text(currentDataColumn.displayLabel == null
-              ? ""
-              : currentDataColumn.displayLabel!)));
-    }
-
-    //return DataTable(columns: columns, rows: rows);
-
-    return PaginatedDataTable(
-        columns: columns, source: SerializableTableSource(result));
+    return ConfigurationItemTable(result);
   }
 
   @override

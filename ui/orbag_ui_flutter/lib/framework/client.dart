@@ -49,6 +49,14 @@ class MyHttpClient {
     return UpdateControllerApi(_apiClient());
   }
 
+  ActionControllerApi get actionApi {
+    return ActionControllerApi(_apiClient());
+  }
+
+  ViewControllerApi get viewApi {
+    return ViewControllerApi(_apiClient());
+  }
+
   Future<LoginResponse> login(String userName, String password) async {
     LoginResponse? response = await authenticationApi().login(LoginRequest(
         userName: userName, password: password, persistent: false));

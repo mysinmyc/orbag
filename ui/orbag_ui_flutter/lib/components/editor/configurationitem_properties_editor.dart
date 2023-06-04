@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/inputpropertyeditor.dart';
+import 'package:orbag_ui_flutter/components/editor/inputproperty_editor.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 
-class ConfigurationItemEditor extends StatefulWidget {
+class ConfigurationItemPropertiesEditor extends StatefulWidget {
   final ConfigurationItemReference ci;
-  const ConfigurationItemEditor(this.ci, {super.key});
+  const ConfigurationItemPropertiesEditor(this.ci, {super.key});
 
   @override
-  State<ConfigurationItemEditor> createState() =>
-      _ConfigurationItemEditorState();
+  State<ConfigurationItemPropertiesEditor> createState() =>
+      _ConfigurationItemPropertiesEditorState();
 }
 
-class _ConfigurationItemEditorState extends State<ConfigurationItemEditor> {
-  late Future<UpdateRequest?> _updateRequest;
+class _ConfigurationItemPropertiesEditorState
+    extends State<ConfigurationItemPropertiesEditor> {
+  late Future<UpdateRequest?> _updateRequestFuture;
 
   @override
   void initState() {
     super.initState();
-    _updateRequest =
+    _updateRequestFuture =
         MyHttpClient.instance.updateApi.buildUpdateTemplate(widget.ci);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _updateRequest,
+      future: _updateRequestFuture,
       builder: (BuildContext context, AsyncSnapshot<UpdateRequest?> snapshot) {
         if (snapshot.hasData) {
           return InputPropertyEditor(
@@ -36,7 +37,8 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor> {
                             configurationItem: widget.ci, properties: fields))
                         .whenComplete(() => {
                               setState(() {
-                                _updateRequest = MyHttpClient.instance.updateApi
+                                _updateRequestFuture = MyHttpClient
+                                    .instance.updateApi
                                     .buildUpdateTemplate(widget.ci);
                               })
                             })

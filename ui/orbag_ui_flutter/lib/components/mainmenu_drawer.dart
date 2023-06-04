@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
-import 'package:orbag_ui_flutter/views/SearchView.dart';
+import 'package:orbag_ui_flutter/views/search_view.dart';
 
 Drawer buildDrawerFromClassModel(
     BuildContext context, GetClassModelResponse classModel) {
