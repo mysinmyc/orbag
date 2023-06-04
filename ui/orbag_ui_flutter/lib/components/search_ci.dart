@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
+import 'package:orbag_ui_flutter/views/create_view.dart';
 
 class SearchCi extends StatefulWidget {
   final String configurationItemType;
@@ -15,12 +16,16 @@ class _SearchCiState extends State<SearchCi> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<SearchRequest?>? _requestTemplate;
   Future<SerializableTable?>? _searchResult;
+  Future<SerializableConfigurationItemDescriptor?>?
+      _configurationItemDescriptor;
 
   @override
   void initState() {
     super.initState();
     _requestTemplate = MyHttpClient.instance.searchApi
         .getSearchTemplate(widget.configurationItemType);
+    _configurationItemDescriptor = MyHttpClient.instance.metadataApi
+        .getClassMetadata(widget.configurationItemType);
   }
 
   submitSearch(SearchRequest request) async {
@@ -70,16 +75,36 @@ class _SearchCiState extends State<SearchCi> {
         if (value != null) {searchRequest.resultType = value}
       },
     ));
-    filters.add(Padding(
-      padding: const EdgeInsets.all(8),
-      child: ElevatedButton.icon(
-          onPressed: () {
-            _formKey.currentState!.save();
-            submitSearch(searchRequest);
-          },
-          icon: const Icon(Icons.search),
-          label: const Text("Search")),
-    ));
+    filters.add(Row(children: [
+      Padding(
+          padding: const EdgeInsets.all(8),
+          child: ElevatedButton.icon(
+              onPressed: () {
+                _formKey.currentState!.save();
+                submitSearch(searchRequest);
+              },
+              icon: const Icon(Icons.search),
+              label: const Text("Search"))),
+      Padding(
+          padding: const EdgeInsets.all(8),
+          child: FutureBuilder(
+              future: _configurationItemDescriptor,
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data!.allowCreation!) {
+                  return ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(CreateView.routeName, arguments: {
+                          "configurationItemType": widget.configurationItemType
+                        });
+                      },
+                      icon: Icon(Icons.create),
+                      label: Text("New"));
+                } else {
+                  return Text("");
+                }
+              }))
+    ]));
 
     return Form(key: _formKey, child: Column(children: filters));
   }

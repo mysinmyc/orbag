@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
 
@@ -37,6 +38,22 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
           onChanged: (value) => {
                 currentRequestField.changed = true,
                 currentRequestField.value = value
+              });
+      filters.add(currentField);
+    }
+
+    for (NumericField currentRequestField in fields.numericFields) {
+      TextFormField currentField = TextFormField(
+          readOnly: currentRequestField.readOnly!,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          initialValue: currentRequestField.value?.toString(),
+          decoration:
+              InputDecoration(labelText: currentRequestField.displayLabel),
+          onChanged: (value) => {
+                currentRequestField.changed = true,
+                currentRequestField.value = int.tryParse(value)
               });
       filters.add(currentField);
     }

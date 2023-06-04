@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_properties_editor.dart';
@@ -20,40 +18,67 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
     with TickerProviderStateMixin {
   Future<GetAvailableViewsResponse?>? _availableViewsFuture;
 
+  Future<GetAvailableActionsResponse?>? _availableActionsFuture;
+
   @override
   void initState() {
     super.initState();
     _availableViewsFuture = MyHttpClient.instance.viewApi
         .getAvailableViews(GetAvailableViewsRequest(targetCi: widget.ci));
+    _availableActionsFuture = MyHttpClient.instance.actionApi
+        .getAvailable(GetAvailableActionsRequest(targetCis: [widget.ci]));
   }
 
   int _currentTabIndex = 0;
 
   _changeTabIndex(int value) {
     setState(() {
+      _lastView = null;
       _currentTabIndex = value;
     });
   }
 
+  SerializableView? _lastView;
+  Future<BindViewResponse?>? _lastViewBindFuture;
+
   Widget buildView(SerializableView view) {
+    if (_lastView == null || !(_lastView! == view)) {
+      _lastViewBindFuture = MyHttpClient.instance.viewApi
+          .bind(BindViewRequest(targetCi: widget.ci, view: view));
+      _lastView = view;
+    }
+
     return FutureBuilder(
-        future: MyHttpClient.instance.viewApi
-            .bind(BindViewRequest(targetCi: widget.ci, view: view)),
+        future: _lastViewBindFuture,
         builder:
             (BuildContext context, AsyncSnapshot<BindViewResponse?> snapshot) {
           if (snapshot.hasData) {
             return ConfigurationItemTable(snapshot.data!.resultTable!,
                 sourceCi: widget.ci);
           } else {
-            return Text("Please wait...");
+            return const Text("Please wait...");
+          }
+        });
+  }
+
+  Widget buildActions() {
+    return FutureBuilder(
+        future: _availableActionsFuture,
+        builder: (BuildContext context,
+            AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
+          if (snapshot.hasData) {
+            return PopupMenuButton(
+                itemBuilder: (context) => snapshot.data!.availableActions
+                    .map((e) => PopupMenuItem(child: Text(e.displayLabel!)))
+                    .toList());
+          } else {
+            return const Text("");
           }
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    final ci = ModalRoute.of(context)!.settings.arguments
-        as ConfigurationItemReference;
     return FutureBuilder(
         future: _availableViewsFuture,
         builder: (BuildContext context,
@@ -76,10 +101,12 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
 
           return Scaffold(
               appBar: AppBar(
-                  title: Text(ci.displayLabel!),
-                  bottom: TabBar(tabs: tabs, controller: tabController)),
+                title: Text(widget.ci.displayLabel!),
+                bottom: TabBar(tabs: tabs, controller: tabController),
+                actions: [buildActions()],
+              ),
               body: _currentTabIndex == 0
-                  ? ConfigurationItemPropertiesEditor(ci)
+                  ? ConfigurationItemPropertiesEditor(widget.ci)
                   : buildView(views[_currentTabIndex - 1]));
         });
   }

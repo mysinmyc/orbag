@@ -37,6 +37,10 @@ class MyHttpClient {
     return AuthenticationControllerApi(_apiClient());
   }
 
+  CreateControllerApi get createApi {
+    return CreateControllerApi(_apiClient());
+  }
+
   MetadataControllerApi get metadataApi {
     return MetadataControllerApi(_apiClient());
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/components/searchci.dart';
+import 'package:orbag_ui_flutter/components/mainmenu_drawer.dart';
+import 'package:orbag_ui_flutter/components/search_ci.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key, this.title = "Search"});
@@ -14,6 +15,7 @@ class SearchView extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     return Scaffold(
         appBar: AppBar(title: Text(args['configurationItemType']!)),
+        drawer: const MainMenuDrawer(),
         body: SearchCi(args['configurationItemType']!));
   }
 }

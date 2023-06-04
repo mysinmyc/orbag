@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/home_view_material.dart';
 
@@ -53,23 +54,18 @@ class _LoginViewState extends State<LoginView> {
                                 padding: EdgeInsets.all(15),
                                 child: ElevatedButton(
                                   onPressed: () => {
-                                    MyHttpClient.instance
-                                        .login(userNameController.text,
-                                            passwordController.text)
-                                        .then((value) => {
-                                              Navigator.pushNamed(context,
-                                                  HomeViewMaterial.routeName)
-                                            })
-                                        .catchError((e) => {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      backgroundColor:
-                                                          Color.fromRGBO(
-                                                              230, 0, 0, 80),
-                                                      content: Text(
-                                                          "Login failed:" +
-                                                              e.toString())))
-                                            })
+                                    ErrorMessageWrapper(
+                                        context,
+                                        MyHttpClient.instance
+                                            .login(userNameController.text,
+                                                passwordController.text)
+                                            .then((value) => {
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      HomeViewMaterial
+                                                          .routeName)
+                                                }),
+                                        "Login failed")
                                   },
                                   child: Text("Login"),
                                 ))

@@ -31,18 +31,13 @@ class _ConfigurationItemPropertiesEditorState
         if (snapshot.hasData) {
           return InputPropertyEditor(
               snapshot.data!.properties!,
-              (fields) => {
-                    MyHttpClient.instance.updateApi
-                        .update(UpdateRequest(
-                            configurationItem: widget.ci, properties: fields))
-                        .whenComplete(() => {
-                              setState(() {
-                                _updateRequestFuture = MyHttpClient
-                                    .instance.updateApi
-                                    .buildUpdateTemplate(widget.ci);
-                              })
-                            })
-                  });
+              (fields) => MyHttpClient.instance.updateApi
+                  .update(UpdateRequest(
+                      configurationItem: widget.ci, properties: fields))
+                  .whenComplete(() => setState(() {
+                        _updateRequestFuture = MyHttpClient.instance.updateApi
+                            .buildUpdateTemplate(widget.ci);
+                      })));
         } else {
           return const Text("loading...");
         }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orbag_ui_flutter/views/create_view.dart';
 import 'package:orbag_ui_flutter/views/edit_view.dart';
 import 'package:orbag_ui_flutter/views/login_view.dart';
 import 'package:orbag_ui_flutter/views/home_view_material.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       LoginView.routeName: (context) => const LoginView(),
       SearchView.routeName: (context) => const SearchView(),
       EditView.routeName: (context) => EditView(),
+      CreateView.routeName: (context) => CreateView(),
     });
   }
 }

@@ -18,7 +18,7 @@ Drawer buildDrawerFromClassModel(
     currentSubMenu.children.add(ListTile(
         title: Text(currentClass.displayLabel!),
         onTap: () => {
-              Navigator.pushNamed(context, SearchView.routeName,
+              Navigator.pushReplacementNamed(context, SearchView.routeName,
                   arguments: {"configurationItemType": currentClass.name!})
             }));
   }
