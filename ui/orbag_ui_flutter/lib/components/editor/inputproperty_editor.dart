@@ -10,8 +10,13 @@ class InputPropertyEditor extends StatefulWidget {
   final SerializableFieldGroup source;
   final InputPropertyEditorSaveCallback onSave;
   final String saveCaption;
+  final bool saveVisible;
+  final Icon saveIcon;
   const InputPropertyEditor(this.source, this.onSave,
-      {this.saveCaption = "Save", super.key});
+      {this.saveCaption = "Save",
+      this.saveVisible = false,
+      this.saveIcon = const Icon(Icons.save),
+      super.key});
 
   @override
   State<InputPropertyEditor> createState() => _InputPropertyEditorState();
@@ -58,6 +63,21 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
       filters.add(currentField);
     }
 
+    for (BooleanField currentRequestField in fields.booleanFields) {
+      Row currentField = Row(children: [
+        Checkbox(
+            value: currentRequestField.value,
+            tristate: true,
+            onChanged: (value) => {
+                  currentRequestField.changed = value != null,
+                  currentRequestField.value = value,
+                  setState(() => changed = true)
+                }),
+        Text(currentRequestField.displayLabel!)
+      ]);
+      filters.add(currentField);
+    }
+
     for (ConfigurationItemReferenceField currentRequestReferenceField
         in fields.configurationItemReferenceFields) {
       if (currentRequestReferenceField.value == null) {
@@ -85,7 +105,7 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
             },
           )));
     }
-    if (changed) {
+    if (changed || widget.saveVisible) {
       filters.add(Padding(
         padding: const EdgeInsets.all(8),
         child: ElevatedButton.icon(
@@ -94,7 +114,7 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
               widget.onSave(fields);
               changed = false;
             },
-            icon: const Icon(Icons.save),
+            icon: widget.saveIcon,
             label: Text(widget.saveCaption)),
       ));
     }

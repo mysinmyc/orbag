@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
+import 'package:orbag_ui_flutter/components/action/action_executor.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_properties_editor.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
+import 'package:orbag_ui_flutter/views/action_view.dart';
 
 class ConfigurationItemEditor extends StatefulWidget {
   final ConfigurationItemReference ci;
@@ -68,8 +70,14 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
             AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
           if (snapshot.hasData) {
             return PopupMenuButton(
+                onSelected: (value) => {
+                      ActionView.show(context, ActionData(value, [widget.ci]))
+                    },
                 itemBuilder: (context) => snapshot.data!.availableActions
-                    .map((e) => PopupMenuItem(child: Text(e.displayLabel!)))
+                    .map((e) => PopupMenuItem(
+                          value: e,
+                          child: Text(e.displayLabel!),
+                        ))
                     .toList());
           } else {
             return const Text("");

@@ -38,10 +38,6 @@ class _SearchCiState extends State<SearchCi> {
     });
   }
 
-  refreshActions() {
-    setState(() {});
-  }
-
   Widget buildFilters(BuildContext context, SearchRequest searchRequest) {
     List<Widget> filters = [];
 
@@ -98,10 +94,10 @@ class _SearchCiState extends State<SearchCi> {
                           "configurationItemType": widget.configurationItemType
                         });
                       },
-                      icon: Icon(Icons.create),
-                      label: Text("New"));
+                      icon: const Icon(Icons.create),
+                      label: const Text("New"));
                 } else {
-                  return Text("");
+                  return const Text("");
                 }
               }))
     ]));

@@ -5,6 +5,8 @@ import 'package:orbag_ui_flutter/components/editor/configurationitem_editor.dart
 class EditView extends StatelessWidget {
   static const routeName = "/edit";
 
+  const EditView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ConfigurationItemEditor(ModalRoute.of(context)!.settings.arguments!

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
+import 'package:orbag_ui_flutter/components/action/action_executor.dart';
 import 'package:orbag_ui_flutter/components/table/tablesource.dart';
+import 'package:orbag_ui_flutter/components/util/label_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
+import 'package:orbag_ui_flutter/views/action_view.dart';
 
 class ConfigurationItemTable extends StatefulWidget {
   final ConfigurationItemReference? sourceCi;
@@ -18,19 +21,18 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
 
   final List<SerializableRow> _selectedRows = List.empty(growable: true);
 
-  refreshActions() {
-    setState(() {});
+  List<ConfigurationItemReference> get selectedCis {
+    return _selectedRows
+        .map((e) =>
+            ConfigurationItemReference.fromJson(e.fields["__reference"])!)
+        .toList();
   }
 
   refreshSelection() {
     setState(() {
       _availableActionsFuture = MyHttpClient.instance.actionApi.getAvailable(
           GetAvailableActionsRequest(
-              targetCis: _selectedRows
-                  .map((e) => ConfigurationItemReference.fromJson(
-                      e.fields["__reference"])!)
-                  .toList(),
-              sourceCi: widget.sourceCi));
+              targetCis: selectedCis, sourceCi: widget.sourceCi));
     });
   }
 
@@ -44,6 +46,12 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
                   .map((e) => SimpleDialogOption(
                       onPressed: () {
                         Navigator.of(context).pop();
+                        ActionView.show(
+                            context,
+                            ActionData(e, selectedCis,
+                                sourceCi: widget.sourceCi));
+                        _selectedRows.clear();
+                        refreshSelection();
                       },
                       child: Text(e.displayLabel!)))
                   .toList());
@@ -75,27 +83,27 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
           context: context,
           conditionBuilder: (context) => _selectedRows.isNotEmpty,
           widgetBuilder: (context) => Row(children: [
-                Text("Selected ${_selectedRows.length} cis"),
-                Padding(padding: EdgeInsets.all(10)),
+                Text("Selected ${LabelUtil.getCisLabel(selectedCis)}"),
+                const Padding(padding: EdgeInsets.all(10)),
                 FutureBuilder<GetAvailableActionsResponse?>(
                     future: _availableActionsFuture,
                     builder: (BuildContext context,
                         AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data!.availableActions.isEmpty) {
-                          return Text("No action available");
+                          return const Text("No action available");
                         } else {
                           return ElevatedButton(
                               onPressed: () => _showAvailableActions(
                                   snapshot.data!.availableActions),
-                              child: Text("Actions..."));
+                              child: const Text("Actions..."));
                         }
                       } else {
-                        return Text("");
+                        return const Text("");
                       }
                     })
               ]),
-          fallbackBuilder: (context) => Text("")),
+          fallbackBuilder: (context) => const Text("")),
       buildTable(context, widget.table)
     ]);
   }

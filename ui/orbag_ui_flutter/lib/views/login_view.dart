@@ -21,37 +21,37 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+        body: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Align(
                 alignment: Alignment.center,
                 child: Container(
                     alignment: Alignment.center,
-                    constraints: BoxConstraints(maxWidth: 400, maxHeight: 300),
+                    constraints: const BoxConstraints(maxWidth: 400, maxHeight: 300),
                     child: Form(
                         key: _formKey,
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(15),
                               child: TextField(
                                 controller: userNameController,
-                                decoration: InputDecoration(labelText: "Login"),
+                                decoration: const InputDecoration(labelText: "Login"),
                                 autofocus: true,
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(15),
                               child: TextField(
                                 obscureText: true,
                                 controller: passwordController,
                                 decoration:
-                                    InputDecoration(labelText: "Password"),
+                                    const InputDecoration(labelText: "Password"),
                               ),
                             ),
                             Padding(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: ElevatedButton(
                                   onPressed: () => {
                                     ErrorMessageWrapper(
@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                                                 }),
                                         "Login failed")
                                   },
-                                  child: Text("Login"),
+                                  child: const Text("Login"),
                                 ))
                           ],
                         ))))));

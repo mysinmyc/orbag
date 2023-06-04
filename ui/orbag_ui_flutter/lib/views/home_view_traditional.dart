@@ -8,9 +8,9 @@ class HomeViewTraditional extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: Column(children: [
-      Row(children: const [MainMenu()])
+      Row(children: [MainMenu()])
     ]));
   }
 }

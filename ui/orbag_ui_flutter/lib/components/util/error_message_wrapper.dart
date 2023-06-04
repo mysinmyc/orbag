@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:orbag_ui_flutter/components/util/message_util.dart';
 
 class ErrorMessageWrapper<T> {
   ErrorMessageWrapper(
       BuildContext context, Future<T> future, String errorMessage) {
-    future.catchError((error, stackTrace) => {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Color.fromRGBO(230, 0, 0, 80),
-              content: Text(errorMessage + ":" + error.toString())))
-        });
+    future.catchError((error, stackTrace) =>
+        MessageUtil.showError(context, errorMessage + ": " + error.toString()));
   }
 }

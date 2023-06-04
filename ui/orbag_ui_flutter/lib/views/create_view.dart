@@ -13,7 +13,7 @@ class CreateView extends StatelessWidget {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     return Scaffold(
-        appBar: AppBar(title: Text("Create " + args['configurationItemType']!)),
+        appBar: AppBar(title: Text("Create ${args['configurationItemType']!}")),
         body: CreateCi(args['configurationItemType']!));
   }
 }

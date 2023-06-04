@@ -11,7 +11,7 @@ MenuBar buildMenuBarFromClassModel(
     var currentSubMenu = submenus[currentClass.category];
     if (currentSubMenu == null) {
       currentSubMenu = SubmenuButton(
-          menuChildren: [],
+          menuChildren: const [],
           child: MenuAcceleratorLabel(currentClass.category!));
       submenus[currentClass.category!] = currentSubMenu;
     }
