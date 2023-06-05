@@ -10,7 +10,9 @@ import 'package:orbag_ui_flutter/views/action_view.dart';
 class ConfigurationItemTable extends StatefulWidget {
   final ConfigurationItemReference? sourceCi;
   final SerializableTable table;
-  const ConfigurationItemTable(this.table, {super.key, this.sourceCi});
+  final ValueChanged<ConfigurationItemReference>? onSelectedCi;
+  const ConfigurationItemTable(this.table,
+      {super.key, this.onSelectedCi, this.sourceCi});
 
   @override
   State<ConfigurationItemTable> createState() => _ConfigurationItemTableState();
@@ -71,7 +73,8 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
               : currentDataColumn.displayLabel!)));
     }
     var tableSource = SerializableTableSource(result, _selectedRows,
-        onSelected: (rows) => {refreshSelection()});
+        onSelected: (rows) => {refreshSelection()},
+        onSelectCi: widget.onSelectedCi);
 
     return PaginatedDataTable(columns: columns, source: tableSource);
   }

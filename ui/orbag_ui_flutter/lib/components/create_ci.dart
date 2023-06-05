@@ -7,7 +7,8 @@ import 'package:orbag_ui_flutter/views/edit_view.dart';
 
 class CreateCi extends StatefulWidget {
   final String configurationItemType;
-  const CreateCi(this.configurationItemType, {super.key});
+  final ValueChanged<ConfigurationItemReference>? onCreated;
+  const CreateCi(this.configurationItemType, {this.onCreated, super.key});
 
   @override
   State<CreateCi> createState() => _CreateCiState();
@@ -26,9 +27,15 @@ class _CreateCiState extends State<CreateCi> {
   submitCreate(CreateRequest request) async {
     ErrorMessageWrapper(
         context,
-        MyHttpClient.instance.createApi.create(request).then((value) =>
-            Navigator.of(context)
-                .pushReplacementNamed(EditView.routeName, arguments: value)),
+        MyHttpClient.instance.createApi.create(request).then((value) => {
+              if (widget.onCreated == null)
+                {
+                  Navigator.of(context).pushReplacementNamed(EditView.routeName,
+                      arguments: value)
+                }
+              else
+                {widget.onCreated!(value!)}
+            }),
         "Creation failed");
   }
 

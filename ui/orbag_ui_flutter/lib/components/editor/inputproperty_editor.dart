@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
+import 'package:orbag_ui_flutter/components/search_ci.dart';
+import 'package:orbag_ui_flutter/components/util/render_util.dart';
+
+typedef AdditionalWidgetBuilder = List<Widget> Function(
+    BuildContext buildContext, VoidCallback changeCallBack);
 
 typedef InputPropertyEditorSaveCallback = void Function(
     SerializableFieldGroup value);
@@ -12,10 +18,15 @@ class InputPropertyEditor extends StatefulWidget {
   final String saveCaption;
   final bool saveVisible;
   final Icon saveIcon;
+  final AdditionalWidgetBuilder? additionalFields;
+  final AdditionalWidgetBuilder? additionalButtons;
+
   const InputPropertyEditor(this.source, this.onSave,
       {this.saveCaption = "Save",
       this.saveVisible = false,
       this.saveIcon = const Icon(Icons.save),
+      this.additionalFields,
+      this.additionalButtons,
       super.key});
 
   @override
@@ -65,29 +76,59 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
 
     for (BooleanField currentRequestField in fields.booleanFields) {
       Row currentField = Row(children: [
+        Text(currentRequestField.displayLabel!),
         Checkbox(
-            value: currentRequestField.value,
-            tristate: true,
+            value: currentRequestField.value ?? false,
             onChanged: (value) => {
                   currentRequestField.changed = value != null,
                   currentRequestField.value = value,
                   setState(() => changed = true)
                 }),
-        Text(currentRequestField.displayLabel!)
       ]);
       filters.add(currentField);
     }
 
     for (ConfigurationItemReferenceField currentRequestReferenceField
         in fields.configurationItemReferenceFields) {
-      if (currentRequestReferenceField.value == null) {
-        filters.add(Text("no ${currentRequestReferenceField.displayLabel}"));
-      } else {
-        filters.add(InputDecorator(
-            decoration: InputDecoration(
-                labelText: currentRequestReferenceField.displayLabel),
-            child: ConfigurationItemLink(currentRequestReferenceField.value!)));
-      }
+      filters.add(InputDecorator(
+          decoration: InputDecoration(
+              labelText: currentRequestReferenceField.displayLabel),
+          child: Row(
+              children: RenderUtil.padAll([
+            ConfigurationItemLink(currentRequestReferenceField.value),
+            Conditional.single(
+                context: context,
+                conditionBuilder: (context) =>
+                    !currentRequestReferenceField.readOnly!,
+                widgetBuilder: (context) {
+                  return ElevatedButton.icon(
+                      icon: const Icon(Icons.edit),
+                      label: Text(currentRequestReferenceField.value == null
+                          ? "Set"
+                          : "Change"),
+                      onPressed: () => {
+                            showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                        child: SearchCi(
+                                            currentRequestReferenceField
+                                                .configurationItemType!,
+                                            onSelectedCi: (value) {
+                                      Navigator.of(context).pop(value);
+                                      setState(() {
+                                        currentRequestReferenceField.value =
+                                            value;
+                                        currentRequestReferenceField.changed =
+                                            true;
+                                        changed = true;
+                                      });
+                                    })))
+                          });
+                },
+                fallbackBuilder: (context) {
+                  return Text("");
+                })
+          ], padding: const EdgeInsets.only(right: 10)))));
     }
 
     for (EnumField currentRequestEnumField in fields.enumFields) {
@@ -105,10 +146,16 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
             },
           )));
     }
+
+    if (widget.additionalFields != null) {
+      filters.addAll(widget.additionalFields!(
+          context, () => setState(() => changed = true)));
+    }
+
+    List<Widget> buttons = List.empty(growable: true);
     if (changed || widget.saveVisible) {
-      filters.add(Padding(
-        padding: const EdgeInsets.all(8),
-        child: ElevatedButton.icon(
+      buttons.add(
+        ElevatedButton.icon(
             onPressed: () {
               _formKey.currentState!.save();
               widget.onSave(fields);
@@ -116,11 +163,19 @@ class _InputPropertyEditorState extends State<InputPropertyEditor> {
             },
             icon: widget.saveIcon,
             label: Text(widget.saveCaption)),
-      ));
+      );
     }
+
+    if (widget.additionalButtons != null) {
+      buttons.addAll(widget.additionalButtons!(
+          context, () => setState(() => changed = true)));
+    }
+    filters.add(Row(
+        children:
+            RenderUtil.padAll(buttons, padding: EdgeInsets.only(right: 10))));
     return Form(
       key: _formKey,
-      child: Column(children: filters),
+      child: Column(children: RenderUtil.padAll(filters)),
       onChanged: () => {setState(() => changed = true)},
     );
   }

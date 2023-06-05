@@ -4,10 +4,11 @@ import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
 
 class SerializableTableSource extends DataTableSource {
   ValueChanged<List<SerializableRow>>? onSelected;
-
+  ValueChanged<ConfigurationItemReference>? onSelectCi;
   List<SerializableRow> selectedRows;
   SerializableTable table;
-  SerializableTableSource(this.table, this.selectedRows, {this.onSelected});
+  SerializableTableSource(this.table, this.selectedRows,
+      {this.onSelected, this.onSelectCi});
 
   Widget buildCellContent(SerializableColumn column, Object? value) {
     if (value == null) {
@@ -15,7 +16,12 @@ class SerializableTableSource extends DataTableSource {
     }
     if (column.type == SerializableColumnTypeEnum.reference) {
       var reference = ConfigurationItemReference.fromJson(value)!;
-      return ConfigurationItemLink(reference);
+
+      if (column.name == '__reference' && onSelectCi != null) {
+        return ConfigurationItemLink(reference, onSelectedCi: onSelectCi);
+      } else {
+        return ConfigurationItemLink(reference);
+      }
     } else {
       return Text(value.toString());
     }
@@ -33,14 +39,16 @@ class SerializableTableSource extends DataTableSource {
     return DataRow(
         cells: cells,
         selected: selectedRows.contains(currentDataRow),
-        onSelectChanged: (value) => {
-              if (value!)
-                {selectedRows.add(currentDataRow)}
-              else
-                {selectedRows.remove(currentDataRow)},
-              notifyListeners(),
-              if (onSelected != null) {onSelected!(selectedRows)}
-            });
+        onSelectChanged: onSelectCi == null
+            ? (value) => {
+                  if (value!)
+                    {selectedRows.add(currentDataRow)}
+                  else
+                    {selectedRows.remove(currentDataRow)},
+                  notifyListeners(),
+                  if (onSelected != null) {onSelected!(selectedRows)}
+                }
+            : null);
   }
 
   @override

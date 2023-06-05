@@ -16,6 +16,7 @@ class SearchView extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text(args['configurationItemType']!)),
         drawer: const MainMenuDrawer(),
-        body: SearchCi(args['configurationItemType']!));
+        body: SingleChildScrollView(
+            child: SearchCi(args['configurationItemType']!)));
   }
 }

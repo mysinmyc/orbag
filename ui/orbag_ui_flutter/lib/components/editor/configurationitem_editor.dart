@@ -113,9 +113,10 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
                 bottom: TabBar(tabs: tabs, controller: tabController),
                 actions: [buildActions()],
               ),
-              body: _currentTabIndex == 0
-                  ? ConfigurationItemPropertiesEditor(widget.ci)
-                  : buildView(views[_currentTabIndex - 1]));
+              body: SingleChildScrollView(
+                  child: _currentTabIndex == 0
+                      ? ConfigurationItemPropertiesEditor(widget.ci)
+                      : buildView(views[_currentTabIndex - 1])));
         });
   }
 }
