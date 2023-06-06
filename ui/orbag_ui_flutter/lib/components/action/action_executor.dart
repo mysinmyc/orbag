@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/editor/inputproperty_editor.dart';
+import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 
 class ActionData {
@@ -57,7 +57,7 @@ class _ActionExecutorState extends State<ActionExecutor> {
               future: _submitActionRequestFuture,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return InputPropertyEditor(snapshot.data!.parameters!,
+                  return FieldGroupEditor(snapshot.data!.parameters!,
                       (value) => executeAction(value),
                       saveCaption: "Execute",
                       saveVisible: true,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/editor/inputproperty_editor.dart';
+import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 
 class ConfigurationItemPropertiesEditor extends StatefulWidget {
@@ -29,7 +29,7 @@ class _ConfigurationItemPropertiesEditorState
       future: _updateRequestFuture,
       builder: (BuildContext context, AsyncSnapshot<UpdateRequest?> snapshot) {
         if (snapshot.hasData) {
-          return InputPropertyEditor(
+          return FieldGroupEditor(
               snapshot.data!.properties!,
               (fields) => MyHttpClient.instance.updateApi
                   .update(UpdateRequest(

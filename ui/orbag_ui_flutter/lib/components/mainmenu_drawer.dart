@@ -25,9 +25,7 @@ Drawer buildDrawerFromClassModel(
 
   List<Widget> children = [
     const DrawerHeader(
-      decoration: BoxDecoration(
-        color: Colors.blue,
-      ),
+      //decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: Text('orbaG'),
     ),
   ];

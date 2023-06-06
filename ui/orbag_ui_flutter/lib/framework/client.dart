@@ -33,8 +33,16 @@ class MyHttpClient {
         basePath: serverAddress, authentication: _authentication());
   }
 
+  ApiClient _apiClient_Unhautenticated() {
+    return ApiClient(basePath: serverAddress);
+  }
+
   AuthenticationControllerApi authenticationApi() {
     return AuthenticationControllerApi(_apiClient());
+  }
+
+  ConfigControllerApi configApi() {
+    return ConfigControllerApi(_apiClient_Unhautenticated());
   }
 
   CreateControllerApi get createApi {

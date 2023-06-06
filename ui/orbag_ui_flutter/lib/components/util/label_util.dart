@@ -10,4 +10,19 @@ class LabelUtil {
     }
     return "${cis.length} cis";
   }
+
+  static String truncateLabel(String? label, {int size = 40}) {
+    if (label == null) {
+      return "";
+    }
+    if (label.length <= size) {
+      return label;
+    }
+
+    int leftSize = size ~/ 2;
+
+    return label.substring(0, leftSize + 1) +
+        "..." +
+        label.substring(label.length - (size - leftSize - 3) + 1, label.length);
+  }
 }

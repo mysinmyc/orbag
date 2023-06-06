@@ -30,8 +30,8 @@ public class CustomSecurityConfiguration  {
 		
 		UserDetails it_user = User.withDefaultPasswordEncoder().username("it_user").password("orbag")
 				.authorities(new SimpleGrantedAuthority("it_user")).build();
-		UserDetails user = User.withDefaultPasswordEncoder().username("user").password("orbag")
-				.authorities(new SimpleGrantedAuthority("user")).build();
+		UserDetails user = User.withDefaultPasswordEncoder().username("business_user").password("orbag")
+				.authorities(new SimpleGrantedAuthority("business_user")).build();
 		return new InMemoryUserDetailsManager(it_user,user);
 	}
 }

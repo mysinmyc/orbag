@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/create_ci.dart';
-import 'package:orbag_ui_flutter/components/editor/inputproperty_editor.dart';
+import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
@@ -48,9 +48,15 @@ class _SearchCiState extends State<SearchCi> {
     showDialog(
         context: context,
         builder: (context) => Dialog(
-                child: CreateCi(widget.configurationItemType, onCreated: (ci) {
-              Navigator.of(context).pop(ci);
-            }))).then((value) => {
+                child: (Column(
+                    children: RenderUtil.padAll([
+              ListTile(
+                  title: Text("Create new " +
+                      configurationItemDescriptor.displayLabel!)),
+              CreateCi(widget.configurationItemType, onCreated: (ci) {
+                Navigator.of(context).pop(ci);
+              })
+            ]))))).then((value) => {
           if (widget.onSelectedCi == null)
             {_submitSearch(request)}
           else
@@ -59,7 +65,7 @@ class _SearchCiState extends State<SearchCi> {
   }
 
   Widget buildFilters(BuildContext context, SearchRequest searchRequest) {
-    return InputPropertyEditor(searchRequest.parameters!, (value) {
+    return FieldGroupEditor(searchRequest.parameters!, (value) {
       searchRequest.parameters = value;
       _submitSearch(searchRequest);
     },

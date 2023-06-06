@@ -16,13 +16,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Orbag UI', home: const LoginView(), routes: {
-      HomeViewMaterial.routeName: (context) => const HomeViewMaterial(),
-      LoginView.routeName: (context) => const LoginView(),
-      SearchView.routeName: (context) => const SearchView(),
-      EditView.routeName: (context) => const EditView(),
-      CreateView.routeName: (context) => const CreateView(),
-      ActionView.routeName: (context) => const ActionView(),
-    });
+    return MaterialApp(
+        theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+        title: 'Orbag UI',
+        home: const LoginView(),
+        routes: {
+          HomeViewMaterial.routeName: (context) => const HomeViewMaterial(),
+          LoginView.routeName: (context) => const LoginView(),
+          SearchView.routeName: (context) => const SearchView(),
+          EditView.routeName: (context) => const EditView(),
+          CreateView.routeName: (context) => const CreateView(),
+          ActionView.routeName: (context) => const ActionView(),
+        });
   }
 }

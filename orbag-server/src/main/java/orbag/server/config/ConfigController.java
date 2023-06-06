@@ -3,6 +3,7 @@ package orbag.server.config;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,8 @@ public class ConfigController {
 		
 		ConfigResponse configResponse = new ConfigResponse();
 		configResponse.setAddress(configService.getServerAddress(httpServletRequest));
+		configResponse.setApplicationName(configService.getApplicationName());
+		configResponse.setLoginMessage(configService.getLoginMessage());
 		return configResponse;
 	}
 }

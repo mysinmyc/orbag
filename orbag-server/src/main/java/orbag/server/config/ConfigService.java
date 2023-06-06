@@ -10,7 +10,14 @@ public class ConfigService {
 
 	@Value("${custom.server.address:UNDEFINED}")
 	String serverAddress;
-	
+
+
+	@Value("${orbag.config.application_name:ORBAG}")
+	String applicationName;
+
+	@Value("${orbag.config.login_message:}")
+	String loginMessage;
+
 	public String getServerAddress(HttpServletRequest httpServletRequest) {
 		if ("UNDEFINED".equals(serverAddress)) {
 			//return httpServletRequest.getScheme()+"://"+httpServletRequest.getServerName()+":"+httpServletRequest.getLocalPort();
@@ -18,5 +25,13 @@ public class ConfigService {
 		} else {
 			return serverAddress;
 		}
+	}
+
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	public String getLoginMessage() {
+		return loginMessage;
 	}
 }

@@ -188,18 +188,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
-        "400":
-          description: Invalid objects in request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: Action submitted
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
+        "400":
+          description: Invalid objects in request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/action/getAvailable:
@@ -216,6 +216,12 @@ paths:
               $ref: '#/components/schemas/GetAvailableActionsRequest'
         required: true
       responses:
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -228,12 +234,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/GetAvailableActionsResponse'
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/action/buildExecutionTemplate:
@@ -250,6 +250,12 @@ paths:
               $ref: '#/components/schemas/BuildActionTemplateRequest'
         required: true
       responses:
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -268,12 +274,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionRequest'
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /public/config.json:
@@ -782,6 +782,10 @@ components:
       type: object
       properties:
         address:
+          type: string
+        applicationName:
+          type: string
+        loginMessage:
           type: string
     GetClassModelResponse:
       type: object

@@ -14,6 +14,8 @@ class ConfigResponse {
   /// Returns a new [ConfigResponse] instance.
   ConfigResponse({
     this.address,
+    this.applicationName,
+    this.loginMessage,
   });
 
   ///
@@ -24,17 +26,37 @@ class ConfigResponse {
   ///
   String? address;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? applicationName;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? loginMessage;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ConfigResponse &&
-     other.address == address;
+     other.address == address &&
+     other.applicationName == applicationName &&
+     other.loginMessage == loginMessage;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (address == null ? 0 : address!.hashCode);
+    (address == null ? 0 : address!.hashCode) +
+    (applicationName == null ? 0 : applicationName!.hashCode) +
+    (loginMessage == null ? 0 : loginMessage!.hashCode);
 
   @override
-  String toString() => 'ConfigResponse[address=$address]';
+  String toString() => 'ConfigResponse[address=$address, applicationName=$applicationName, loginMessage=$loginMessage]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -42,6 +64,16 @@ class ConfigResponse {
       json[r'address'] = this.address;
     } else {
       json[r'address'] = null;
+    }
+    if (this.applicationName != null) {
+      json[r'applicationName'] = this.applicationName;
+    } else {
+      json[r'applicationName'] = null;
+    }
+    if (this.loginMessage != null) {
+      json[r'loginMessage'] = this.loginMessage;
+    } else {
+      json[r'loginMessage'] = null;
     }
     return json;
   }
@@ -66,6 +98,8 @@ class ConfigResponse {
 
       return ConfigResponse(
         address: mapValueOfType<String>(json, r'address'),
+        applicationName: mapValueOfType<String>(json, r'applicationName'),
+        loginMessage: mapValueOfType<String>(json, r'loginMessage'),
       );
     }
     return null;

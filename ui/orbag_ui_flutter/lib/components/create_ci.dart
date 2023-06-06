@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/editor/inputproperty_editor.dart';
+import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/edit_view.dart';
@@ -46,12 +46,13 @@ class _CreateCiState extends State<CreateCi> {
         builder:
             (BuildContext context, AsyncSnapshot<CreateRequest?> snapshot) {
           if (snapshot.hasData) {
-            return InputPropertyEditor(
+            return FieldGroupEditor(
                 snapshot.data!.parameters!,
                 (value) => submitCreate(CreateRequest(
                     configurationItemType: widget.configurationItemType,
                     parameters: value)),
-                saveCaption: "Create");
+                saveCaption: "Create",
+                saveVisible: true);
           } else {
             return const Text("Loading...");
           }
