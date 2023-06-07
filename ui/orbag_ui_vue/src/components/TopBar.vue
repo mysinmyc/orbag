@@ -16,8 +16,8 @@
 
 <script lang="ts">
 
-import {ClassModel,getClassModel} from "@/framework/metadata"
-import { whoami, WhoAmIResponse } from "@/framework/authentication";
+import { myHttpClient } from '@/framework/client';
+import axios from 'axios';
 
 export default {
     data() {
@@ -27,22 +27,24 @@ export default {
         }
     },
     mounted() {
-        getClassModel().then( (classModel:ClassModel) =>{
+
+        axios.get
+        myHttpClient().metadataApi.getClassModel().then( (response) =>{
             let newCisMenu= new Map<string,Array<unknown>>();
             
-            for (let descriptor of classModel.configurationItemDescriptors) {
-                let currentCategory = newCisMenu.get(descriptor.category);
+            for (let descriptor of response.data!.configurationItemDescriptors!) {
+                let currentCategory = newCisMenu.get(descriptor.category!);
                 if (currentCategory==null )  {
                     currentCategory = new Array<any>();
-                    newCisMenu.set(descriptor.category,currentCategory);
+                    newCisMenu.set(descriptor.category!,currentCategory);
                 }
                 currentCategory.push( {link: "/search/"+descriptor.name, displayLabel: descriptor.displayLabel });
             }
 
             this.cisMenu = newCisMenu;
         });
-        whoami().then( (whoami:WhoAmIResponse) => {
-            this.userName = whoami.userName;
+        myHttpClient().authenticationApi.whoAmI().then( (whoamiResponse) => {
+            this.userName = whoamiResponse.data!.userName!;
         })
     }
 }

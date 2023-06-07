@@ -27,12 +27,11 @@
 
 <script lang="ts">
 
-import { ConfigurationItemReference } from "@/framework/reference"
-import {getAvailableActions, SerializableAction,submitAction} from "@/framework/action"
-import {getAvailableViews,SerializableView} from "@/framework/view";
 import ConfigurationItemPropertyEditor from './ConfigurationItemPropertyEditor.vue'
 import ConfigurationItemView from './ConfigurationItemView.vue';
 import { smartSubmitAction } from '@/framework/smartDispatcher';
+import { ConfigurationItemReference, GetAvailableActionsRequest, GetAvailableViewsRequest, SerializableAction, SerializableView } from '@/generated/client';
+import { myHttpClient } from '@/framework/client';
 
 export default {
   components: { ConfigurationItemPropertyEditor, ConfigurationItemView },
@@ -53,11 +52,11 @@ export default {
         }
     },
     mounted() {
-      getAvailableActions([this.value!]).then( r=>{
-        this.availablableActions = r;
+      myHttpClient().actionApi.getAvailable({targetCis:[this.value]} as GetAvailableActionsRequest).then( r=>{
+        this.availablableActions = r.data!.availableActions!;
       });
-      getAvailableViews(this.value!).then( r=>{
-        this.availablableViews = r;
+      myHttpClient().viewApi.getAvailableViews({targetCi: this.value} as GetAvailableViewsRequest).then( r=>{
+        this.availablableViews = r.data!.availableViews!;
       });
     }
 }

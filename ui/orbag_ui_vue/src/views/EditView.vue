@@ -3,8 +3,9 @@
 </template>
 <script lang="ts">
 
-import {ConfigurationItemReference, loadReference} from "@/framework/reference"
 import ConfigurationItemEditor from '@/components/ConfigurationItemEditor.vue';
+import { ConfigurationItemReference } from '@/generated/client';
+import { myHttpClient } from '@/framework/client';
 
 export default {
   components: { ConfigurationItemEditor },
@@ -23,8 +24,8 @@ export default {
       
     },
     mounted() {
-      loadReference(this.configurationItemId,this.configurationItemType).then(
-        (ci) => this.ci = ci
+      myHttpClient().referenceApi.getConfigurationItem(this.configurationItemType,this.configurationItemId).then(
+        (r) => this.ci = r.data!
       )
     },
 }

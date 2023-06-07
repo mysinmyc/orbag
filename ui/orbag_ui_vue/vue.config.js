@@ -5,11 +5,10 @@ module.exports = defineConfig({
   devServer: {
     port: 9090, 
     proxy: {
-      '^/api': {
+      '^/public/config.json': {
         target: 'http://localhost:8080',
         ws: true,
-        changeOrigin: true,
-        auth: 'it_user:orbag'
+        changeOrigin: true
       }
     }
   }

@@ -1,8 +1,11 @@
 package orbag.server.reference;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.security.OrbagSecurityException;
+import orbag.server.ApiInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +17,7 @@ import orbag.reference.ConfigurationItemReference;
 
 @RestController
 @RequestMapping("/api/reference")
+@SecurityRequirements({@SecurityRequirement(name = ApiInfo.JWT)})
 public class ReferenceController {
 
 	@Autowired

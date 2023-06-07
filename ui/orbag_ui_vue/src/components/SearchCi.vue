@@ -10,7 +10,7 @@
             
         <b-form inline v-if=" searchRequest != undefined " @submit="onSubmit">
     
-        <b-form-input class="mr-2" v-for=" field in searchRequest.parameters.stringFields " :key="field.name" :placeholder="field.displayLabel + ' filter'"  v-model="field.value"/>
+        <b-form-input class="mr-2" v-for=" field in searchRequest?.parameters?.stringFields " :key="field.name" :placeholder="field.displayLabel + ' filter'"  v-model="field.value"/>
 
         <b-select class="mr-2" v-model="searchRequest.resultType">
             <b-select-option value="ROW_REFERENCE">Don't show any field</b-select-option>
@@ -32,11 +32,9 @@
 </template>
 
 <script lang="ts">
-import {SearchRequest, getSearchTemplate, executeSearch} from "@/framework/search"
 import ConfigurationItemTable from '@/components/ConfigurationItemTable.vue'
-import { ConfigurationItemDescriptor, getClassMetadata } from '@/framework/metadata'
-import { SerializableTable } from '@/framework/data'
-import { ConfigurationItemReference } from '@/framework/reference'
+import { myHttpClient } from '@/framework/client'
+import { ConfigurationItemReference, SearchRequest, SerializableConfigurationItemDescriptor, SerializableTable } from '@/generated/client'
 
 export default {
     components: { ConfigurationItemTable },
@@ -50,20 +48,20 @@ export default {
         return {
             searchRequest: undefined as SearchRequest|undefined,
             result: undefined as SerializableTable|undefined,
-            classDescriptor: undefined as ConfigurationItemDescriptor | undefined,
+            classDescriptor: undefined as SerializableConfigurationItemDescriptor | undefined,
             pending: false
 
         }
     },
     mounted() {
         this.reloadFromTemplate();
-        getClassMetadata(this.configurationItemType!,false).then( (r)=>
-            this.classDescriptor = r
+        myHttpClient().metadataApi.getClassMetadata(this.configurationItemType!,false).then( (r)=>
+            this.classDescriptor = r.data!
         );
     }, 
     methods: {
         reloadFromTemplate() {
-            getSearchTemplate(this.configurationItemType!).then( (r) => this.searchRequest = r);
+            myHttpClient().searchApi.getSearchTemplate(this.configurationItemType!).then( (r) => this.searchRequest = r.data!);
         },
         onSubmit(event:Event) {
             event.preventDefault();
@@ -71,7 +69,7 @@ export default {
         },
         doSearch() {
             this.pending=true
-            executeSearch(this.searchRequest as SearchRequest).then( (r) => this.result = r).finally(
+            myHttpClient().searchApi.execute(this.searchRequest as SearchRequest).then( (r) => this.result = r.data!).finally(
                 ()=> this.pending =false
             );
         },

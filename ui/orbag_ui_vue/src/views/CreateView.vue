@@ -23,17 +23,17 @@
   </b-card>
 </template>
 <script lang="ts">
+import { CreateRequest, SerializableConfigurationItemDescriptor } from '@/generated/client';
 
-import { getCreateRequestTemplate, CreateRequest, createConfigurationItem } from "@/framework/create";
-import { ConfigurationItemDescriptor, getClassMetadata } from '@/framework/metadata';
 import InputPropertyEditor from '../components/InputPropertyEditor.vue';
+import { myHttpClient } from '@/framework/client';
 
 export default {
   components: {InputPropertyEditor  },
     data() {
         return {
             createRequest: undefined as CreateRequest | undefined,
-            classDescriptor: undefined as ConfigurationItemDescriptor | undefined,
+            classDescriptor: undefined as SerializableConfigurationItemDescriptor | undefined,
             changed: false
         }
     },  
@@ -44,18 +44,18 @@ export default {
      
     },
     mounted() {
-      getCreateRequestTemplate(this.configurationItemType).then( (r)=>
-        this.createRequest = r
+      myHttpClient().createApi.getCreateTemplate(this.configurationItemType).then( (r)=>
+        this.createRequest = r.data!
       );
-      getClassMetadata(this.configurationItemType,false).then( (r)=>
-            this.classDescriptor = r
+      myHttpClient().metadataApi.getClassMetadata(this.configurationItemType,false).then( (r)=>
+            this.classDescriptor = r.data!
       );
     },
     methods: {
       onSubmit(event:Event) {
         event.preventDefault;
-        createConfigurationItem(this.createRequest!).then((r)=>{
-            this.$router.push("/edit/"+r.configurationItemType+"/"+r.identifier);
+        myHttpClient().createApi.create(this.createRequest!).then((r)=>{
+            this.$router.push("/edit/"+r.data!.configurationItemType+"/"+r.data!.identifier!);
         });
       }
     }

@@ -1,6 +1,5 @@
+import { ConfigurationItemReference, SerializableAction, SubmitActionResponse } from "@/generated/client";
 import {Subject, Subscription } from "rxjs";
-import { ConfigurationItemReference } from "./reference";
-import { SerializableAction, SubmitActionResponse } from "./action";
 
 
 const _editCiSubject = new Subject<ConfigurationItemReference>();

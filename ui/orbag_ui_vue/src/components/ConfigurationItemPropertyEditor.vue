@@ -17,12 +17,14 @@
 </template>
 
 <script lang="ts">
+import { ConfigurationItemReference, UpdateRequest } from '@/generated/client'
 
-import { ConfigurationItemReference } from "@/framework/reference"
-import { UpdateRequest, getUpdateRequestTemplate, updateConfigurationItem } from "@/framework/update"
-import { InputFieldBase } from '@/framework/input'
 import InputPropertyEditor from './InputPropertyEditor.vue'
+import { myHttpClient } from '@/framework/client'
 
+export type InputFieldBase<T> = {
+    changed?: boolean
+}
 export default {
   components: { InputPropertyEditor },
     props: {
@@ -40,8 +42,9 @@ export default {
         }
     },
     mounted() {
-        getUpdateRequestTemplate(this.value! ).then( (r)=> {
-            this.updateRequest = r;
+
+        myHttpClient().updateApi.buildUpdateTemplate(this.value! ).then( (r)=> {
+            this.updateRequest = r.data!;
             this.changed =false;
         })
     },
@@ -49,9 +52,9 @@ export default {
         onSubmit(event:Event) {
             event.preventDefault;
             this.changed =false;
-            updateConfigurationItem(this.updateRequest!).then( (r)=>
-                getUpdateRequestTemplate(r).then( (r1)=> {
-                    this.updateRequest = r1;
+            myHttpClient().updateApi.update(this.updateRequest!).then( (r)=>
+            myHttpClient().updateApi.buildUpdateTemplate(r.data!).then( (r1)=> {
+                    this.updateRequest = r1.data!;
                     this.changed =false;
                 })                
             )

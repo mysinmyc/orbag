@@ -29,10 +29,9 @@
 
 <script lang="ts">
 
-import {SerializableTable,SerializableRow, SerializableColumn} from "@/framework/data"
-import { ConfigurationItemReference } from '@/framework/reference'
-import {getAvailableActions, getAvailableActionsWithSource, SerializableAction, submitAction, SubmitActionResponse} from "@/framework/action"
 import { smartSubmitAction } from '@/framework/smartDispatcher'
+import { ConfigurationItemReference, GetAvailableActionsRequest, SerializableAction, SerializableColumn, SerializableRow, SerializableTable, SubmitActionResponse } from '@/generated/client';
+import { myHttpClient } from '@/framework/client';
 
 export default {
   components: { },
@@ -68,13 +67,13 @@ export default {
                 }
             }
             fields.sort( (a,b) => {
-                if (a.key.startsWith("__")) {
+                if (a.key?.startsWith("__")) {
                     return -1
                 }
-                if (b.key.startsWith("__")) {
+                if (b.key?.startsWith("__")) {
                     return 1
                 }
-                return a.label.localeCompare(b.label);
+                return a.label!.localeCompare(b.label!);
             });
             return fields;
         }
@@ -84,10 +83,11 @@ export default {
             this.availablableActions=[];
             this.selectedCis =  new Array<ConfigurationItemReference>();
             for ( let ci  of items ) {
-                this.selectedCis.push (ci.fields.__reference);
+                this.selectedCis.push (ci.fields!.__reference);
             }
-            getAvailableActionsWithSource(this.sourceci,this.selectedCis).then( r=>{
-                this.availablableActions = r;
+
+            myHttpClient().actionApi.getAvailable({sourceCi: this.sourceci,targetCis: this.selectedCis} as GetAvailableActionsRequest).then( r=>{
+                this.availablableActions = r.data!.availableActions!;
             });
         },
         onReferenceClick(column:SerializableColumn,ci:ConfigurationItemReference) {

@@ -21,6 +21,12 @@ Method | HTTP request | Description
 ### Example
 ```dart
 import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = UpdateControllerApi();
 final configurationItemReference = ConfigurationItemReference(); // ConfigurationItemReference | 
@@ -45,7 +51,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[JWT](../README.md#JWT)
 
 ### HTTP request headers
 
@@ -62,6 +68,12 @@ No authorization required
 ### Example
 ```dart
 import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = UpdateControllerApi();
 final updateRequest = UpdateRequest(); // UpdateRequest | 
@@ -86,7 +98,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[JWT](../README.md#JWT)
 
 ### HTTP request headers
 

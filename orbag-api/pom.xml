@@ -36,6 +36,7 @@
                             <version>6.6.0</version>
                             <executions>
                                 <execution>
+                                    <id>flutter</id>
                                     <goals>
                                         <goal>generate</goal>
                                     </goals>
@@ -47,8 +48,23 @@
                                         </configOptions>
                                     </configuration>
                                 </execution>
+                                <execution>
+                                    <id>vue</id>
+                                    <goals>
+                                        <goal>generate</goal>
+                                    </goals>
+                                    <configuration>
+                                        <inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
+                                        <output>${project.basedir}/../ui/orbag_ui_vue/src/generated/client</output>
+                                        <generatorName>typescript-axios</generatorName>
+                                        <configOptions>
+                                        </configOptions>
+                                    </configuration>
+                                </execution>
                             </executions>
                         </plugin>
+
+
         </plugins>
     </build>
 </project>

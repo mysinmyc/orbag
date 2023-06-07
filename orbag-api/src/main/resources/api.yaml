@@ -24,6 +24,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/GetAvailableViewsResponse'
+      security:
+      - JWT: []
   /api/view/bind:
     post:
       tags:
@@ -42,6 +44,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/BindViewResponse'
+      security:
+      - JWT: []
   /api/update/execute:
     post:
       tags:
@@ -60,6 +64,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ConfigurationItemReference'
+      security:
+      - JWT: []
   /api/update/buildUpdateTemplate:
     post:
       tags:
@@ -78,6 +84,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UpdateRequest'
+      security:
+      - JWT: []
   /api/search/execute:
     post:
       tags:
@@ -111,6 +119,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SerializableTable'
+      security:
+      - JWT: []
   /api/create/execute:
     post:
       tags:
@@ -188,18 +198,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
-        "200":
-          description: Action submitted
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/SubmitActionResponse'
         "400":
           description: Invalid objects in request
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorPayload'
+        "200":
+          description: Action submitted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
       security:
       - JWT: []
   /api/action/getAvailable:
@@ -216,12 +226,6 @@ paths:
               $ref: '#/components/schemas/GetAvailableActionsRequest'
         required: true
       responses:
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -234,6 +238,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/GetAvailableActionsResponse'
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/action/buildExecutionTemplate:
@@ -250,12 +260,6 @@ paths:
               $ref: '#/components/schemas/BuildActionTemplateRequest'
         required: true
       responses:
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -274,6 +278,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionRequest'
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /public/config.json:
@@ -307,6 +317,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SearchRequest'
+      security:
+      - JWT: []
   /api/reference/{configurationItemType}/{configurationItemId}:
     get:
       tags:
@@ -330,6 +342,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ConfigurationItemReference'
+      security:
+      - JWT: []
   /api/metadata:
     get:
       tags:

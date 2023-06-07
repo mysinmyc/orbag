@@ -12,6 +12,6 @@ public class AuthenticationBuilder {
     @Autowired
     public void buildAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder, PasswordEncoder passwordEncoder) throws Exception {
         authenticationManagerBuilder.inMemoryAuthentication().withUser("it_user").password(passwordEncoder.encode("orbag")).authorities(new SimpleGrantedAuthority("it_user"))
-                .and().withUser("user").password(passwordEncoder.encode("orbag")).authorities(new SimpleGrantedAuthority("user"));
+                .and().withUser("business_user").password(passwordEncoder.encode("orbag")).authorities(new SimpleGrantedAuthority("business_user"));
     }
 }

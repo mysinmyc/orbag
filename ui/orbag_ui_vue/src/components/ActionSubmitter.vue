@@ -2,7 +2,7 @@
   <span>
   <my-modal-container v-if="showActionInputProperties">
       <template #header>
-        {{request?.action.displayLabel}}
+        {{request?.action?.displayLabel}}
       </template>
       <template #body>
         <input-property-editor :value="request?.parameters"/>
@@ -21,11 +21,12 @@
 </template>
   
 <script lang="ts">
-import { buildActionTemplateWithSource, submitAction, SubmitActionRequest, ValidationError } from '@/framework/action'
 import InputPropertyEditor from './InputPropertyEditor.vue'
-import { isFieldGroupEmpty } from '@/framework/input'
 import { SmartActionEntry, subscribeSmartSubmitAction } from '@/framework/smartDispatcher'
 import MyModalContainer from './MyModalContainer.vue'
+import { BuildActionTemplateRequest, SubmitActionRequest } from '@/generated/client'
+import { myHttpClient } from '@/framework/client'
+import { isFieldGroupEmpty } from '@/framework/input'
   
   export default {
     components: { InputPropertyEditor, MyModalContainer},
@@ -45,9 +46,9 @@ import MyModalContainer from './MyModalContainer.vue'
         },
         doSubmit() {
           this.showMessage=false;
-          submitAction(this.request!).then(r=>{
-                if (r.requestValid) {
-                  this.message = r.message;
+          myHttpClient().actionApi.submit(this.request!).then(r=>{
+                if (r.data!.requestValid) {
+                  this.message = r.data!.message!;
                   this.showMessage=true;
                   this.messageType="success";
                   if (this.requestEntry?.callback != undefined) {
@@ -55,14 +56,14 @@ import MyModalContainer from './MyModalContainer.vue'
                   }
                   this.showActionInputProperties =false;
                 } else {
-                  r.validationErrors.forEach( (error, index) =>{
-                      this.message = error.error;
+                  r.data!.validationErrors!.forEach( (error, index) =>{
+                      this.message = error.error!;
                       this.messageType = "warning";
                       this.showMessage =true;
                   });
                 }
             }).catch ( reason=> {
-                this.message = this.request!.action.displayLabel + " failed: "+reason;
+                this.message = this.request!.action!.displayLabel + " failed: "+reason;
                 this.messageType="warning";
                 this.showMessage=true;
             });
@@ -73,9 +74,10 @@ import MyModalContainer from './MyModalContainer.vue'
           this.showActionInputProperties=false;
           this.showMessage=false;
           this.requestEntry = entry;
-          buildActionTemplateWithSource(entry.action,entry.sourceCi,entry.cis).then( (request)=>{
-            this.request = request
-            if (isFieldGroupEmpty(this.request!.parameters)) {
+
+          myHttpClient().actionApi.buildExecutionTemplate ( { action: entry.action, sourceCi: entry.sourceCi,targetCis: entry.cis} as BuildActionTemplateRequest).then( (r)=>{
+            this.request = r.data!
+            if (isFieldGroupEmpty(this.request!.parameters!)) {
               this.doSubmit();
             } else {
               this.showActionInputProperties=true;

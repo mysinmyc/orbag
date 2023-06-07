@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import SearchCi from '@/components/SearchCi.vue'
-import { ConfigurationItemReference } from '@/framework/reference';
 import { smartEditConfigurationItem } from '@/framework/smartDispatcher';
+import { ConfigurationItemReference } from '@/generated/client';
 
 export default {
     components: {  SearchCi },

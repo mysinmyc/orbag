@@ -1,7 +1,10 @@
 package orbag.server.update;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
+import orbag.server.ApiInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +17,7 @@ import orbag.security.OrbagSecurityException;
 
 @RestController
 @RequestMapping("/api/update")
+@SecurityRequirements({@SecurityRequirement(name = ApiInfo.JWT)})
 public class UpdateController {
 
 	@Autowired

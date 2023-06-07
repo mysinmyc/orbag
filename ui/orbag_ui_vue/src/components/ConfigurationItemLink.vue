@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
+import { ConfigurationItemReference } from '@/generated/client';
 
-import {ConfigurationItemReference} from "@/framework/reference"
 
 export default {
     props: {

@@ -4,11 +4,10 @@
 
 <script lang="ts">
 
-import {SerializableTable} from "@/framework/data"
-import { ConfigurationItemReference } from '@/framework/reference'
-import { SerializableView, bindView } from "@/framework/view"
 import ConfigurationItemTable from './ConfigurationItemTable.vue'
 import { smartEditConfigurationItem } from '@/framework/smartDispatcher'
+import { BindViewRequest, ConfigurationItemReference, SerializableTable, SerializableView } from '@/generated/client'
+import { myHttpClient } from '@/framework/client'
 
 export default {
   components: { ConfigurationItemTable },
@@ -26,8 +25,8 @@ export default {
         }
     },
     mounted() {
-        bindView(this.view!, this.ci! ).then( (r)=> {
-            this.table = r;
+        myHttpClient().viewApi.bind({view: this.view!, targetCi: this.ci!} as BindViewRequest ).then( (r)=> {
+            this.table = r.data!.resultTable!;
         })
     },
     methods: {

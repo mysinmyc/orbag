@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import {ConfigurationItemReference} from "@/framework/reference"
-import {listConfigurationItems} from "@/framework/list"
+import { ConfigurationItemReference } from '@/generated/client';
+import { myHttpClient } from '@/framework/client';
 
 export default {
     data() {
@@ -45,8 +45,8 @@ export default {
     },
     methods: {
         reloadList() {
-            listConfigurationItems(this.configurationItemType).then( r => {
-                this.cis = r.cis;
+            myHttpClient().listApi.listConfigurationItems(this.configurationItemType).then( r => {
+                this.cis = r.data!.cis!;
             });
         }
     }
