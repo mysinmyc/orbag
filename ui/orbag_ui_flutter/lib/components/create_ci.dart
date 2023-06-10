@@ -25,7 +25,7 @@ class _CreateCiState extends State<CreateCi> {
   }
 
   submitCreate(CreateRequest request) async {
-    ErrorMessageWrapper(
+    ErrorMessageWrapper.wrap(
         context,
         MyHttpClient.instance.createApi.create(request).then((value) => {
               if (widget.onCreated == null)

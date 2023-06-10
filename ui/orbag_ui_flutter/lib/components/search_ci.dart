@@ -3,6 +3,7 @@ import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/create_ci.dart';
 import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
+import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 
@@ -23,6 +24,8 @@ class _SearchCiState extends State<SearchCi> {
   Future<SerializableConfigurationItemDescriptor?>?
       _configurationItemDescriptorFuture;
 
+  bool _searchStarted = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +41,9 @@ class _SearchCiState extends State<SearchCi> {
     });
 
     setState(() {
+      _searchStarted = true;
       _searchResultFuture = MyHttpClient.instance.searchApi.execute(request);
+      ErrorMessageWrapper.wrap(context, _searchResultFuture!, "Search failed");
     });
   }
 
@@ -69,7 +74,7 @@ class _SearchCiState extends State<SearchCi> {
       searchRequest.parameters = value;
       _submitSearch(searchRequest);
     },
-        saveCaption: "Search",
+        saveCaption: "Search ",
         saveIcon: const Icon(Icons.search),
         saveVisible: true,
         additionalFields: (context, changeCallBack) => [
@@ -85,7 +90,9 @@ class _SearchCiState extends State<SearchCi> {
                         value: SearchRequestResultTypeEnum.ALL_FIELDS,
                         child: Text("Show all fields"))
                   ],
-                  value: widget.onSelectedCi == null
+                  value: widget.onSelectedCi == null &&
+                          MediaQuery.of(context).orientation ==
+                              Orientation.landscape
                       ? searchRequest.resultType
                       : SearchRequestResultTypeEnum.ROW_REFERENCE,
                   onChanged: (newValue) => {},
@@ -135,10 +142,14 @@ class _SearchCiState extends State<SearchCi> {
           future: _searchResultFuture,
           builder: (BuildContext context,
               AsyncSnapshot<SerializableTable?> snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasError) {
+              return Text("");
+            } else if (snapshot.hasData) {
               return buildResults(context, snapshot.requireData!);
+            } else if (_searchStarted) {
+              return CircularProgressIndicator();
             } else {
-              return const Text("waiting for results");
+              return Text("");
             }
           })
     ]);

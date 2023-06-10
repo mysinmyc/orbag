@@ -4,7 +4,7 @@ import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/search_view.dart';
 
 Drawer buildDrawerFromClassModel(
-    BuildContext context, GetClassModelResponse classModel) {
+    BuildContext context, String title, GetClassModelResponse classModel) {
   Map<String, ExpansionTile> submenus = {};
 
   for (SerializableConfigurationItemDescriptor currentClass
@@ -24,9 +24,9 @@ Drawer buildDrawerFromClassModel(
   }
 
   List<Widget> children = [
-    const DrawerHeader(
+    DrawerHeader(
       //decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-      child: Text('orbaG'),
+      child: Text(title),
     ),
   ];
 
@@ -36,7 +36,8 @@ Drawer buildDrawerFromClassModel(
 }
 
 class MainMenuDrawer extends StatefulWidget {
-  const MainMenuDrawer({super.key});
+  final String title;
+  const MainMenuDrawer({this.title = "", super.key});
 
   @override
   State<MainMenuDrawer> createState() => _MainMenuState();
@@ -53,7 +54,8 @@ class _MainMenuState extends State<MainMenuDrawer> {
         builder: (BuildContext context,
             AsyncSnapshot<GetClassModelResponse?> snapshot) {
           if (snapshot.hasData) {
-            return buildDrawerFromClassModel(context, snapshot.requireData!);
+            return buildDrawerFromClassModel(
+                context, widget.title, snapshot.requireData!);
           } else {
             return const Text("Loading...");
           }

@@ -4,6 +4,7 @@ import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/action/action_executor.dart';
 import 'package:orbag_ui_flutter/components/table/tablesource.dart';
 import 'package:orbag_ui_flutter/components/util/label_util.dart';
+import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/action_view.dart';
 
@@ -85,7 +86,7 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
       Conditional.single(
           context: context,
           conditionBuilder: (context) => _selectedRows.isNotEmpty,
-          widgetBuilder: (context) => Row(children: [
+          widgetBuilder: (context) => RenderUtil.pad(Row(children: [
                 Text("Selected ${LabelUtil.getCisLabel(selectedCis)}"),
                 const Padding(padding: EdgeInsets.all(10)),
                 FutureBuilder<GetAvailableActionsResponse?>(
@@ -105,7 +106,7 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
                         return const Text("");
                       }
                     })
-              ]),
+              ])),
           fallbackBuilder: (context) => const Text("")),
       buildTable(context, widget.table)
     ]);

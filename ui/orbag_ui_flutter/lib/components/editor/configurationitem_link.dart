@@ -9,8 +9,10 @@ class ConfigurationItemLink extends StatelessWidget {
   const ConfigurationItemLink(this.ci, {this.onSelectedCi, super.key});
 
   Widget getLabel() {
-    return Text(LabelUtil.truncateLabel(
-        ci!.displayLabel! == null ? "???" : ci!.displayLabel!));
+    return Align(
+        alignment: Alignment.centerLeft,
+        child:
+            Text(LabelUtil.truncateLabel(ci!.displayLabel ?? "???", size: 20)));
   }
 
   @override
@@ -19,19 +21,21 @@ class ConfigurationItemLink extends StatelessWidget {
       return Text("empty");
     } else {
       return SizedBox(
-          width: 350,
-          child: OutlinedButton.icon(
-              icon:
-                  Icon(onSelectedCi == null ? Icons.open_in_new : Icons.input),
-              label: getLabel(),
-              onPressed: () {
-                if (onSelectedCi == null) {
-                  Navigator.pushNamed(context, EditView.routeName,
-                      arguments: ci);
-                } else {
-                  onSelectedCi!(ci!);
-                }
-              }));
+          width: 200,
+          child: Tooltip(
+              message: ci!.displayLabel,
+              child: TextButton.icon(
+                  icon: Icon(
+                      onSelectedCi == null ? Icons.open_in_new : Icons.input),
+                  label: getLabel(),
+                  onPressed: () {
+                    if (onSelectedCi == null) {
+                      Navigator.pushNamed(context, EditView.routeName,
+                          arguments: ci);
+                    } else {
+                      onSelectedCi!(ci!);
+                    }
+                  })));
     }
   }
 }

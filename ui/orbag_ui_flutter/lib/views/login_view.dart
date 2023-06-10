@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
@@ -21,12 +19,25 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final passwordFocusNode = FocusNode();
+
   late Future<ConfigResponse?> _getConfigFuture;
 
   @override
   void initState() {
     super.initState();
     _getConfigFuture = MyHttpClient.instance.configApi().getConfig();
+  }
+
+  void _submitLogin() {
+    ErrorMessageWrapper.wrap(
+        context,
+        MyHttpClient.instance
+            .login(userNameController.text, passwordController.text)
+            .then((value) =>
+                {Navigator.pushNamed(context, HomeViewMaterial.routeName)}),
+        "Login failed",
+        onClose: () => FocusScope.of(context).requestFocus(passwordFocusNode));
   }
 
   @override
@@ -41,91 +52,67 @@ class _LoginViewState extends State<LoginView> {
                   child: Align(
                       alignment: Alignment.center,
                       child: SizedBox(
-                          width: 400,
-                          child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(12)),
-                              ),
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                        title: Text(snapshot.hasData
-                                            ? snapshot.data!.applicationName!
-                                            : "Orbag")),
-                                    Text(snapshot.hasData
-                                        ? snapshot.data!.loginMessage!
-                                        : "Please login"),
-                                    Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Form(
-                                              key: _formKey,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            15),
-                                                    child: TextField(
-                                                      controller:
-                                                          userNameController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                              labelText:
-                                                                  "Login"),
-                                                      autofocus: true,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            15),
-                                                    child: TextField(
-                                                      obscureText: true,
-                                                      controller:
-                                                          passwordController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                              labelText:
-                                                                  "Password"),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              15),
-                                                      child: ElevatedButton(
-                                                        onPressed: () => {
-                                                          ErrorMessageWrapper(
-                                                              context,
-                                                              MyHttpClient
-                                                                  .instance
-                                                                  .login(
-                                                                      userNameController
-                                                                          .text,
-                                                                      passwordController
-                                                                          .text)
-                                                                  .then(
-                                                                      (value) =>
-                                                                          {
-                                                                            Navigator.pushNamed(context,
-                                                                                HomeViewMaterial.routeName)
-                                                                          }),
-                                                              "Login failed")
-                                                        },
-                                                        child:
-                                                            const Text("Login"),
-                                                      ))
-                                                ],
-                                              ))
-                                        ])
-                                  ]))))));
+                          width: 300,
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            Container(
+                                alignment: Alignment.topCenter,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                    snapshot.hasData
+                                        ? snapshot.data!.applicationName!
+                                        : "Orbag",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall)),
+                            Text(snapshot.hasData
+                                ? snapshot.data!.loginMessage!
+                                : "Please login"),
+                            Column(children: [
+                              Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: TextField(
+                                          controller: userNameController,
+                                          decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: "Login"),
+                                          textInputAction: TextInputAction.next,
+                                          autofocus: true,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: TextField(
+                                          obscureText: true,
+                                          controller: passwordController,
+                                          focusNode: passwordFocusNode,
+                                          decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: "Password"),
+                                          onSubmitted: (value) =>
+                                              _submitLogin(),
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      {_submitLogin()},
+                                                  child: const Text("Login"),
+                                                )
+                                              ]))
+                                    ],
+                                  ))
+                            ])
+                          ])))));
         });
   }
 }

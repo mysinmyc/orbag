@@ -1,0 +1,35 @@
+# TODO
+- [ ] ui
+  - [ ] ui-flutter
+    - [ ] action feedbacks
+    - [ ] sistemare configurationitem tables 
+      - [ ] sort
+- [ ] orcherstrazione
+  - [ ] core 
+  - [ ] ui-flutter
+  - [ ] ui-vue
+- [ ] bookmarks
+  - [ ] core
+  - [ ] ui-flutter
+  - [ ] ui-vue
+- [ ] export tables
+    - [ ] core
+      - [ ] tsv
+      - [ ] excel?
+      - [ ] ontimecache
+      - [ ] async
+    - [ ] ui-flutter
+    - [ ] ui-vue 
+- [ ] fieldgroup categories
+    - [ ] core
+    - [ ] ui-flutter
+    - [ ] ui-vue 
+- [ ] ad hoc actions (azioni senza ci)
+    - [ ] core
+    - [ ] ui-flutter
+    - [ ] ui-vue
+- [ ] reportistica
+    - [ ] core
+    - [ ] ui-flutter
+    - [ ] ui-vue
+- [ ] demo

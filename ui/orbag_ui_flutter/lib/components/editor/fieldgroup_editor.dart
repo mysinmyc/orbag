@@ -36,6 +36,8 @@ class FieldGroupEditor extends StatefulWidget {
 class _FieldGroupEditorState extends State<FieldGroupEditor> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  FocusNode focusNode = FocusNode();
+
   bool changed = false;
   @override
   void initState() {
@@ -50,8 +52,12 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           readOnly: currentRequestField.readOnly!,
           enabled: !currentRequestField.readOnly!,
           initialValue: currentRequestField.value,
+          autofocus: filters.isEmpty,
+          textInputAction: TextInputAction.send,
           decoration: InputDecoration(
-              labelText: currentRequestField.displayLabel, filled: true),
+              border: const OutlineInputBorder(),
+              labelText: currentRequestField.displayLabel,
+              filled: true),
           onChanged: (value) => {
                 currentRequestField.changed = true,
                 currentRequestField.value = value
@@ -62,12 +68,15 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     for (NumericField currentRequestField in fields.numericFields) {
       TextFormField currentField = TextFormField(
           readOnly: currentRequestField.readOnly!,
+          textInputAction: TextInputAction.send,
+          autofocus: filters.isEmpty,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
           initialValue: currentRequestField.value?.toString(),
-          decoration:
-              InputDecoration(labelText: currentRequestField.displayLabel),
+          decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: currentRequestField.displayLabel),
           onChanged: (value) => {
                 currentRequestField.changed = true,
                 currentRequestField.value = int.tryParse(value)
@@ -99,39 +108,40 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
               expands: true,
               child: Row(
                   children: RenderUtil.padAll([
-                ConfigurationItemLink(currentRequestReferenceField.value),
                 Conditional.single(
                     context: context,
                     conditionBuilder: (context) =>
                         !currentRequestReferenceField.readOnly!,
                     widgetBuilder: (context) {
-                      return ElevatedButton.icon(
+                      return IconButton(
                           icon: const Icon(Icons.edit),
-                          label: Text(currentRequestReferenceField.value == null
-                              ? "Set"
-                              : "Change"),
                           onPressed: () => {
                                 showDialog(
                                     context: context,
                                     builder: (context) => Dialog(
-                                            child: SearchCi(
+                                        child: Container(
+                                            padding: EdgeInsets.only(
+                                                top: 40, bottom: 40),
+                                            child: SingleChildScrollView(
+                                                child: SearchCi(
+                                                    currentRequestReferenceField
+                                                        .configurationItemType!,
+                                                    onSelectedCi: (value) {
+                                              Navigator.of(context).pop(value);
+                                              setState(() {
                                                 currentRequestReferenceField
-                                                    .configurationItemType!,
-                                                onSelectedCi: (value) {
-                                          Navigator.of(context).pop(value);
-                                          setState(() {
-                                            currentRequestReferenceField.value =
-                                                value;
-                                            currentRequestReferenceField
-                                                .changed = true;
-                                            changed = true;
-                                          });
-                                        })))
+                                                    .value = value;
+                                                currentRequestReferenceField
+                                                    .changed = true;
+                                                changed = true;
+                                              });
+                                            })))))
                               });
                     },
                     fallbackBuilder: (context) {
                       return Text("");
-                    })
+                    }),
+                ConfigurationItemLink(currentRequestReferenceField.value)
               ], padding: const EdgeInsets.only(top: 10, right: 10))))));
     }
 
@@ -176,13 +186,21 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
       buttons.addAll(widget.additionalButtons!(
           context, () => setState(() => changed = true)));
     }
-    filters.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children:
-            RenderUtil.padAll(buttons, padding: EdgeInsets.only(right: 10))));
+
     return Form(
       key: _formKey,
-      child: Column(children: RenderUtil.padAll(filters)),
+      child: Column(
+          children: RenderUtil.toRows(
+                  RenderUtil.padAll(filters),
+                  (MediaQuery.of(context).size.width / 600)
+                      .clamp(1, 4)
+                      .round()) +
+              [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:
+                        RenderUtil.padAll(buttons, padding: EdgeInsets.all(40)))
+              ]),
       onChanged: () => {setState(() => changed = true)},
     );
   }

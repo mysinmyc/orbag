@@ -21,4 +21,21 @@ class RenderUtil {
   static List<Widget> padAll(List<Widget> widgets, {padding = defaultPadding}) {
     return widgets.map((e) => RenderUtil.pad(e, padding: padding)).toList();
   }
+
+  static List<Widget> toRows(List<Widget> widgets, int size) {
+    List<Widget> result = List.empty(growable: true);
+
+    List<Widget> currentRow = List.empty(growable: true);
+    for (Widget currentWidget in widgets) {
+      if (currentRow.length == size) {
+        result.add(Row(children: currentRow));
+        currentRow = List.empty(growable: true);
+      }
+      currentRow.add(Expanded(child: currentWidget));
+    }
+    if (currentRow.isNotEmpty) {
+      result.add(Row(children: currentRow));
+    }
+    return result;
+  }
 }
