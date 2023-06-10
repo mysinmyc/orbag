@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orbag_ui_flutter/components/create_ci.dart';
+import 'package:orbag_ui_flutter/components/util/view_util.dart';
 
 class CreateViewData {
   final String configurationItemType;
@@ -15,12 +16,14 @@ class CreateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as CreateViewData;
-    return Scaffold(
-        appBar: AppBar(title: Text("Create ${args.configurationItemType}")),
-        body: CreateCi(
-          args.configurationItemType,
-        ));
+    return ViewUtil.checkViewAgs(context, (context, arguments) {
+      final args = arguments as CreateViewData;
+      return Scaffold(
+          appBar: AppBar(title: Text("Create ${args.configurationItemType}")),
+          body: CreateCi(
+            args.configurationItemType,
+          ));
+    });
   }
 
   static show(

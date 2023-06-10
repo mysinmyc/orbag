@@ -1,9 +1,12 @@
 # TODO
 - [ ] ui
   - [ ] ui-flutter
+    - [ ] error handling
     - [ ] action feedbacks
     - [ ] sistemare configurationitem tables 
       - [ ] sort
+    - [ ] searcher
+      - [ ] valutare widget alternativo in caso di assenza fields 
 - [ ] orcherstrazione
   - [ ] core 
   - [ ] ui-flutter
@@ -16,7 +19,7 @@
     - [ ] core
       - [ ] tsv
       - [ ] excel?
-      - [ ] ontimecache
+      - [ ] onetimecache
       - [ ] async
     - [ ] ui-flutter
     - [ ] ui-vue 
@@ -33,3 +36,4 @@
     - [ ] ui-flutter
     - [ ] ui-vue
 - [ ] demo
+- [ ] localizzazione?
