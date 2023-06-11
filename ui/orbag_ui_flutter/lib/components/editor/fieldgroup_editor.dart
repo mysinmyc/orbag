@@ -20,13 +20,14 @@ class FieldGroupEditor extends StatefulWidget {
   final Icon saveIcon;
   final AdditionalWidgetBuilder? additionalFields;
   final AdditionalWidgetBuilder? additionalButtons;
-
+  final bool enabled;
   const FieldGroupEditor(this.source, this.onSave,
       {this.saveCaption = "Save",
       this.saveVisible = false,
       this.saveIcon = const Icon(Icons.save),
       this.additionalFields,
       this.additionalButtons,
+      this.enabled = true,
       super.key});
 
   @override
@@ -50,10 +51,17 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     for (StringField currentRequestField in fields.stringFields) {
       TextFormField currentField = TextFormField(
           readOnly: currentRequestField.readOnly!,
-          enabled: !currentRequestField.readOnly!,
+          enabled: widget.enabled && !currentRequestField.readOnly!,
           initialValue: currentRequestField.value,
           autofocus: filters.isEmpty,
           textInputAction: TextInputAction.send,
+          /*
+          onFieldSubmitted: (value) {
+            _formKey.currentState!.save();
+            widget.onSave(fields);
+            changed = false;
+          },
+          */
           decoration: InputDecoration(
               border: const OutlineInputBorder(),
               labelText: currentRequestField.displayLabel,
@@ -69,6 +77,7 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
       TextFormField currentField = TextFormField(
           readOnly: currentRequestField.readOnly!,
           textInputAction: TextInputAction.send,
+          enabled: widget.enabled && !currentRequestField.readOnly!,
           autofocus: filters.isEmpty,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
@@ -167,24 +176,26 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     }
 
     List<Widget> buttons = List.empty(growable: true);
-    if (changed || widget.saveVisible) {
-      buttons.add(
-        ElevatedButton.icon(
-            onPressed: () {
-              _formKey.currentState!.save();
-              widget.onSave(fields);
-              changed = false;
-            },
-            icon: widget.saveIcon,
-            label: Text(widget.saveCaption)),
-      );
-    }
+    if (widget.enabled) {
+      if ((changed || widget.saveVisible)) {
+        buttons.add(
+          ElevatedButton.icon(
+              onPressed: () {
+                _formKey.currentState!.save();
+                widget.onSave(fields);
+                changed = false;
+              },
+              icon: widget.saveIcon,
+              label: Text(widget.saveCaption)),
+        );
+      }
 
-    //filters=RenderUtil.fixedSizeAll(filters, width: 400, height: 70));
+      //filters=RenderUtil.fixedSizeAll(filters, width: 400, height: 70));
 
-    if (widget.additionalButtons != null) {
-      buttons.addAll(widget.additionalButtons!(
-          context, () => setState(() => changed = true)));
+      if (widget.additionalButtons != null) {
+        buttons.addAll(widget.additionalButtons!(
+            context, () => setState(() => changed = true)));
+      }
     }
 
     return Form(

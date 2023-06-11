@@ -61,6 +61,34 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
         });
   }
 
+  SerializableColumn? _sort_column;
+  int? _sort_columnIndex;
+  bool _sort_asceding = true;
+
+  _sortBy(SerializableColumn column, int _columnIndex, bool asceding) {
+    setState(() {
+      _sort_column = column;
+      _sort_columnIndex = _columnIndex;
+      _sort_asceding = asceding;
+    });
+  }
+
+  String getComparableValue(SerializableColumn column, SerializableRow row) {
+    Object? value = row.fields[column.name];
+    if (value == null) {
+      return "";
+    }
+    if (column.type == SerializableColumnTypeEnum.reference) {
+      return (ConfigurationItemReference.fromJson(value)!.displayLabel ?? "")
+          .toLowerCase();
+    }
+
+    return value.toString().toLowerCase();
+  }
+
+  GlobalKey<PaginatedDataTableState> _tableKey =
+      new GlobalKey<PaginatedDataTableState>();
+
   Widget buildTable(BuildContext context, SerializableTable result) {
     if (result.columns.isEmpty || result.rows.isEmpty) {
       return const Text("no item found");
@@ -71,13 +99,38 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
       columns.add(DataColumn(
           label: Text(currentDataColumn.displayLabel == null
               ? ""
-              : currentDataColumn.displayLabel!)));
+              : currentDataColumn.displayLabel!),
+          onSort: ((columnIndex, ascending) =>
+              {_sortBy(currentDataColumn, columnIndex, ascending)})));
     }
+
+    if (_sort_column != null) {
+      result.rows.sort((a, b) {
+        if (_sort_asceding) {
+          return getComparableValue(_sort_column!, a)
+              .compareTo(getComparableValue(_sort_column!, b));
+        } else {
+          return getComparableValue(_sort_column!, b)
+              .compareTo(getComparableValue(_sort_column!, a));
+        }
+      });
+    }
+
     var tableSource = SerializableTableSource(result, _selectedRows,
         onSelected: (rows) => {refreshSelection()},
         onSelectCi: widget.onSelectedCi);
 
-    return PaginatedDataTable(columns: columns, source: tableSource);
+    var table = PaginatedDataTable(
+        columns: columns,
+        source: tableSource,
+        sortColumnIndex: _sort_columnIndex,
+        sortAscending: _sort_asceding,
+        key: _tableKey);
+
+    if (_tableKey.currentState != null) {
+      _tableKey.currentState!.pageTo(0);
+    }
+    return table;
   }
 
   @override

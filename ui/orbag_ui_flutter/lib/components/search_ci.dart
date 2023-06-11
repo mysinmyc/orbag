@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/create_ci.dart';
@@ -42,7 +44,12 @@ class _SearchCiState extends State<SearchCi> {
 
     setState(() {
       _searchStarted = true;
-      _searchResultFuture = MyHttpClient.instance.searchApi.execute(request);
+      _searchResultFuture =
+          MyHttpClient.instance.searchApi.execute(request).whenComplete(() {
+        setState(() {
+          _searchStarted = false;
+        });
+      });
       ErrorMessageWrapper.wrap(context, _searchResultFuture!, "Search failed");
     });
   }
@@ -74,6 +81,7 @@ class _SearchCiState extends State<SearchCi> {
       searchRequest.parameters = value;
       _submitSearch(searchRequest);
     },
+        enabled: !_searchStarted,
         saveCaption: "Search ",
         saveIcon: const Icon(Icons.search),
         saveVisible: true,
@@ -122,7 +130,10 @@ class _SearchCiState extends State<SearchCi> {
     if (result.columns.isEmpty || result.rows.isEmpty) {
       return const Text("no item found");
     }
-    return ConfigurationItemTable(result, onSelectedCi: widget.onSelectedCi);
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child:
+            ConfigurationItemTable(result, onSelectedCi: widget.onSelectedCi));
   }
 
   @override
@@ -142,12 +153,10 @@ class _SearchCiState extends State<SearchCi> {
           future: _searchResultFuture,
           builder: (BuildContext context,
               AsyncSnapshot<SerializableTable?> snapshot) {
-            if (snapshot.hasError) {
-              return Text("");
+            if (_searchStarted) {
+              return CircularProgressIndicator();
             } else if (snapshot.hasData) {
               return buildResults(context, snapshot.requireData!);
-            } else if (_searchStarted) {
-              return CircularProgressIndicator();
             } else {
               return Text("");
             }

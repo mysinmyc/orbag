@@ -4,9 +4,10 @@
     - [ ] error handling
     - [ ] action feedbacks
     - [ ] sistemare configurationitem tables 
-      - [ ] sort
+      - [x] sort (all'interno dei risultati)
     - [ ] searcher
       - [ ] valutare widget alternativo in caso di assenza fields 
+  - [ ] icone?
 - [ ] orcherstrazione
   - [ ] core 
   - [ ] ui-flutter
@@ -37,3 +38,4 @@
     - [ ] ui-vue
 - [ ] demo
 - [ ] localizzazione?
+- [ ] documentazione

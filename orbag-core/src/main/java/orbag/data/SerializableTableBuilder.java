@@ -104,7 +104,7 @@ public class SerializableTableBuilder<T> implements TableBuilder<T>, RowBuilder<
 			return;
 		}
 		if (!referenceColumnsDefined) {
-			addColumn(COLUMN__REFERENCE, ColumnType.Reference);
+			addColumn(COLUMN__REFERENCE, ColumnType.Reference).setDisplayLabel("Configuration Item");
 			referenceColumnsDefined=true;
 		}
 		row.put(COLUMN__REFERENCE, reference);

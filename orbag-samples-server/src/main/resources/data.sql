@@ -165,3 +165,12 @@ insert into server(id,name,server_group_id,address,owner_id,productive_stage) va
 insert into server(id,name,server_group_id,address,owner_id,productive_stage) values(-54,'bigserver45',-4,'10.0.1.54',-56,'production');
 insert into server(id,name,server_group_id,address,owner_id,productive_stage) values(-55,'bigserver46',-4,'10.0.1.55',-55,'production');
 insert into server(id,name,server_group_id,address,owner_id,productive_stage) values(-56,'bigserver47',-4,'10.0.1.56',-54,'production');
+
+
+
+insert into slow_configuration_item(id,name) values(-1,'ci 1');
+insert into slow_configuration_item(id,name) values(-2,'ci 2');
+insert into slow_configuration_item(id,name) values(-3,'ci 3');
+insert into slow_configuration_item(id,name) values(-4,'ci 4');
+insert into slow_configuration_item(id,name) values(-5,'ci 5');
+
