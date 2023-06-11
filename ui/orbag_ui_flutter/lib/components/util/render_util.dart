@@ -18,7 +18,8 @@ class RenderUtil {
         .toList();
   }
 
-  static List<Widget> padAll(List<Widget> widgets, {padding = defaultPadding}) {
+  static List<Widget> padAll(Iterable<Widget> widgets,
+      {padding = defaultPadding}) {
     return widgets.map((e) => RenderUtil.pad(e, padding: padding)).toList();
   }
 

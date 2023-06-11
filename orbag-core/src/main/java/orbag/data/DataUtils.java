@@ -32,10 +32,14 @@ public class DataUtils {
 	}
 	
 	public static InputFieldBase<?> buildInputFieldFromConfigurationItemProperty(ConfigurationItemPropertyDescriptor property, FieldGroupBuilder fieldGroupBuilder) {
-		if (property.isConfigurationItemReference()) {
-			return fieldGroupBuilder.addReferenceField(property.getName(), property.getDisplayLabel(), property.getReferencedConfigurationItemType().getName());
+
+		InputFieldBase<?> field = property.isConfigurationItemReference() ?
+				fieldGroupBuilder.addReferenceField(property.getName(), property.getDisplayLabel(), property.getReferencedConfigurationItemType().getName())
+		: fieldGroupBuilder.addFieldOfType(property.getName(), property.getDisplayLabel(), property.getValueType());
+
+		if (field!=null) {
+			field.setCategory(property.getCategory());
 		}
-		InputFieldBase<?> field = fieldGroupBuilder.addFieldOfType(property.getName(), property.getDisplayLabel(), property.getValueType());
 		return field;
 	}
 }

@@ -17,6 +17,8 @@ public abstract class InputFieldBase<T> {
 
 	String displayLabel;
 
+	String category;
+
 	T value;
 	
 	boolean readOnly;
@@ -69,4 +71,12 @@ public abstract class InputFieldBase<T> {
 	}
 
 	public abstract void parseValue(String value);
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 }

@@ -17,9 +17,16 @@ class HomeViewMaterial extends StatelessWidget {
               appBar: AppBar(
                   title: Text(
                       snapshot.hasData ? snapshot.data!.applicationName! : "")),
-              drawer: MainMenuDrawer(
+              /*drawer: MainMenuDrawer(
                   title:
                       snapshot.hasData ? snapshot.data!.applicationName! : ""),
+              */
+              body: Row(
+                children: [
+                  MainMenuDrawer(title: "", showHome: false),
+                  Expanded(child: Text(""))
+                ],
+              ),
             ));
   }
 }

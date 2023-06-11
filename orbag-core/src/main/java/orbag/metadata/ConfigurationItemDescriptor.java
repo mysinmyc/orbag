@@ -122,6 +122,7 @@ public class ConfigurationItemDescriptor {
 					propertyDescriptor.setDisplayLabel(
 							propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
 					propertyDescriptor.setDescription(propertyAnnotation.description());
+					propertyDescriptor.setCategory(propertyAnnotation.category());
 					propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
 					propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
 					propertyDescriptor

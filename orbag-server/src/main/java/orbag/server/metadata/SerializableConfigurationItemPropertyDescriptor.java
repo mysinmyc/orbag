@@ -9,6 +9,7 @@ public class SerializableConfigurationItemPropertyDescriptor {
 	
 	String description;
 
+	String category;
 	boolean readOnly;
 	
 	boolean configurationItemReference;
@@ -61,5 +62,13 @@ public class SerializableConfigurationItemPropertyDescriptor {
 
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

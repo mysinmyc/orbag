@@ -16,6 +16,7 @@ class SerializableConfigurationItemPropertyDescriptor {
     this.name,
     this.displayLabel,
     this.description,
+    this.category,
     this.readOnly,
     this.configurationItemReference,
     this.referencedConfigurationItemType,
@@ -51,6 +52,14 @@ class SerializableConfigurationItemPropertyDescriptor {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  String? category;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   bool? readOnly;
 
   ///
@@ -74,6 +83,7 @@ class SerializableConfigurationItemPropertyDescriptor {
      other.name == name &&
      other.displayLabel == displayLabel &&
      other.description == description &&
+     other.category == category &&
      other.readOnly == readOnly &&
      other.configurationItemReference == configurationItemReference &&
      other.referencedConfigurationItemType == referencedConfigurationItemType;
@@ -84,12 +94,13 @@ class SerializableConfigurationItemPropertyDescriptor {
     (name == null ? 0 : name!.hashCode) +
     (displayLabel == null ? 0 : displayLabel!.hashCode) +
     (description == null ? 0 : description!.hashCode) +
+    (category == null ? 0 : category!.hashCode) +
     (readOnly == null ? 0 : readOnly!.hashCode) +
     (configurationItemReference == null ? 0 : configurationItemReference!.hashCode) +
     (referencedConfigurationItemType == null ? 0 : referencedConfigurationItemType!.hashCode);
 
   @override
-  String toString() => 'SerializableConfigurationItemPropertyDescriptor[name=$name, displayLabel=$displayLabel, description=$description, readOnly=$readOnly, configurationItemReference=$configurationItemReference, referencedConfigurationItemType=$referencedConfigurationItemType]';
+  String toString() => 'SerializableConfigurationItemPropertyDescriptor[name=$name, displayLabel=$displayLabel, description=$description, category=$category, readOnly=$readOnly, configurationItemReference=$configurationItemReference, referencedConfigurationItemType=$referencedConfigurationItemType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -107,6 +118,11 @@ class SerializableConfigurationItemPropertyDescriptor {
       json[r'description'] = this.description;
     } else {
       json[r'description'] = null;
+    }
+    if (this.category != null) {
+      json[r'category'] = this.category;
+    } else {
+      json[r'category'] = null;
     }
     if (this.readOnly != null) {
       json[r'readOnly'] = this.readOnly;
@@ -148,6 +164,7 @@ class SerializableConfigurationItemPropertyDescriptor {
         name: mapValueOfType<String>(json, r'name'),
         displayLabel: mapValueOfType<String>(json, r'displayLabel'),
         description: mapValueOfType<String>(json, r'description'),
+        category: mapValueOfType<String>(json, r'category'),
         readOnly: mapValueOfType<bool>(json, r'readOnly'),
         configurationItemReference: mapValueOfType<bool>(json, r'configurationItemReference'),
         referencedConfigurationItemType: mapValueOfType<String>(json, r'referencedConfigurationItemType'),

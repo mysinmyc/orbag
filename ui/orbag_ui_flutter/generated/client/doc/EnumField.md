@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | [optional] 
 **displayLabel** | **String** |  | [optional] 
+**category** | **String** |  | [optional] 
 **value** | **String** |  | [optional] 
 **readOnly** | **bool** |  | [optional] 
 **changed** | **bool** |  | [optional] 

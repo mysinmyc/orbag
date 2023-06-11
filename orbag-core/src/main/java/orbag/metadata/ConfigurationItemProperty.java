@@ -12,9 +12,9 @@ public @interface ConfigurationItemProperty {
 	String displayLabel() default "";
 	
 	String description() default "";
-	
-	String group() default "Base Properties";
-	
+
+	String category() default "Base Properties";
+
 	boolean highlighted() default false;
 	
 	boolean mandatoryForCreation() default false;

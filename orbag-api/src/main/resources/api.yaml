@@ -198,18 +198,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
-        "400":
-          description: Invalid objects in request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: Action submitted
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
+        "400":
+          description: Invalid objects in request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/action/getAvailable:
@@ -573,6 +573,8 @@ components:
           type: string
         displayLabel:
           type: string
+        category:
+          type: string
         value:
           type: boolean
         readOnly:
@@ -585,6 +587,8 @@ components:
         name:
           type: string
         displayLabel:
+          type: string
+        category:
           type: string
         value:
           $ref: '#/components/schemas/ConfigurationItemReference'
@@ -600,6 +604,8 @@ components:
         name:
           type: string
         displayLabel:
+          type: string
+        category:
           type: string
         value:
           type: string
@@ -617,6 +623,8 @@ components:
         name:
           type: string
         displayLabel:
+          type: string
+        category:
           type: string
         value:
           type: integer
@@ -654,6 +662,8 @@ components:
         name:
           type: string
         displayLabel:
+          type: string
+        category:
           type: string
         value:
           type: string
@@ -833,6 +843,8 @@ components:
         displayLabel:
           type: string
         description:
+          type: string
+        category:
           type: string
         readOnly:
           type: boolean

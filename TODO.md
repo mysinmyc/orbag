@@ -25,8 +25,12 @@
     - [ ] ui-flutter
     - [ ] ui-vue 
 - [ ] fieldgroup categories
-    - [ ] core
-    - [ ] ui-flutter
+    - [x] core
+    - [x] ui-flutter
+    - [ ] ui-vue 
+- [ ] datetime fields
+    - [x] core
+    - [x] ui-flutter
     - [ ] ui-vue 
 - [ ] ad hoc actions (azioni senza ci)
     - [ ] core

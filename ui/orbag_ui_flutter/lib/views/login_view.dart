@@ -34,8 +34,10 @@ class _LoginViewState extends State<LoginView> {
         context,
         MyHttpClient.instance
             .login(userNameController.text, passwordController.text)
-            .then((value) =>
-                {Navigator.pushNamed(context, HomeViewMaterial.routeName)}),
+            .then((value) => {
+                  Navigator.pushReplacementNamed(
+                      context, HomeViewMaterial.routeName)
+                }),
         "Login failed",
         onClose: () => FocusScope.of(context).requestFocus(passwordFocusNode));
   }
@@ -99,16 +101,16 @@ class _LoginViewState extends State<LoginView> {
                                       ),
                                       Padding(
                                           padding: const EdgeInsets.all(15),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      {_submitLogin()},
-                                                  child: const Text("Login"),
-                                                )
-                                              ]))
+                                          child: MaterialButton(
+                                            minWidth: double.infinity,
+                                            height: 60,
+                                            textColor:
+                                                Theme.of(context).cardColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            onPressed: () => {_submitLogin()},
+                                            child: const Text("Login"),
+                                          ))
                                     ],
                                   ))
                             ])

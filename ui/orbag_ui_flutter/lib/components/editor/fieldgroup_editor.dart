@@ -4,6 +4,7 @@ import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
 import 'package:orbag_ui_flutter/components/search_ci.dart';
+import 'package:orbag_ui_flutter/components/util/list_grouper.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 
 typedef AdditionalWidgetBuilder = List<Widget> Function(
@@ -34,6 +35,32 @@ class FieldGroupEditor extends StatefulWidget {
   State<FieldGroupEditor> createState() => _FieldGroupEditorState();
 }
 
+class WidgetFieldBuildInfo {
+  final String category;
+  final String displayLabel;
+  final Widget widget;
+
+  bool _isBaseCategory() {
+    return category.toLowerCase() == "base properties";
+  }
+
+  const WidgetFieldBuildInfo(this.category, this.displayLabel, this.widget);
+
+  int compareTo(WidgetFieldBuildInfo b) {
+    int result;
+
+    if (_isBaseCategory()) {
+      result = b._isBaseCategory() ? 0 : -1;
+    } else {
+      result = category.toLowerCase().compareTo(b.category.toLowerCase());
+    }
+    if (result == 0) {
+      return displayLabel.toLowerCase().compareTo(b.displayLabel.toLowerCase());
+    }
+    return result;
+  }
+}
+
 class _FieldGroupEditorState extends State<FieldGroupEditor> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -45,8 +72,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     super.initState();
   }
 
-  Widget buildFilters(BuildContext context, SerializableFieldGroup fields) {
-    List<Widget> filters = [];
+  List<WidgetFieldBuildInfo> _buildFieldWidgets(SerializableFieldGroup fields) {
+    List<WidgetFieldBuildInfo> filters = List.empty(growable: true);
 
     for (StringField currentRequestField in fields.stringFields) {
       TextFormField currentField = TextFormField(
@@ -70,7 +97,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                 currentRequestField.changed = true,
                 currentRequestField.value = value
               });
-      filters.add(currentField);
+      filters.add(WidgetFieldBuildInfo(currentRequestField.category ?? "",
+          currentRequestField.displayLabel!, currentField));
     }
 
     for (NumericField currentRequestField in fields.numericFields) {
@@ -90,7 +118,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                 currentRequestField.changed = true,
                 currentRequestField.value = int.tryParse(value)
               });
-      filters.add(currentField);
+      filters.add(WidgetFieldBuildInfo(currentRequestField.category!,
+          currentRequestField.displayLabel!, currentField));
     }
 
     for (BooleanField currentRequestField in fields.booleanFields) {
@@ -104,12 +133,13 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                   setState(() => changed = true)
                 }),
       ]);
-      filters.add(currentField);
+      filters.add(WidgetFieldBuildInfo(currentRequestField.category!,
+          currentRequestField.displayLabel!, currentField));
     }
 
     for (ConfigurationItemReferenceField currentRequestReferenceField
         in fields.configurationItemReferenceFields) {
-      filters.add(SizedBox(
+      Widget currentField = SizedBox(
           height: 80,
           child: InputDecorator(
               decoration: InputDecoration(
@@ -151,11 +181,13 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                       return Text("");
                     }),
                 ConfigurationItemLink(currentRequestReferenceField.value)
-              ], padding: const EdgeInsets.only(top: 10, right: 10))))));
+              ], padding: const EdgeInsets.only(top: 10, right: 10)))));
+      filters.add(WidgetFieldBuildInfo(currentRequestReferenceField.category!,
+          currentRequestReferenceField.displayLabel!, currentField));
     }
 
     for (EnumField currentRequestEnumField in fields.enumFields) {
-      filters.add(InputDecorator(
+      Widget currentField = InputDecorator(
           decoration:
               InputDecoration(labelText: currentRequestEnumField.displayLabel),
           child: DropdownButtonFormField<String>(
@@ -167,9 +199,30 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
               currentRequestEnumField.changed = true,
               currentRequestEnumField.value = newValue
             },
-          )));
+          ));
+      filters.add(WidgetFieldBuildInfo(currentRequestEnumField.category!,
+          currentRequestEnumField.displayLabel!, currentField));
     }
+    return filters;
+  }
 
+  Widget buildFilters(BuildContext context, SerializableFieldGroup fields) {
+    List<WidgetFieldBuildInfo> widgetForFields = _buildFieldWidgets(fields);
+    widgetForFields.sort((a, b) => a.compareTo(b));
+    List<Widget> filters = [];
+
+    Map<String, List<WidgetFieldBuildInfo>> byCategories =
+        new ListGrouper<String, WidgetFieldBuildInfo>()
+            .groupBy(widgetForFields, (e) => e.category);
+
+    for (var entry in byCategories.entries) {
+      if (entry.key.isNotEmpty && byCategories.keys.length > 1) {
+        filters.add(ListTile(title: Text(entry.key)));
+      }
+      filters.addAll(RenderUtil.toRows(
+          RenderUtil.padAll(entry.value.map((e) => e.widget)),
+          (MediaQuery.of(context).size.width / 600).clamp(1, 4).round()));
+    }
     if (widget.additionalFields != null) {
       filters.addAll(widget.additionalFields!(
           context, () => setState(() => changed = true)));
@@ -198,22 +251,20 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
       }
     }
 
-    return Form(
-      key: _formKey,
-      child: Column(
-          children: RenderUtil.toRows(
-                  RenderUtil.padAll(filters),
-                  (MediaQuery.of(context).size.width / 600)
-                      .clamp(1, 4)
-                      .round()) +
-              [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children:
-                        RenderUtil.padAll(buttons, padding: EdgeInsets.all(40)))
-              ]),
-      onChanged: () => {setState(() => changed = true)},
-    );
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+              children: filters +
+                  [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: RenderUtil.padAll(buttons,
+                            padding: EdgeInsets.all(40)))
+                  ]),
+          onChanged: () => {setState(() => changed = true)},
+        ));
   }
 
   @override

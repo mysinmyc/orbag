@@ -46,6 +46,20 @@ class _ActionExecutorState extends State<ActionExecutor> {
     });
   }
 
+  Widget _buildResultWidget(
+      BuildContext context, SubmitActionResponse response) {
+    if (!response.requestValid!) {
+      List<Widget> children = [
+        ListTile(title: Text("Request validation failed"))
+      ];
+
+      children.addAll(response.validationErrors.map((e) => Text(e.error!)));
+      return Column(children: children);
+    } else {
+      return Text("Action submitted");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -71,11 +85,7 @@ class _ActionExecutorState extends State<ActionExecutor> {
           context: context,
           conditionBuilder: (context) => result != null,
           widgetBuilder: (context) {
-            if (!result!.requestValid!) {
-              return Text("Action validation error");
-            } else {
-              return Text("Action submitted");
-            }
+            return _buildResultWidget(context, result!);
           },
           fallbackBuilder: (context) => Text(""))
     ]);

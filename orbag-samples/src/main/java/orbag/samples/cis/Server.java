@@ -23,7 +23,7 @@ public class Server extends RootConfigurationItem {
 		return productiveStage;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Management info")
 	public void setProductiveStage(ProductiveStage productiveStage) {
 		this.productiveStage = productiveStage;
 	}
@@ -48,7 +48,7 @@ public class Server extends RootConfigurationItem {
 	@Searcheable
 	String address;
 
-	@ConfigurationItemProperty( displayLabel = "Server owner")
+	@ConfigurationItemProperty( displayLabel = "Server owner",category = "Management info")
 	public Person getOwner() {
 		return owner;
 	}
@@ -68,7 +68,7 @@ public class Server extends RootConfigurationItem {
 		this.serverGroup = serverGroup;
 	}
 
-	@ConfigurationItemProperty(mandatoryForCreation = true)
+	@ConfigurationItemProperty(mandatoryForCreation = true, category = "Connection info")
 	public String getAddress() {
 		return address;
 	}

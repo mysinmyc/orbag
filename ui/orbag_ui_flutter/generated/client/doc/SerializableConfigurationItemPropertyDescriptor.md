@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **name** | **String** |  | [optional] 
 **displayLabel** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
+**category** | **String** |  | [optional] 
 **readOnly** | **bool** |  | [optional] 
 **configurationItemReference** | **bool** |  | [optional] 
 **referencedConfigurationItemType** | **String** |  | [optional] 

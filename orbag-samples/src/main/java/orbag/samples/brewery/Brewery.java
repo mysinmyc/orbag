@@ -77,12 +77,12 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		return street;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getAddress_2() {
 		return address_2;
 	}
@@ -91,7 +91,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.address_2 = address_2;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getAddress_3() {
 		return address_3;
 	}
@@ -100,7 +100,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.address_3 = address_3;
 	}
 
-	@ConfigurationItemProperty(highlighted = true)
+	@ConfigurationItemProperty(highlighted = true,category = "Location")
 	public String getCity() {
 		return city;
 	}
@@ -109,7 +109,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.city = city;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getState() {
 		return state;
 	}
@@ -118,7 +118,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.state = state;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getCountry_province() {
 		return country_province;
 	}
@@ -127,7 +127,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.country_province = country_province;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getPostal_code() {
 		return postal_code;
 	}
@@ -136,7 +136,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.postal_code = postal_code;
 	}
 
-	@ConfigurationItemProperty(highlighted = true)
+	@ConfigurationItemProperty(highlighted = true,category = "Location")
 	public String getCountry() {
 		return country;
 	}
@@ -145,7 +145,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.country = country;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getLongitude() {
 		return longitude;
 	}
@@ -154,7 +154,7 @@ public class Brewery implements orbag.metadata.Identifiable<String>, orbag.metad
 		this.longitude = longitude;
 	}
 
-	@ConfigurationItemProperty
+	@ConfigurationItemProperty(category = "Location")
 	public String getLatitude() {
 		return latitude;
 	}

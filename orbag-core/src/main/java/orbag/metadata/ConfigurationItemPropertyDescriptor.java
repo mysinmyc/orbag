@@ -21,6 +21,8 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	String description;
 
+	String category;
+
 	Method getterMethod;
 	
 	Method setterMethod;
@@ -119,5 +121,13 @@ public class ConfigurationItemPropertyDescriptor {
 	
 	protected void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

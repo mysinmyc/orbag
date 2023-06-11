@@ -75,6 +75,12 @@ export interface BooleanField {
     'displayLabel'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof BooleanField
+     */
+    'category'?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof BooleanField
      */
@@ -193,6 +199,12 @@ export interface ConfigurationItemReferenceField {
     'displayLabel'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ConfigurationItemReferenceField
+     */
+    'category'?: string;
+    /**
+     * 
      * @type {ConfigurationItemReference}
      * @memberof ConfigurationItemReferenceField
      */
@@ -253,6 +265,12 @@ export interface EnumField {
      * @memberof EnumField
      */
     'displayLabel'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EnumField
+     */
+    'category'?: string;
     /**
      * 
      * @type {string}
@@ -451,6 +469,12 @@ export interface NumericField {
     'displayLabel'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof NumericField
+     */
+    'category'?: string;
+    /**
+     * 
      * @type {number}
      * @memberof NumericField
      */
@@ -623,6 +647,12 @@ export interface SerializableConfigurationItemPropertyDescriptor {
     'description'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof SerializableConfigurationItemPropertyDescriptor
+     */
+    'category'?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof SerializableConfigurationItemPropertyDescriptor
      */
@@ -752,6 +782,12 @@ export interface StringField {
      * @memberof StringField
      */
     'displayLabel'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StringField
+     */
+    'category'?: string;
     /**
      * 
      * @type {string}

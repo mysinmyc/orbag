@@ -15,6 +15,7 @@ class ConfigurationItemReferenceField {
   ConfigurationItemReferenceField({
     this.name,
     this.displayLabel,
+    this.category,
     this.value,
     this.readOnly,
     this.changed,
@@ -36,6 +37,14 @@ class ConfigurationItemReferenceField {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   String? displayLabel;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? category;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -73,6 +82,7 @@ class ConfigurationItemReferenceField {
   bool operator ==(Object other) => identical(this, other) || other is ConfigurationItemReferenceField &&
      other.name == name &&
      other.displayLabel == displayLabel &&
+     other.category == category &&
      other.value == value &&
      other.readOnly == readOnly &&
      other.changed == changed &&
@@ -83,13 +93,14 @@ class ConfigurationItemReferenceField {
     // ignore: unnecessary_parenthesis
     (name == null ? 0 : name!.hashCode) +
     (displayLabel == null ? 0 : displayLabel!.hashCode) +
+    (category == null ? 0 : category!.hashCode) +
     (value == null ? 0 : value!.hashCode) +
     (readOnly == null ? 0 : readOnly!.hashCode) +
     (changed == null ? 0 : changed!.hashCode) +
     (configurationItemType == null ? 0 : configurationItemType!.hashCode);
 
   @override
-  String toString() => 'ConfigurationItemReferenceField[name=$name, displayLabel=$displayLabel, value=$value, readOnly=$readOnly, changed=$changed, configurationItemType=$configurationItemType]';
+  String toString() => 'ConfigurationItemReferenceField[name=$name, displayLabel=$displayLabel, category=$category, value=$value, readOnly=$readOnly, changed=$changed, configurationItemType=$configurationItemType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -102,6 +113,11 @@ class ConfigurationItemReferenceField {
       json[r'displayLabel'] = this.displayLabel;
     } else {
       json[r'displayLabel'] = null;
+    }
+    if (this.category != null) {
+      json[r'category'] = this.category;
+    } else {
+      json[r'category'] = null;
     }
     if (this.value != null) {
       json[r'value'] = this.value;
@@ -147,6 +163,7 @@ class ConfigurationItemReferenceField {
       return ConfigurationItemReferenceField(
         name: mapValueOfType<String>(json, r'name'),
         displayLabel: mapValueOfType<String>(json, r'displayLabel'),
+        category: mapValueOfType<String>(json, r'category'),
         value: ConfigurationItemReference.fromJson(json[r'value']),
         readOnly: mapValueOfType<bool>(json, r'readOnly'),
         changed: mapValueOfType<bool>(json, r'changed'),
