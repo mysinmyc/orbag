@@ -140,7 +140,8 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
           context: context,
           conditionBuilder: (context) => _selectedRows.isNotEmpty,
           widgetBuilder: (context) => RenderUtil.pad(Row(children: [
-                Text("Selected ${LabelUtil.getCisLabel(selectedCis)}"),
+                Text(
+                    "Selected ${LabelUtil.truncateLabel(LabelUtil.getCisLabel(selectedCis))}"),
                 const Padding(padding: EdgeInsets.all(10)),
                 FutureBuilder<GetAvailableActionsResponse?>(
                     future: _availableActionsFuture,

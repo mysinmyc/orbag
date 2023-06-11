@@ -23,7 +23,7 @@ class HomeViewMaterial extends StatelessWidget {
               */
               body: Row(
                 children: [
-                  MainMenuDrawer(title: "", showHome: false),
+                  MainMenuDrawer(showHome: false),
                   Expanded(child: Text(""))
                 ],
               ),

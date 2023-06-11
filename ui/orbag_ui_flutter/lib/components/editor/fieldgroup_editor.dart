@@ -36,15 +36,24 @@ class FieldGroupEditor extends StatefulWidget {
 }
 
 class WidgetFieldBuildInfo {
-  final String category;
-  final String displayLabel;
+  final String? fieldCategory;
+  final String? fieldDisplayLabel;
   final Widget widget;
+
+  String get category {
+    return fieldCategory ?? "";
+  }
+
+  String get displayLabel {
+    return fieldDisplayLabel ?? "";
+  }
 
   bool _isBaseCategory() {
     return category.toLowerCase() == "base properties";
   }
 
-  const WidgetFieldBuildInfo(this.category, this.displayLabel, this.widget);
+  const WidgetFieldBuildInfo(
+      this.fieldCategory, this.fieldDisplayLabel, this.widget);
 
   int compareTo(WidgetFieldBuildInfo b) {
     int result;
@@ -133,7 +142,7 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                   setState(() => changed = true)
                 }),
       ]);
-      filters.add(WidgetFieldBuildInfo(currentRequestField.category!,
+      filters.add(WidgetFieldBuildInfo(currentRequestField.category,
           currentRequestField.displayLabel!, currentField));
     }
 
@@ -200,7 +209,7 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
               currentRequestEnumField.value = newValue
             },
           ));
-      filters.add(WidgetFieldBuildInfo(currentRequestEnumField.category!,
+      filters.add(WidgetFieldBuildInfo(currentRequestEnumField.category,
           currentRequestEnumField.displayLabel!, currentField));
     }
     return filters;
@@ -223,6 +232,7 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           RenderUtil.padAll(entry.value.map((e) => e.widget)),
           (MediaQuery.of(context).size.width / 600).clamp(1, 4).round()));
     }
+
     if (widget.additionalFields != null) {
       filters.addAll(widget.additionalFields!(
           context, () => setState(() => changed = true)));
