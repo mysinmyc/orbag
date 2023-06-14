@@ -1,14 +1,10 @@
 package orbag.samples.actions;
 
+import orbag.action.*;
 import orbag.metadata.UnmanagedObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionConsequences;
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemActionBase;
-import orbag.action.ConfirmationAwareFilter;
 import orbag.dao.ConfigurationItemDao;
 import orbag.metadata.DisplayLabel;
 import orbag.metadata.MetadataRegistry;
@@ -39,7 +35,7 @@ public class DeleteCi extends ConfigurationItemActionBase implements Confirmatio
 	}
 
 	@Override
-	public void execute(ActionRequest request, ActionResult result) {
+	public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
 		for (Object ci : request.getTargetCis()) {
 			dao.delete(ci);
 		}

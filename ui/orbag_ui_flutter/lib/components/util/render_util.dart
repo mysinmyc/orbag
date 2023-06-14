@@ -39,4 +39,8 @@ class RenderUtil {
     }
     return result;
   }
+
+  static Widget empty() {
+    return const SizedBox.shrink();
+  }
 }

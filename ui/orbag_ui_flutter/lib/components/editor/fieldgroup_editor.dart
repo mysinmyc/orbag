@@ -200,6 +200,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           decoration:
               InputDecoration(labelText: currentRequestEnumField.displayLabel),
           child: DropdownButtonFormField<String>(
+            hint: Text(
+                "No " + currentRequestEnumField.displayLabel! + " selected"),
             value: currentRequestEnumField.value,
             items: currentRequestEnumField.allowedValues
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))

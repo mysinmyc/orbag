@@ -1,12 +1,18 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/action/action_executor.dart';
+import 'package:orbag_ui_flutter/components/action/action_execution_feedback.dart';
+import 'package:orbag_ui_flutter/components/action/action_execution_form.dart';
+import 'package:orbag_ui_flutter/components/action/action_util.dart';
 import 'package:orbag_ui_flutter/components/table/tablesource.dart';
 import 'package:orbag_ui_flutter/components/util/label_util.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/action_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationItemTable extends StatefulWidget {
   final ConfigurationItemReference? sourceCi;
@@ -21,6 +27,11 @@ class ConfigurationItemTable extends StatefulWidget {
 
 class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
   Future<GetAvailableActionsResponse?>? _availableActionsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final List<SerializableRow> _selectedRows = List.empty(growable: true);
 
@@ -39,6 +50,16 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
     });
   }
 
+  final Queue<ActionSubmissionResultInfo> _actionResultInfoQueue = Queue();
+
+  _executeAction(BuildContext context, ActionData actionData) async {
+    ActionUtil.submit(context, actionData).then((response) {
+        setState(() {
+          _actionResultInfoQueue.add(response);
+        });
+      });
+  }
+
   Future<void> _showAvailableActions(List<SerializableAction> actions) async {
     await showDialog<void>(
         context: context,
@@ -49,7 +70,7 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
                   .map((e) => SimpleDialogOption(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        ActionView.show(
+                        _executeAction(
                             context,
                             ActionData(e, selectedCis,
                                 sourceCi: widget.sourceCi));
@@ -61,15 +82,16 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
         });
   }
 
-  SerializableColumn? _sort_column;
-  int? _sort_columnIndex;
-  bool _sort_asceding = true;
+  SerializableColumn? _sortColumn;
+  int? _sortColumnIndex;
+  bool _sortAscending = true;
 
-  _sortBy(SerializableColumn column, int _columnIndex, bool asceding) {
+
+  _sortBy(SerializableColumn column, int columnIndex, bool asceding) {
     setState(() {
-      _sort_column = column;
-      _sort_columnIndex = _columnIndex;
-      _sort_asceding = asceding;
+      _sortColumn = column;
+      _sortColumnIndex = columnIndex;
+      _sortAscending = asceding;
     });
   }
 
@@ -86,8 +108,8 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
     return value.toString().toLowerCase();
   }
 
-  GlobalKey<PaginatedDataTableState> _tableKey =
-      new GlobalKey<PaginatedDataTableState>();
+  final GlobalKey<PaginatedDataTableState> _tableKey =
+      GlobalKey<PaginatedDataTableState>();
 
   Widget buildTable(BuildContext context, SerializableTable result) {
     if (result.columns.isEmpty || result.rows.isEmpty) {
@@ -104,14 +126,14 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
               {_sortBy(currentDataColumn, columnIndex, ascending)})));
     }
 
-    if (_sort_column != null) {
+    if (_sortColumn != null) {
       result.rows.sort((a, b) {
-        if (_sort_asceding) {
-          return getComparableValue(_sort_column!, a)
-              .compareTo(getComparableValue(_sort_column!, b));
+        if (_sortAscending) {
+          return getComparableValue(_sortColumn!, a)
+              .compareTo(getComparableValue(_sortColumn!, b));
         } else {
-          return getComparableValue(_sort_column!, b)
-              .compareTo(getComparableValue(_sort_column!, a));
+          return getComparableValue(_sortColumn!, b)
+              .compareTo(getComparableValue(_sortColumn!, a));
         }
       });
     }
@@ -123,8 +145,8 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
     var table = PaginatedDataTable(
         columns: columns,
         source: tableSource,
-        sortColumnIndex: _sort_columnIndex,
-        sortAscending: _sort_asceding,
+        sortColumnIndex: _sortColumnIndex,
+        sortAscending: _sortAscending,
         key: _tableKey);
 
     if (_tableKey.currentState != null) {
@@ -136,6 +158,7 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      Container(height: 60, child:
       Conditional.single(
           context: context,
           conditionBuilder: (context) => _selectedRows.isNotEmpty,
@@ -161,8 +184,9 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
                       }
                     })
               ])),
-          fallbackBuilder: (context) => const Text("")),
-      buildTable(context, widget.table)
+          fallbackBuilder: (context) => const Text(""))),
+      buildTable(context, widget.table),
+      ActionExecutionFeedBack(_actionResultInfoQueue)
     ]);
   }
 }

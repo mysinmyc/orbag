@@ -1,12 +1,9 @@
 package orbag.samples.actions;
 
+import orbag.action.*;
 import orbag.metadata.DisplayLabelUtils;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionConsequences;
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemActionBase;
 import orbag.samples.brewery.Brewery;
 import orbag.samples.brewery.PurchaseAction;
 import orbag.samples.cis.BreweryMenuItem;
@@ -24,7 +21,7 @@ public class OrderFromMenu extends ConfigurationItemActionBase implements Purcha
 	}
 
 	@Override
-	public void execute(ActionRequest request, ActionResult result) {
+	public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
 		result.setConsequences(ActionConsequences.NONE);
 		result.setMessage(
 				"You have ordered: "

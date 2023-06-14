@@ -1,11 +1,8 @@
 package orbag.samples.brewery;
 
+import orbag.action.*;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionConsequences;
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemActionBase;
 import orbag.metadata.DisplayLabel;
 import orbag.visibility.ManagedClasses;
 
@@ -16,7 +13,7 @@ import orbag.visibility.ManagedClasses;
 public class GoToDrinkAction extends ConfigurationItemActionBase{
 
 	@Override
-	public void execute(ActionRequest request, ActionResult result) {
+	public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
 		result.setConsequences(ActionConsequences.NONE);
 		result.setMessage( " Oh yeah, "+((Brewery)request.getTargetCis().get(0)).getName()+" it's a good choice!!!");
 	}

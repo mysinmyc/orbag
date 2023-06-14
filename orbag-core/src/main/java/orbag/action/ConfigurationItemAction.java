@@ -4,6 +4,11 @@ import orbag.metadata.Displayable;
 
 public interface ConfigurationItemAction extends Displayable {
 
+
+	default boolean isQuick() {
+		return false;
+	}
+
 	String getIdentifier();
 
 	default boolean isAvailableFor(ActionRequest request) {
@@ -14,6 +19,6 @@ public interface ConfigurationItemAction extends Displayable {
 		
 	}
 	
-	void execute(ActionRequest request, ActionResult result);
+	void execute(ActionRequest request, ActionResult result) throws ActionExecutionException;
 
 }

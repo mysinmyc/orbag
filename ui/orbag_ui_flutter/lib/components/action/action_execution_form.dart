@@ -11,15 +11,22 @@ class ActionData {
   const ActionData(this.action, this.targetCis, {this.sourceCi});
 }
 
-class ActionExecutor extends StatefulWidget {
+class ActionSubmissionResultInfo {
   final ActionData actionData;
-  const ActionExecutor(this.actionData, {super.key});
-
-  @override
-  State<ActionExecutor> createState() => _ActionExecutorState();
+  final SubmitActionResponse response;
+  ActionSubmissionResultInfo(this.actionData, this.response);
 }
 
-class _ActionExecutorState extends State<ActionExecutor> {
+class ActionExecutionForm extends StatefulWidget {
+  final ActionData actionData;
+  final ValueChanged<ActionSubmissionResultInfo> onExecuted;
+  const ActionExecutionForm(this.actionData, this.onExecuted, {super.key});
+
+  @override
+  State<ActionExecutionForm> createState() => _ActionExecutionFormState();
+}
+
+class _ActionExecutionFormState extends State<ActionExecutionForm> {
   late Future<SubmitActionRequest?> _submitActionRequestFuture;
   Future<SubmitActionResponse?>? _SubmitActionResponseFuture;
   @override
@@ -42,7 +49,11 @@ class _ActionExecutorState extends State<ActionExecutor> {
             action: widget.actionData.action,
             parameters: parameters))
         .then((value) {
-      setState(() => result = value);
+      if (value!.requestValid! == true) {
+        widget.onExecuted(ActionSubmissionResultInfo(widget.actionData, value));
+      } else {
+        setState(() => result = value);
+      }
     });
   }
 

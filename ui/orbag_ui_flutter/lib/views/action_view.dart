@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:orbag_ui_flutter/components/action/action_executor.dart';
+import 'package:orbag_ui_flutter/components/action/action_execution_form.dart';
 import 'package:orbag_ui_flutter/components/util/label_util.dart';
 import 'package:orbag_ui_flutter/components/util/view_util.dart';
 
@@ -16,11 +18,20 @@ class ActionView extends StatelessWidget {
           appBar: AppBar(
               title: Text(
                   "Execute ${actionData.action.displayLabel!} on ${LabelUtil.getCisLabel(actionData.targetCis)}")),
-          body: ActionExecutor(actionData));
+          body: ActionExecutionForm(actionData, (actionResponse) {
+            Navigator.of(context).pop(actionResponse);
+          }));
     });
   }
 
-  static show(BuildContext context, ActionData data) {
-    Navigator.of(context).pushNamed(routeName, arguments: data);
+  static Future<ActionSubmissionResultInfo> show(
+      BuildContext context, ActionData data) {
+    Completer<ActionSubmissionResultInfo> completer = Completer();
+    Navigator.of(context).pushNamed(routeName, arguments: data).then((result) {
+      completer.complete(result as ActionSubmissionResultInfo);
+    }).onError((error, stackTrace) {
+      completer.completeError(error!, stackTrace);
+    });
+    return completer.future;
   }
 }

@@ -29,9 +29,13 @@
     - [x] ui-flutter
     - [ ] ui-vue 
 - [ ] datetime fields
-    - [x] core
-    - [x] ui-flutter
+    - [ ] core
+    - [ ] ui-flutter
     - [ ] ui-vue 
+- [ ] quick action (azioni senza passare dalla richiesta parametri e con feedback immediati)
+  - [x] core
+  - [x] ui-flutter
+  - [ ] ui-vue 
 - [ ] ad hoc actions (azioni senza ci)
     - [ ] core
     - [ ] ui-flutter

@@ -1,11 +1,8 @@
 package orbag.server.action;
 
+import orbag.action.*;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionConsequences;
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemActionBase;
 import orbag.metadata.DisplayLabel;
 import orbag.visibility.ManagedClasses;
 
@@ -16,7 +13,7 @@ public class TestAction extends ConfigurationItemActionBase{
 
 	
 	@Override
-	public void execute(ActionRequest request, ActionResult result) {
+	public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
 		result.setConsequences(ActionConsequences.UPDATED);
 	}
 

@@ -186,6 +186,12 @@ paths:
               $ref: '#/components/schemas/SubmitActionRequest'
         required: true
       responses:
+        "500":
+          description: An error occcured during action exectuion
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
         "401":
           description: Access denied
           content:
@@ -733,6 +739,8 @@ components:
           type: string
         displayLabel:
           type: string
+        quick:
+          type: boolean
     SubmitActionRequest:
       type: object
       properties:

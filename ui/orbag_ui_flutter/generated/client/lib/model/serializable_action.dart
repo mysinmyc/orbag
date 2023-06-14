@@ -15,6 +15,7 @@ class SerializableAction {
   SerializableAction({
     this.identifier,
     this.displayLabel,
+    this.quick,
   });
 
   ///
@@ -33,19 +34,29 @@ class SerializableAction {
   ///
   String? displayLabel;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? quick;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is SerializableAction &&
      other.identifier == identifier &&
-     other.displayLabel == displayLabel;
+     other.displayLabel == displayLabel &&
+     other.quick == quick;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (identifier == null ? 0 : identifier!.hashCode) +
-    (displayLabel == null ? 0 : displayLabel!.hashCode);
+    (displayLabel == null ? 0 : displayLabel!.hashCode) +
+    (quick == null ? 0 : quick!.hashCode);
 
   @override
-  String toString() => 'SerializableAction[identifier=$identifier, displayLabel=$displayLabel]';
+  String toString() => 'SerializableAction[identifier=$identifier, displayLabel=$displayLabel, quick=$quick]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -58,6 +69,11 @@ class SerializableAction {
       json[r'displayLabel'] = this.displayLabel;
     } else {
       json[r'displayLabel'] = null;
+    }
+    if (this.quick != null) {
+      json[r'quick'] = this.quick;
+    } else {
+      json[r'quick'] = null;
     }
     return json;
   }
@@ -83,6 +99,7 @@ class SerializableAction {
       return SerializableAction(
         identifier: mapValueOfType<String>(json, r'identifier'),
         displayLabel: mapValueOfType<String>(json, r'displayLabel'),
+        quick: mapValueOfType<bool>(json, r'quick'),
       );
     }
     return null;

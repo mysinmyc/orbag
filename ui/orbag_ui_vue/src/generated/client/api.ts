@@ -544,6 +544,12 @@ export interface SerializableAction {
      * @memberof SerializableAction
      */
     'displayLabel'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SerializableAction
+     */
+    'quick'?: boolean;
 }
 /**
  * 

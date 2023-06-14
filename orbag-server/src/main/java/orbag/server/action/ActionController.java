@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import orbag.action.ActionExecutionException;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.server.ApiInfo;
@@ -58,7 +59,7 @@ public class ActionController {
 	)
 	@PostMapping("/buildExecutionTemplate")
 	public SubmitActionRequest buildExecutionTemplate(@RequestBody BuildActionTemplateRequest buildActionTemplateRequest,
-			Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+			Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
 		SerializableFieldGroup parameters = new SerializableFieldGroup();
 		actionService.buildParameters(buildActionTemplateRequest.getAction(), buildActionTemplateRequest.getSourceCi(),
 				buildActionTemplateRequest.getTargetCis(), user, parameters);
@@ -76,12 +77,13 @@ public class ActionController {
 					@ApiResponse(responseCode = "200", description = "Action submitted"),
 					@ApiResponse(responseCode = "400", description = "Invalid objects in request", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
 					@ApiResponse(responseCode = "401", description = "Access denied"),
-					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound")
+					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound"),
+					@ApiResponse(responseCode = "500", description = "An error occcured during action exectuion", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
 			}
 	)
 	@PostMapping("/submit")
 	public SubmitActionResponse submit(@RequestBody SubmitActionRequest request, Authentication user)
-			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
 		ActionResult result = actionService.submit(request.getAction(), request.getSourceCi(), request.getTargetCis(),
 				request.getParameters(), user);
 		SubmitActionResponse response = new SubmitActionResponse();
@@ -93,4 +95,6 @@ public class ActionController {
 		response.setValidationErrors(result.getValidationErrors());
 		return response;
 	}
+
+
 }

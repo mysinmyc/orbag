@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import orbag.action.*;
 import orbag.dao.ConfigurationItemNotFoundException;
-import orbag.metadata.DisplayLabelUtils;
 import orbag.metadata.UnmanagedObjectException;
+import orbag.util.UnsafeBiConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionRegistry;
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemAction;
-import orbag.action.ConfigurationItemActionExecutionFilter;
 import orbag.dao.ConfigurationItemDao;
 import orbag.input.FieldGroupBuilder;
 import orbag.input.FieldGroupConsumer;
@@ -25,7 +21,6 @@ import orbag.reference.ConfigurationItemReference;
 import orbag.security.AccessType;
 import orbag.security.OrbagSecurityException;
 import orbag.security.SecurityAssertionService;
-import orbag.server.OrbagServerException;
 import orbag.visibility.FilterContext;
 import orbag.visibility.VisibilityManager;
 
@@ -95,7 +90,7 @@ public class ActionService {
 		List<ConfigurationItemAction> availableActions = actionRegistry.getAllActions();
 		return availableActions.stream().filter(a -> isActionVisibile(a, targetCis, user))
 				.filter(a -> a.isAvailableFor(request)).map(a -> new SerializableAction(a.getIdentifier(),
-						formatLabel(a.getDisplayLabel(), targetCisReferences)))
+						formatLabel(a.getDisplayLabel(), targetCisReferences), a.isQuick()))
 				.toList();
 	}
 
@@ -130,8 +125,8 @@ public class ActionService {
 	}
 
 	void invokeAction(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
-			List<ConfigurationItemReference> targetCisReferences, Authentication user,
-			BiConsumer<ConfigurationItemAction, ActionRequest> consumer) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+					  List<ConfigurationItemReference> targetCisReferences, Authentication user,
+					  UnsafeBiConsumer<ConfigurationItemAction, ActionRequest, ActionExecutionException> consumer) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
 		if (serializableAction  ==null) {
 			throw new UnmanagedObjectException("Missing action");
 		}
@@ -155,7 +150,7 @@ public class ActionService {
 
 	public void buildParameters(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
 			List<ConfigurationItemReference> targetCisReferences, Authentication user, FieldGroupBuilder builder)
-			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
 		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 			for (ConfigurationItemActionExecutionFilter filter : getFiltersFor(action, request)) {
 				filter.setActionParameters(action,builder, request);
@@ -165,14 +160,15 @@ public class ActionService {
 	}
 
 	public ActionResult submit(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
-			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
 		ActionResult result = new ActionResult();
 		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
-			request.setParameters(parameters);
+				request.setParameters(parameters);
 			if (filterAction(action, request, result) && result.isRequestValid()) {
 				action.execute(request, result);
 			}
 		});
 		return result;
 	}
+
 }

@@ -1,6 +1,10 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
-import 'package:orbag_ui_flutter/components/action/action_executor.dart';
+import 'package:orbag_ui_flutter/components/action/action_execution_feedback.dart';
+import 'package:orbag_ui_flutter/components/action/action_execution_form.dart';
+import 'package:orbag_ui_flutter/components/action/action_util.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_properties_editor.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
@@ -63,6 +67,16 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
         });
   }
 
+  final Queue<ActionSubmissionResultInfo> _actionResultInfoQueue = Queue();
+
+  _executeAction(BuildContext context, ActionData actionData) async {
+    ActionUtil.submit(context, actionData).then((response) {
+      setState(() {
+        _actionResultInfoQueue.add(response);
+      });
+    });
+  }
+
   Widget buildActions() {
     return FutureBuilder(
         future: _availableActionsFuture,
@@ -70,9 +84,7 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
             AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
           if (snapshot.hasData) {
             return PopupMenuButton(
-                onSelected: (value) => {
-                      ActionView.show(context, ActionData(value, [widget.ci]))
-                    },
+                onSelected: (value) {_executeAction(context, ActionData(value, [widget.ci]));},
                 itemBuilder: (context) => snapshot.data!.availableActions
                     .map((e) => PopupMenuItem(
                           value: e,
@@ -113,10 +125,12 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
                 bottom: TabBar(tabs: tabs, controller: tabController),
                 actions: [buildActions()],
               ),
-              body: SingleChildScrollView(
+              body: Stack( children: [SingleChildScrollView(
                   child: _currentTabIndex == 0
                       ? ConfigurationItemPropertiesEditor(widget.ci)
-                      : buildView(views[_currentTabIndex - 1])));
+                      : buildView(views[_currentTabIndex - 1])), ActionExecutionFeedBack(_actionResultInfoQueue, onDeleted: (context,result) {
+                Navigator.of(context).pop();
+              })]));
         });
   }
 }
