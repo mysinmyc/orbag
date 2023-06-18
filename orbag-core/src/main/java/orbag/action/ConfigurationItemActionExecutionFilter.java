@@ -8,5 +8,5 @@ public interface ConfigurationItemActionExecutionFilter {
 	
 	void setActionParameters(ConfigurationItemAction action,FieldGroupBuilder parametersBuilder, ActionRequest request);
 	
-	boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionResult result);
+	boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionFeedback feedback);
 }

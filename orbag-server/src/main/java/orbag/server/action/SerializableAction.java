@@ -7,6 +7,8 @@ public class SerializableAction {
 	
 	String displayLabel;
 
+	String description;
+
 	boolean quick;
 
 
@@ -15,10 +17,11 @@ public class SerializableAction {
 		
 	}
 	
-	public SerializableAction(String identifier, String displayLabel, boolean quick) {
+	public SerializableAction(String identifier, String displayLabel, boolean quick,String description) {
 		this.identifier = identifier;
 		this.displayLabel = displayLabel;
 		this.quick = quick;
+		this.description=description;
 	}
 
 	public String getIdentifier() {
@@ -43,5 +46,14 @@ public class SerializableAction {
 
 	public void setQuick(boolean quick) {
 		this.quick = quick;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

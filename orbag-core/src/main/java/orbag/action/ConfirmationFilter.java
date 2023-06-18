@@ -22,10 +22,10 @@ public class ConfirmationFilter implements ConfigurationItemActionExecutionFilte
 	}
 
 	@Override
-	public boolean filterAction(ConfigurationItemAction action, ActionRequest request, ActionResult result) {
+	public boolean filterAction(ConfigurationItemAction action, ActionRequest request, ActionFeedback feedback) {
 		Boolean confirmed = ((BooleanField)request.getParameters().getField("_confirm")).getValue();
 		if (! Boolean.TRUE.equals(confirmed)) {
-			result.addValidationError("Action not confirmed");
+			feedback.addValidationError("Action not confirmed");
 			return false;
 		}
 		return true;

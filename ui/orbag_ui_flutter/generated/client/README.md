@@ -94,6 +94,7 @@ Class | Method | HTTP request | Description
  - [ConfigurationItemReference](doc//ConfigurationItemReference.md)
  - [ConfigurationItemReferenceField](doc//ConfigurationItemReferenceField.md)
  - [CreateRequest](doc//CreateRequest.md)
+ - [CreateResponse](doc//CreateResponse.md)
  - [EnumField](doc//EnumField.md)
  - [ErrorPayload](doc//ErrorPayload.md)
  - [GetAvailableActionsRequest](doc//GetAvailableActionsRequest.md)

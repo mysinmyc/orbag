@@ -197,6 +197,8 @@ class ApiClient {
           return ConfigurationItemReferenceField.fromJson(value);
         case 'CreateRequest':
           return CreateRequest.fromJson(value);
+        case 'CreateResponse':
+          return CreateResponse.fromJson(value);
         case 'EnumField':
           return EnumField.fromJson(value);
         case 'ErrorPayload':

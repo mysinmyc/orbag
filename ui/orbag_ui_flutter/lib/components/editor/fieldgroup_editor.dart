@@ -127,8 +127,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                 currentRequestField.changed = true,
                 currentRequestField.value = int.tryParse(value)
               });
-      filters.add(WidgetFieldBuildInfo(currentRequestField.category!,
-          currentRequestField.displayLabel!, currentField));
+      filters.add(WidgetFieldBuildInfo(currentRequestField.category,
+          currentRequestField.displayLabel, currentField));
     }
 
     for (BooleanField currentRequestField in fields.booleanFields) {

@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **create**
-> ConfigurationItemReference create(createRequest)
+> CreateResponse create(createRequest)
 
 Execute the configuration item creation
 
@@ -47,7 +47,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ConfigurationItemReference**](ConfigurationItemReference.md)
+[**CreateResponse**](CreateResponse.md)
 
 ### Authorization
 

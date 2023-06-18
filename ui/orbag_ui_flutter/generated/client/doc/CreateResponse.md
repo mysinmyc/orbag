@@ -1,4 +1,4 @@
-# openapi.model.SubmitActionResponse
+# openapi.model.CreateResponse
 
 ## Load the model package
 ```dart
@@ -12,10 +12,7 @@ Name | Type | Description | Notes
 **errorMessage** | **String** |  | [optional] 
 **validationErrors** | [**List<ValidationError>**](ValidationError.md) |  | [optional] [default to const []]
 **requestValid** | **bool** |  | [optional] 
-**consequences** | **String** |  | [optional] 
-**message** | **String** |  | [optional] 
-**link** | **String** |  | [optional] 
-**jobId** | **String** |  | [optional] 
+**configurationItem** | [**ConfigurationItemReference**](ConfigurationItemReference.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -8,9 +8,12 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+/**
+ * Standard implementation of a fieldgroup that can be safely serialized
+ *
+ * <p>Each type of field has a separate array to avoid issues with some clients that doesn't handle correctly dynamic typing
+ */
 public class SerializableFieldGroup implements FieldGroupBuilder, FieldGroupConsumer {
-
 
 	List<BooleanField> booleanFields = new ArrayList<>();
 	List<ConfigurationItemReferenceField> configurationItemReferenceFields = new ArrayList<>();

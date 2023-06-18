@@ -21,6 +21,16 @@ void main() {
       // TODO
     });
 
+    // String applicationName
+    test('to test the property `applicationName`', () async {
+      // TODO
+    });
+
+    // String loginMessage
+    test('to test the property `loginMessage`', () async {
+      // TODO
+    });
+
 
   });
 

@@ -13,13 +13,35 @@ part of openapi.api;
 class SubmitActionResponse {
   /// Returns a new [SubmitActionResponse] instance.
   SubmitActionResponse({
+    this.executionStatus,
+    this.errorMessage,
+    this.validationErrors = const [],
+    this.requestValid,
     this.consequences,
     this.message,
     this.link,
     this.jobId,
-    this.requestValid,
-    this.validationErrors = const [],
   });
+
+  SubmitActionResponseExecutionStatusEnum? executionStatus;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? errorMessage;
+
+  List<ValidationError> validationErrors;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? requestValid;
 
   SubmitActionResponseConsequencesEnum? consequences;
 
@@ -47,40 +69,50 @@ class SubmitActionResponse {
   ///
   String? jobId;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? requestValid;
-
-  List<ValidationError> validationErrors;
-
   @override
   bool operator ==(Object other) => identical(this, other) || other is SubmitActionResponse &&
+     other.executionStatus == executionStatus &&
+     other.errorMessage == errorMessage &&
+     other.validationErrors == validationErrors &&
+     other.requestValid == requestValid &&
      other.consequences == consequences &&
      other.message == message &&
      other.link == link &&
-     other.jobId == jobId &&
-     other.requestValid == requestValid &&
-     other.validationErrors == validationErrors;
+     other.jobId == jobId;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (executionStatus == null ? 0 : executionStatus!.hashCode) +
+    (errorMessage == null ? 0 : errorMessage!.hashCode) +
+    (validationErrors.hashCode) +
+    (requestValid == null ? 0 : requestValid!.hashCode) +
     (consequences == null ? 0 : consequences!.hashCode) +
     (message == null ? 0 : message!.hashCode) +
     (link == null ? 0 : link!.hashCode) +
-    (jobId == null ? 0 : jobId!.hashCode) +
-    (requestValid == null ? 0 : requestValid!.hashCode) +
-    (validationErrors.hashCode);
+    (jobId == null ? 0 : jobId!.hashCode);
 
   @override
-  String toString() => 'SubmitActionResponse[consequences=$consequences, message=$message, link=$link, jobId=$jobId, requestValid=$requestValid, validationErrors=$validationErrors]';
+  String toString() => 'SubmitActionResponse[executionStatus=$executionStatus, errorMessage=$errorMessage, validationErrors=$validationErrors, requestValid=$requestValid, consequences=$consequences, message=$message, link=$link, jobId=$jobId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.executionStatus != null) {
+      json[r'executionStatus'] = this.executionStatus;
+    } else {
+      json[r'executionStatus'] = null;
+    }
+    if (this.errorMessage != null) {
+      json[r'errorMessage'] = this.errorMessage;
+    } else {
+      json[r'errorMessage'] = null;
+    }
+      json[r'validationErrors'] = this.validationErrors;
+    if (this.requestValid != null) {
+      json[r'requestValid'] = this.requestValid;
+    } else {
+      json[r'requestValid'] = null;
+    }
     if (this.consequences != null) {
       json[r'consequences'] = this.consequences;
     } else {
@@ -101,12 +133,6 @@ class SubmitActionResponse {
     } else {
       json[r'jobId'] = null;
     }
-    if (this.requestValid != null) {
-      json[r'requestValid'] = this.requestValid;
-    } else {
-      json[r'requestValid'] = null;
-    }
-      json[r'validationErrors'] = this.validationErrors;
     return json;
   }
 
@@ -129,12 +155,14 @@ class SubmitActionResponse {
       }());
 
       return SubmitActionResponse(
+        executionStatus: SubmitActionResponseExecutionStatusEnum.fromJson(json[r'executionStatus']),
+        errorMessage: mapValueOfType<String>(json, r'errorMessage'),
+        validationErrors: ValidationError.listFromJson(json[r'validationErrors']),
+        requestValid: mapValueOfType<bool>(json, r'requestValid'),
         consequences: SubmitActionResponseConsequencesEnum.fromJson(json[r'consequences']),
         message: mapValueOfType<String>(json, r'message'),
         link: mapValueOfType<String>(json, r'link'),
         jobId: mapValueOfType<String>(json, r'jobId'),
-        requestValid: mapValueOfType<bool>(json, r'requestValid'),
-        validationErrors: ValidationError.listFromJson(json[r'validationErrors']),
       );
     }
     return null;
@@ -184,6 +212,83 @@ class SubmitActionResponse {
   static const requiredKeys = <String>{
   };
 }
+
+
+class SubmitActionResponseExecutionStatusEnum {
+  /// Instantiate a new enum with the provided [value].
+  const SubmitActionResponseExecutionStatusEnum._(this.value);
+
+  /// The underlying value of this enum member.
+  final String value;
+
+  @override
+  String toString() => value;
+
+  String toJson() => value;
+
+  static const VALIDATION_FAILED = SubmitActionResponseExecutionStatusEnum._(r'VALIDATION_FAILED');
+  static const SUCCEEDED = SubmitActionResponseExecutionStatusEnum._(r'SUCCEEDED');
+  static const FAILED = SubmitActionResponseExecutionStatusEnum._(r'FAILED');
+
+  /// List of all possible values in this [enum][SubmitActionResponseExecutionStatusEnum].
+  static const values = <SubmitActionResponseExecutionStatusEnum>[
+    VALIDATION_FAILED,
+    SUCCEEDED,
+    FAILED,
+  ];
+
+  static SubmitActionResponseExecutionStatusEnum? fromJson(dynamic value) => SubmitActionResponseExecutionStatusEnumTypeTransformer().decode(value);
+
+  static List<SubmitActionResponseExecutionStatusEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <SubmitActionResponseExecutionStatusEnum>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = SubmitActionResponseExecutionStatusEnum.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+}
+
+/// Transformation class that can [encode] an instance of [SubmitActionResponseExecutionStatusEnum] to String,
+/// and [decode] dynamic data back to [SubmitActionResponseExecutionStatusEnum].
+class SubmitActionResponseExecutionStatusEnumTypeTransformer {
+  factory SubmitActionResponseExecutionStatusEnumTypeTransformer() => _instance ??= const SubmitActionResponseExecutionStatusEnumTypeTransformer._();
+
+  const SubmitActionResponseExecutionStatusEnumTypeTransformer._();
+
+  String encode(SubmitActionResponseExecutionStatusEnum data) => data.value;
+
+  /// Decodes a [dynamic value][data] to a SubmitActionResponseExecutionStatusEnum.
+  ///
+  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
+  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
+  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
+  ///
+  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
+  /// and users are still using an old app with the old code.
+  SubmitActionResponseExecutionStatusEnum? decode(dynamic data, {bool allowNull = true}) {
+    if (data != null) {
+      switch (data) {
+        case r'VALIDATION_FAILED': return SubmitActionResponseExecutionStatusEnum.VALIDATION_FAILED;
+        case r'SUCCEEDED': return SubmitActionResponseExecutionStatusEnum.SUCCEEDED;
+        case r'FAILED': return SubmitActionResponseExecutionStatusEnum.FAILED;
+        default:
+          if (!allowNull) {
+            throw ArgumentError('Unknown enum value to decode: $data');
+          }
+      }
+    }
+    return null;
+  }
+
+  /// Singleton [SubmitActionResponseExecutionStatusEnumTypeTransformer] instance.
+  static SubmitActionResponseExecutionStatusEnumTypeTransformer? _instance;
+}
+
 
 
 class SubmitActionResponseConsequencesEnum {

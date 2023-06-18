@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    // List<Map<String, Object>> rows (default value: const [])
+    // List<SerializableRow> rows (default value: const [])
     test('to test the property `rows`', () async {
       // TODO
     });

@@ -14,6 +14,7 @@ doc/ConfigurationItemReference.md
 doc/ConfigurationItemReferenceField.md
 doc/CreateControllerApi.md
 doc/CreateRequest.md
+doc/CreateResponse.md
 doc/EnumField.md
 doc/ErrorPayload.md
 doc/GetAvailableActionsRequest.md
@@ -74,6 +75,7 @@ lib/model/config_response.dart
 lib/model/configuration_item_reference.dart
 lib/model/configuration_item_reference_field.dart
 lib/model/create_request.dart
+lib/model/create_response.dart
 lib/model/enum_field.dart
 lib/model/error_payload.dart
 lib/model/get_available_actions_request.dart

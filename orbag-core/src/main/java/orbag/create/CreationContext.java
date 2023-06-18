@@ -4,12 +4,19 @@ import org.springframework.security.core.Authentication;
 
 import orbag.metadata.ConfigurationItemDescriptor;
 
+/**
+ * Holder for creation request details
+ */
 public class CreationContext {
 
 	ConfigurationItemDescriptor configurationItemDescriptor;
 
 	Authentication user;
 
+	/**
+	 * Descriptor of configuration item to be created
+	 * @return Configuration Item Descriptpr
+	 */
 	public ConfigurationItemDescriptor getConfigurationItemDescriptor() {
 		return configurationItemDescriptor;
 	}
@@ -18,6 +25,10 @@ public class CreationContext {
 		this.configurationItemDescriptor = configurationItemDescriptor;
 	}
 
+	/**
+	 * User that requested the operation
+	 * @return
+	 */
 	public Authentication getUser() {
 		return user;
 	}

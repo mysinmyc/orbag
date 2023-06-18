@@ -1,19 +1,29 @@
 package orbag.server.create;
 
+import orbag.create.ConfigurationItemCreationFeedback;
 import orbag.reference.ConfigurationItemReference;
+import orbag.server.util.OperationResponse;
+import orbag.util.OperationFeedback;
+import orbag.util.OperationStatus;
 
-public class CreateResponse {
+public class CreateResponse extends OperationResponse {
 
-	
-	ConfigurationItemReference configurationItemChange;
-
-	public ConfigurationItemReference getConfigurationItemChange() {
-		return configurationItemChange;
+	public CreateResponse() {
+		super();
 	}
 
-	public void setConfigurationItemChange(ConfigurationItemReference configurationItemChange) {
-		this.configurationItemChange = configurationItemChange;
+	public CreateResponse(ConfigurationItemCreationFeedback<ConfigurationItemReference> feedback) {
+		super(feedback);
+		this.configurationItem = feedback.getResult();
 	}
-	
-	
+
+	ConfigurationItemReference configurationItem;
+
+	public ConfigurationItemReference getConfigurationItem() {
+		return configurationItem;
+	}
+
+	public void setConfigurationItem(ConfigurationItemReference configurationItem) {
+		this.configurationItem = configurationItem;
+	}
 }

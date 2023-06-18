@@ -26,6 +26,11 @@ void main() {
       // TODO
     });
 
+    // String category
+    test('to test the property `category`', () async {
+      // TODO
+    });
+
     // int value
     test('to test the property `value`', () async {
       // TODO

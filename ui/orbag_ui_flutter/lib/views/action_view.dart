@@ -18,8 +18,11 @@ class ActionView extends StatelessWidget {
           appBar: AppBar(
               title: Text(
                   "Execute ${actionData.action.displayLabel!} on ${LabelUtil.getCisLabel(actionData.targetCis)}")),
-          body: ActionExecutionForm(actionData, (actionResponse) {
-            Navigator.of(context).pop(actionResponse);
+          body: ActionExecutionForm(actionData, (actionSubmissionResultInfo) {
+            Navigator.of(context).pop(actionSubmissionResultInfo);
+          }, (error) {
+            Navigator.of(context).pop(
+                ActionSubmissionResultInfo(actionData, null, error: error));
           }));
     });
   }

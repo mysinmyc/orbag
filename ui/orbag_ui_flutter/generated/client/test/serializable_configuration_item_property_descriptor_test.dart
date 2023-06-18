@@ -31,6 +31,11 @@ void main() {
       // TODO
     });
 
+    // String category
+    test('to test the property `category`', () async {
+      // TODO
+    });
+
     // bool readOnly
     test('to test the property `readOnly`', () async {
       // TODO

@@ -2,6 +2,9 @@ package orbag.input;
 
 import orbag.metadata.ConfigurationItemDescriptor;
 
+/**
+ * This interface describe methods that can be used build a fieldgroup
+ */
 public interface FieldGroupBuilder {
 
 	default InputFieldBase<?> addFieldOfType(String name, String displayLabel, Class<?> type) throws DuplicateFieldException {

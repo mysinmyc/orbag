@@ -139,13 +139,13 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/ConfigurationItemReference'
+                $ref: '#/components/schemas/CreateResponse'
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/ConfigurationItemReference'
+                $ref: '#/components/schemas/CreateResponse'
         "400":
           description: Invalid configuration item
           content:
@@ -186,12 +186,6 @@ paths:
               $ref: '#/components/schemas/SubmitActionRequest'
         required: true
       responses:
-        "500":
-          description: An error occcured during action exectuion
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
         "401":
           description: Access denied
           content:
@@ -204,18 +198,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionResponse'
-        "200":
-          description: Action submitted
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/SubmitActionResponse'
         "400":
           description: Invalid objects in request
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorPayload'
+        "200":
+          description: Action submitted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmitActionResponse'
       security:
       - JWT: []
   /api/action/getAvailable:
@@ -712,6 +706,32 @@ components:
           format: int32
         error:
           type: string
+    CreateResponse:
+      type: object
+      properties:
+        executionStatus:
+          type: string
+          enum:
+          - VALIDATION_FAILED
+          - SUCCEEDED
+          - FAILED
+        errorMessage:
+          type: string
+        validationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        requestValid:
+          type: boolean
+        configurationItem:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+        error:
+          type: string
     LoginRequest:
       type: object
       properties:
@@ -739,6 +759,8 @@ components:
           type: string
         displayLabel:
           type: string
+        description:
+          type: string
         quick:
           type: boolean
     SubmitActionRequest:
@@ -757,6 +779,20 @@ components:
     SubmitActionResponse:
       type: object
       properties:
+        executionStatus:
+          type: string
+          enum:
+          - VALIDATION_FAILED
+          - SUCCEEDED
+          - FAILED
+        errorMessage:
+          type: string
+        validationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        requestValid:
+          type: boolean
         consequences:
           type: string
           enum:
@@ -769,19 +805,6 @@ components:
         link:
           type: string
         jobId:
-          type: string
-        requestValid:
-          type: boolean
-        validationErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    ValidationError:
-      type: object
-      properties:
-        field:
-          type: string
-        error:
           type: string
     GetAvailableActionsRequest:
       type: object

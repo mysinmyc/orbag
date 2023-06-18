@@ -19,7 +19,7 @@ void main() {
   group('tests for CreateControllerApi', () {
     // Execute the configuration item creation
     //
-    //Future<ConfigurationItemReference> create(CreateRequest createRequest) async
+    //Future<CreateResponse> create(CreateRequest createRequest) async
     test('test create', () async {
       // TODO
     });

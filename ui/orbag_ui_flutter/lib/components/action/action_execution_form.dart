@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
+import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 
 class ActionData {
@@ -13,14 +14,41 @@ class ActionData {
 
 class ActionSubmissionResultInfo {
   final ActionData actionData;
-  final SubmitActionResponse response;
-  ActionSubmissionResultInfo(this.actionData, this.response);
+  final SubmitActionResponse? response;
+  final Object? error;
+  ActionSubmissionResultInfo(this.actionData, this.response, {this.error});
+
+  bool get succeded {
+    if (error != null) {
+      return false;
+    }
+    return response?.executionStatus ==
+        SubmitActionResponseExecutionStatusEnum.SUCCEEDED;
+  }
+
+  String get errorMessage {
+    if (response?.errorMessage != null) {
+      return response!.errorMessage!;
+    }
+    if (error != null) {
+      return error.toString();
+    }
+
+    if (response?.executionStatus ==
+        SubmitActionResponseExecutionStatusEnum.VALIDATION_FAILED) {
+      return "some error occurred during validation";
+    }
+
+    return "unspecfied error";
+  }
 }
 
 class ActionExecutionForm extends StatefulWidget {
   final ActionData actionData;
   final ValueChanged<ActionSubmissionResultInfo> onExecuted;
-  const ActionExecutionForm(this.actionData, this.onExecuted, {super.key});
+  final ValueChanged<Object?> onError;
+  const ActionExecutionForm(this.actionData, this.onExecuted, this.onError,
+      {super.key});
 
   @override
   State<ActionExecutionForm> createState() => _ActionExecutionFormState();
@@ -54,6 +82,8 @@ class _ActionExecutionFormState extends State<ActionExecutionForm> {
       } else {
         setState(() => result = value);
       }
+    }).onError((error, stackTrace) {
+      widget.onError(error);
     });
   }
 
@@ -77,6 +107,13 @@ class _ActionExecutionFormState extends State<ActionExecutionForm> {
       Conditional.single(
           context: context,
           conditionBuilder: (context) =>
+              widget.actionData.action.description != null,
+          widgetBuilder: (context) =>
+              Text(widget.actionData.action.description!),
+          fallbackBuilder: (context) => RenderUtil.empty()),
+      Conditional.single(
+          context: context,
+          conditionBuilder: (context) =>
               result == null || !(result!.requestValid!),
           widgetBuilder: (context) => FutureBuilder(
               future: _submitActionRequestFuture,
@@ -91,14 +128,14 @@ class _ActionExecutionFormState extends State<ActionExecutionForm> {
                   return Text("Wait");
                 }
               }),
-          fallbackBuilder: (context) => Text("")),
+          fallbackBuilder: (context) => RenderUtil.empty()),
       Conditional.single(
           context: context,
           conditionBuilder: (context) => result != null,
           widgetBuilder: (context) {
             return _buildResultWidget(context, result!);
           },
-          fallbackBuilder: (context) => Text(""))
+          fallbackBuilder: (context) => RenderUtil.empty())
     ]);
   }
 }

@@ -2,7 +2,6 @@ package orbag.server.action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import orbag.action.*;
 import orbag.dao.ConfigurationItemNotFoundException;
@@ -90,7 +89,7 @@ public class ActionService {
 		List<ConfigurationItemAction> availableActions = actionRegistry.getAllActions();
 		return availableActions.stream().filter(a -> isActionVisibile(a, targetCis, user))
 				.filter(a -> a.isAvailableFor(request)).map(a -> new SerializableAction(a.getIdentifier(),
-						formatLabel(a.getDisplayLabel(), targetCisReferences), a.isQuick()))
+						formatLabel(a.getDisplayLabel(), targetCisReferences), a.isQuick(), a.getDescription()))
 				.toList();
 	}
 
@@ -114,10 +113,10 @@ public class ActionService {
 				.filter(f -> f.isAvailableFor(action, request)).toList();
 	}
 
-	boolean filterAction(ConfigurationItemAction action, ActionRequest request, ActionResult result) {
+	boolean filterAction(ConfigurationItemAction action, ActionRequest request, ActionFeedback feedback) {
 		List<ConfigurationItemActionExecutionFilter> filters = getFiltersFor(action, request);
 		for (ConfigurationItemActionExecutionFilter filter : filters) {
-			if (!filter.filterAction(action,request, result)) {
+			if (!filter.filterAction(action,request, feedback)) {
 				return false;
 			}
 		}
@@ -145,7 +144,13 @@ public class ActionService {
 		if (!(isActionVisibile(action, targetCis, user) && action.isAvailableFor(request))) {
 			throw new OrbagSecurityException();
 		}
-		consumer.accept(action, request);
+		try {
+			consumer.accept(action, request);
+		} catch (ActionExecutionException e) {
+			throw e;
+		}catch (Throwable e) {
+			throw new ActionExecutionException(e.getMessage(),e);
+		}
 	}
 
 	public void buildParameters(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
@@ -159,16 +164,23 @@ public class ActionService {
 		});
 	}
 
-	public ActionResult submit(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
-			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
+	public ActionFeedback submit(SerializableAction serializableAction, ConfigurationItemReference sourceCiReference,
+			List<ConfigurationItemReference> targetCisReferences, FieldGroupConsumer parameters, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException{
+		ActionFeedback feedback = new ActionFeedback();
 		ActionResult result = new ActionResult();
-		invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
+		feedback.setResult(result);
+
+		try {
+			invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 				request.setParameters(parameters);
-			if (filterAction(action, request, result) && result.isRequestValid()) {
-				action.execute(request, result);
-			}
-		});
-		return result;
+				if (filterAction(action, request, feedback) && feedback.isOperationValid()) {
+					action.execute(request, result);
+				}
+			});
+		}catch (ActionExecutionException e) {
+			feedback.setException(e);
+		}
+		return feedback;
 	}
 
 }

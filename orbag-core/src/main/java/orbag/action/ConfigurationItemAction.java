@@ -1,8 +1,9 @@
 package orbag.action;
 
+import orbag.metadata.Describable;
 import orbag.metadata.Displayable;
 
-public interface ConfigurationItemAction extends Displayable {
+public interface ConfigurationItemAction extends Displayable, Describable {
 
 
 	default boolean isQuick() {

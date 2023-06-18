@@ -46,6 +46,7 @@ part 'model/config_response.dart';
 part 'model/configuration_item_reference.dart';
 part 'model/configuration_item_reference_field.dart';
 part 'model/create_request.dart';
+part 'model/create_response.dart';
 part 'model/enum_field.dart';
 part 'model/error_payload.dart';
 part 'model/get_available_actions_request.dart';

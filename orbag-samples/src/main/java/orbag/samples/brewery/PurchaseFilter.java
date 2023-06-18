@@ -1,11 +1,8 @@
 package orbag.samples.brewery;
 
+import orbag.action.*;
 import org.springframework.stereotype.Component;
 
-import orbag.action.ActionRequest;
-import orbag.action.ActionResult;
-import orbag.action.ConfigurationItemAction;
-import orbag.action.ConfigurationItemActionExecutionFilter;
 import orbag.input.FieldGroupBuilder;
 import orbag.visibility.ManagedClasses;
 
@@ -24,8 +21,8 @@ public class PurchaseFilter implements ConfigurationItemActionExecutionFilter{
 	}
 
 	@Override
-	public boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionResult result) {		
-		return ((PurchaseAction)action).validatePayment(request, result);
+	public boolean filterAction(ConfigurationItemAction action,ActionRequest request, ActionFeedback feedback) {
+		return ((PurchaseAction)action).validatePayment(request, feedback);
 	}
 
 }

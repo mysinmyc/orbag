@@ -1,4 +1,4 @@
-package orbag.action;
+package orbag.util;
 
 public class ValidationError {
 

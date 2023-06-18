@@ -26,6 +26,16 @@ void main() {
       // TODO
     });
 
+    // String description
+    test('to test the property `description`', () async {
+      // TODO
+    });
+
+    // bool quick
+    test('to test the property `quick`', () async {
+      // TODO
+    });
+
 
   });
 

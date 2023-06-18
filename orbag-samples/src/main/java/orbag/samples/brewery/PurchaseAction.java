@@ -1,5 +1,6 @@
 package orbag.samples.brewery;
 
+import orbag.action.ActionFeedback;
 import orbag.action.ActionRequest;
 import orbag.action.ActionResult;
 import orbag.input.EnumField;
@@ -14,14 +15,14 @@ public interface PurchaseAction {
 	double getPrice(ActionRequest request);
 	
 	
-	default boolean validatePayment (ActionRequest request,  ActionResult actionResult) {
+	default boolean validatePayment (ActionRequest request,  ActionFeedback feedback) {
 		double price =getPrice(request); 
 		if (request.getParameters().getField("_paymentMethod").isEmpty()) {
-			actionResult.addValidationError("Missing payment method","_paymentMethod");
+			feedback.addValidationError("Missing payment method","_paymentMethod");
 			return false;
 		}
 		if (price > 10d) {
-			actionResult.addValidationError("Payment of "+price+" via "+getPaymentMethod(request)+" denied");
+			feedback.addValidationError("Payment of "+price+" via "+getPaymentMethod(request)+" denied");
 			return false;
 		}
 		

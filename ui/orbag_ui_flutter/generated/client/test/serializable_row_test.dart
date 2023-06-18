@@ -16,8 +16,13 @@ void main() {
   // final instance = SerializableRow();
 
   group('test SerializableRow', () {
-    // bool empty
-    test('to test the property `empty`', () async {
+    // Map<String, Object> fields (default value: const {})
+    test('to test the property `fields`', () async {
+      // TODO
+    });
+
+    // Set<String> tags (default value: const {})
+    test('to test the property `tags`', () async {
       // TODO
     });
 

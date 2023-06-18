@@ -11,17 +11,14 @@ import orbag.visibility.ManagedClasses;
 import org.springframework.stereotype.Component;
 
 @Component
-@DisplayLabel("Search in google")
-@Description("This action show what occurs in case the action return a link")
+@DisplayLabel("Error action")
+@Description("This action is used to test what happens in the frontend in case of error")
 @ManagedClasses({Displayable.class})
-public class SearchInGoogle extends ConfigurationItemActionBase {
+public class ErrorAction extends ConfigurationItemActionBase {
+
 
     @Override
-    public boolean isAvailableFor(ActionRequest request) {
-        return request.getTargetCis().size()==1;
-    }
-    @Override
     public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
-        result.setLink("https://www.google.com?q="+ ((Displayable)request.getTargetCis().get(0)).getDisplayLabel());
+        throw new ActionExecutionException("Action failed");
     }
 }

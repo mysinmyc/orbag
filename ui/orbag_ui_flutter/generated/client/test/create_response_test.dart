@@ -11,11 +11,11 @@
 import 'package:openapi/api.dart';
 import 'package:test/test.dart';
 
-// tests for SubmitActionResponse
+// tests for CreateResponse
 void main() {
-  // final instance = SubmitActionResponse();
+  // final instance = CreateResponse();
 
-  group('test SubmitActionResponse', () {
+  group('test CreateResponse', () {
     // String executionStatus
     test('to test the property `executionStatus`', () async {
       // TODO
@@ -36,23 +36,8 @@ void main() {
       // TODO
     });
 
-    // String consequences
-    test('to test the property `consequences`', () async {
-      // TODO
-    });
-
-    // String message
-    test('to test the property `message`', () async {
-      // TODO
-    });
-
-    // String link
-    test('to test the property `link`', () async {
-      // TODO
-    });
-
-    // String jobId
-    test('to test the property `jobId`', () async {
+    // ConfigurationItemReference configurationItem
+    test('to test the property `configurationItem`', () async {
       // TODO
     });
 

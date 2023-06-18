@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import orbag.create.ConfigurationItemCreationException;
+import orbag.create.ConfigurationItemCreationFeedback;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.reference.ConfigurationItemReference;
 import orbag.server.ApiInfo;
@@ -40,7 +42,7 @@ public class CreateController {
 	)
 	@GetMapping("/template/{configurationItemName}")
 	public CreateRequest getCreateTemplate(
-			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
+			@PathVariable("configurationItemName") String configurationItemName, Authentication user) throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemCreationException {
 		return createService.getCreateRequestTemplateFor(configurationItemName, user);
 	}
 
@@ -53,7 +55,8 @@ public class CreateController {
 			}
 	)
 	@PostMapping("/execute")
-	public ConfigurationItemReference create(@RequestBody CreateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
-		return  createService.create(request,user);
+	public CreateResponse create(@RequestBody CreateRequest request, Authentication user) throws OrbagSecurityException, UnmanagedObjectException {
+		ConfigurationItemCreationFeedback<ConfigurationItemReference> feedback= createService.create(request,user);
+		return new CreateResponse(feedback);
 	}
 }

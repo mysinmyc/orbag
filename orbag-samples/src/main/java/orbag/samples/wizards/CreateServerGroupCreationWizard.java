@@ -1,10 +1,10 @@
 package orbag.samples.wizards;
 
+import orbag.create.AnnotatedInputConfigurationItemCreationWizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import orbag.create.ConfigurationItemWizard;
 import orbag.create.CreationContext;
 import orbag.dao.ConfigurationItemDao;
 import orbag.samples.cis.Server;
@@ -22,21 +22,11 @@ import orbag.visibility.ManagedClasses;
 	@InputField(name="serverPrefix", displayLabel="Server Prefix", type = String.class),
 	@InputField(name="servers", displayLabel="Number of Servers", type = Integer.class, defaultValue="5"),
 })
-public class CreateServerGroupWizard implements ConfigurationItemWizard{
+public class CreateServerGroupCreationWizard implements AnnotatedInputConfigurationItemCreationWizard {
 
 	@Autowired
 	ConfigurationItemDao dao;
-	
-	/*
-	@Override
-	public void buildCreateParameters(FieldGroupBuilder parametersBuilder, CreationContext context) {
-		parametersBuilder.addStringField("groupName", "Group Name");
-		parametersBuilder.addStringField("serverPrefix", "Server Prefix");
-		parametersBuilder.addNumericField("servers", "Number of Servers").setValue(5);
-	}
-	*/
 
-	
 	@Override
 	public Object create(FieldGroupConsumer parameters, CreationContext context) {
 		ServerGroup serverGroup = new ServerGroup();

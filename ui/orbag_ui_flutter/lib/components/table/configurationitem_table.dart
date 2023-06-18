@@ -54,10 +54,10 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
 
   _executeAction(BuildContext context, ActionData actionData) async {
     ActionUtil.submit(context, actionData).then((response) {
-        setState(() {
-          _actionResultInfoQueue.add(response);
-        });
+      setState(() {
+        _actionResultInfoQueue.add(response);
       });
+    });
   }
 
   Future<void> _showAvailableActions(List<SerializableAction> actions) async {
@@ -85,7 +85,6 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
   SerializableColumn? _sortColumn;
   int? _sortColumnIndex;
   bool _sortAscending = true;
-
 
   _sortBy(SerializableColumn column, int columnIndex, bool asceding) {
     setState(() {
@@ -158,33 +157,35 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Container(height: 60, child:
-      Conditional.single(
-          context: context,
-          conditionBuilder: (context) => _selectedRows.isNotEmpty,
-          widgetBuilder: (context) => RenderUtil.pad(Row(children: [
-                Text(
-                    "Selected ${LabelUtil.truncateLabel(LabelUtil.getCisLabel(selectedCis))}"),
-                const Padding(padding: EdgeInsets.all(10)),
-                FutureBuilder<GetAvailableActionsResponse?>(
-                    future: _availableActionsFuture,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!.availableActions.isEmpty) {
-                          return const Text("No action available");
-                        } else {
-                          return ElevatedButton(
-                              onPressed: () => _showAvailableActions(
-                                  snapshot.data!.availableActions),
-                              child: const Text("Actions..."));
-                        }
-                      } else {
-                        return const Text("");
-                      }
-                    })
-              ])),
-          fallbackBuilder: (context) => const Text(""))),
+      Container(
+          height: 60,
+          child: Conditional.single(
+              context: context,
+              conditionBuilder: (context) => _selectedRows.isNotEmpty,
+              widgetBuilder: (context) => RenderUtil.pad(Row(children: [
+                    Text(
+                        "Selected ${LabelUtil.truncateLabel(LabelUtil.getCisLabel(selectedCis))}"),
+                    const Padding(padding: EdgeInsets.all(10)),
+                    FutureBuilder<GetAvailableActionsResponse?>(
+                        future: _availableActionsFuture,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<GetAvailableActionsResponse?>
+                                snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.availableActions.isEmpty) {
+                              return const Text("No action available");
+                            } else {
+                              return ElevatedButton(
+                                  onPressed: () => _showAvailableActions(
+                                      snapshot.data!.availableActions),
+                                  child: const Text("Actions..."));
+                            }
+                          } else {
+                            return const Text("");
+                          }
+                        })
+                  ])),
+              fallbackBuilder: (context) => const Text(""))),
       buildTable(context, widget.table),
       ActionExecutionFeedBack(_actionResultInfoQueue)
     ]);

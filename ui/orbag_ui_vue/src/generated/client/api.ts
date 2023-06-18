@@ -250,6 +250,52 @@ export interface CreateRequest {
 /**
  * 
  * @export
+ * @interface CreateResponse
+ */
+export interface CreateResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResponse
+     */
+    'executionStatus'?: CreateResponseExecutionStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResponse
+     */
+    'errorMessage'?: string;
+    /**
+     * 
+     * @type {Array<ValidationError>}
+     * @memberof CreateResponse
+     */
+    'validationErrors'?: Array<ValidationError>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateResponse
+     */
+    'requestValid'?: boolean;
+    /**
+     * 
+     * @type {ConfigurationItemReference}
+     * @memberof CreateResponse
+     */
+    'configurationItem'?: ConfigurationItemReference;
+}
+
+export const CreateResponseExecutionStatusEnum = {
+    ValidationFailed: 'VALIDATION_FAILED',
+    Succeeded: 'SUCCEEDED',
+    Failed: 'FAILED'
+} as const;
+
+export type CreateResponseExecutionStatusEnum = typeof CreateResponseExecutionStatusEnum[keyof typeof CreateResponseExecutionStatusEnum];
+
+/**
+ * 
+ * @export
  * @interface EnumField
  */
 export interface EnumField {
@@ -544,6 +590,12 @@ export interface SerializableAction {
      * @memberof SerializableAction
      */
     'displayLabel'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SerializableAction
+     */
+    'description'?: string;
     /**
      * 
      * @type {boolean}
@@ -855,6 +907,30 @@ export interface SubmitActionResponse {
      * @type {string}
      * @memberof SubmitActionResponse
      */
+    'executionStatus'?: SubmitActionResponseExecutionStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof SubmitActionResponse
+     */
+    'errorMessage'?: string;
+    /**
+     * 
+     * @type {Array<ValidationError>}
+     * @memberof SubmitActionResponse
+     */
+    'validationErrors'?: Array<ValidationError>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SubmitActionResponse
+     */
+    'requestValid'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof SubmitActionResponse
+     */
     'consequences'?: SubmitActionResponseConsequencesEnum;
     /**
      * 
@@ -874,20 +950,15 @@ export interface SubmitActionResponse {
      * @memberof SubmitActionResponse
      */
     'jobId'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SubmitActionResponse
-     */
-    'requestValid'?: boolean;
-    /**
-     * 
-     * @type {Array<ValidationError>}
-     * @memberof SubmitActionResponse
-     */
-    'validationErrors'?: Array<ValidationError>;
 }
 
+export const SubmitActionResponseExecutionStatusEnum = {
+    ValidationFailed: 'VALIDATION_FAILED',
+    Succeeded: 'SUCCEEDED',
+    Failed: 'FAILED'
+} as const;
+
+export type SubmitActionResponseExecutionStatusEnum = typeof SubmitActionResponseExecutionStatusEnum[keyof typeof SubmitActionResponseExecutionStatusEnum];
 export const SubmitActionResponseConsequencesEnum = {
     None: 'NONE',
     Undefined: 'UNDEFINED',
@@ -1574,7 +1645,7 @@ export const CreateControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create(createRequest: CreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConfigurationItemReference>> {
+        async create(createRequest: CreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.create(createRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1606,7 +1677,7 @@ export const CreateControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(createRequest: CreateRequest, options?: any): AxiosPromise<ConfigurationItemReference> {
+        create(createRequest: CreateRequest, options?: any): AxiosPromise<CreateResponse> {
             return localVarFp.create(createRequest, options).then((request) => request(axios, basePath));
         },
         /**

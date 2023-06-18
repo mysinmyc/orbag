@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import orbag.action.ActionExecutionException;
+import orbag.action.ActionFeedback;
+import orbag.action.ActionResult;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.server.ApiInfo;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import orbag.action.ActionResult;
 import orbag.input.SerializableFieldGroup;
 import orbag.security.OrbagSecurityException;
 
@@ -78,22 +79,14 @@ public class ActionController {
 					@ApiResponse(responseCode = "400", description = "Invalid objects in request", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
 					@ApiResponse(responseCode = "401", description = "Access denied"),
 					@ApiResponse(responseCode = "404", description = "ConfigurationItemNotFound"),
-					@ApiResponse(responseCode = "500", description = "An error occcured during action exectuion", content = @Content(schema = @Schema(implementation = ErrorPayload.class))),
 			}
 	)
 	@PostMapping("/submit")
 	public SubmitActionResponse submit(@RequestBody SubmitActionRequest request, Authentication user)
-			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException, ActionExecutionException {
-		ActionResult result = actionService.submit(request.getAction(), request.getSourceCi(), request.getTargetCis(),
+			throws OrbagSecurityException, UnmanagedObjectException, ConfigurationItemNotFoundException {
+		ActionFeedback feedback = actionService.submit(request.getAction(), request.getSourceCi(), request.getTargetCis(),
 				request.getParameters(), user);
-		SubmitActionResponse response = new SubmitActionResponse();
-		response.setConsequences(result.getConsequences());
-		response.setJobId(result.getJobId());
-		response.setLink(result.getLink());
-		response.setMessage(result.getMessage());
-		response.setRequestValid(result.isRequestValid());
-		response.setValidationErrors(result.getValidationErrors());
-		return response;
+		return new SubmitActionResponse(feedback);
 	}
 
 
