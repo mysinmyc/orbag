@@ -102,7 +102,6 @@ class ActionExecutionFeedBack extends StatelessWidget {
                 backgroundColor:
                     info.succeded ? Theme.of(context).primaryColor : Colors.red,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.transparent, width: 1),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 duration: Duration(seconds: 30),

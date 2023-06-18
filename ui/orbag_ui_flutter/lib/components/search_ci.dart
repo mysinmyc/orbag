@@ -6,6 +6,7 @@ import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
+import 'package:orbag_ui_flutter/views/edit_view.dart';
 
 class SearchCi extends StatefulWidget {
   final String configurationItemType;
@@ -68,7 +69,7 @@ class _SearchCiState extends State<SearchCi> {
               })
             ]))))).then((value) => {
           if (widget.onSelectedCi == null)
-            {_submitSearch(request)}
+            {Navigator.pushNamed(context, EditView.routeName, arguments: value)}
           else
             {widget.onSelectedCi!(value)}
         });

@@ -3,7 +3,6 @@ import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
 import 'package:orbag_ui_flutter/components/util/error_message_wrapper.dart';
-import 'package:orbag_ui_flutter/components/util/message_util.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/edit_view.dart';
@@ -59,16 +58,21 @@ class _CreateCiState extends State<CreateCi> {
   }
 
   Widget _buildResultWidget(BuildContext context, CreateResponse response) {
-    if (!response.requestValid!) {
-      List<Widget> children = [
-        ListTile(title: Text("Create validation failed"))
-      ];
+    switch (response.executionStatus) {
+      case CreateResponseExecutionStatusEnum.VALIDATION_FAILED:
+        List<Widget> children = [
+          ListTile(title: Text("Create validation failed"))
+        ];
 
-      children.addAll(response.validationErrors.map((e) => Text(e.error!)));
-      return Column(children: children);
-    } else {
-      return Text("CI created");
+        children.addAll(response.validationErrors.map((e) => Text(e.error!)));
+        return Column(children: children);
+      case CreateResponseExecutionStatusEnum.FAILED:
+        return Text("CI creation failed: " +
+            (response.errorMessage ?? "unkwnown error occurred"));
+      case CreateResponseExecutionStatusEnum.SUCCEEDED:
+        return Text("CI created");
     }
+    return RenderUtil.empty();
   }
 
   @override
