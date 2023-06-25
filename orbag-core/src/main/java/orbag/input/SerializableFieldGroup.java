@@ -20,7 +20,9 @@ public class SerializableFieldGroup implements FieldGroupBuilder, FieldGroupCons
 	List<EnumField> enumFields = new ArrayList<>();
 	List<NumericField> numericFields = new ArrayList<>();
 	List<StringField> stringFields = new ArrayList<>();
-	
+
+	List<ConfigurationItemReferenceListField> configurationItemReferenceListFields = new ArrayList<>();
+
 	transient List<InputFieldBase<?>> fieldsCache;
 	
 	
@@ -81,6 +83,14 @@ public class SerializableFieldGroup implements FieldGroupBuilder, FieldGroupCons
 
 	public void setStringFields(List<StringField> stringFields) {
 		this.stringFields = stringFields;
+	}
+
+	public List<ConfigurationItemReferenceListField> getConfigurationItemReferenceListFields() {
+		return configurationItemReferenceListFields;
+	}
+
+	public void setConfigurationItemReferenceListFields(List<ConfigurationItemReferenceListField> configurationItemReferenceListFields) {
+		this.configurationItemReferenceListFields = configurationItemReferenceListFields;
 	}
 
 	@Override
@@ -147,5 +157,10 @@ public class SerializableFieldGroup implements FieldGroupBuilder, FieldGroupCons
 		return configurationItemReferenceField;
 	}
 
-
+	@Override
+	public ConfigurationItemReferenceListField addReferenceListField(String name, String displayLabel, String configurationItemType ) throws DuplicateFieldException {
+		ConfigurationItemReferenceListField configurationItemReferenceListField= buildInternal(name, displayLabel, ConfigurationItemReferenceListField::new,configurationItemReferenceListFields);
+		configurationItemReferenceListField.setConfigurationItemType(configurationItemType);
+		return configurationItemReferenceListField;
+	}
 }

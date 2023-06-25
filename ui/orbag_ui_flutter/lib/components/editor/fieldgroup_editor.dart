@@ -122,7 +122,8 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           initialValue: currentRequestField.value?.toString(),
           decoration: InputDecoration(
               border: const OutlineInputBorder(),
-              labelText: currentRequestField.displayLabel),
+              labelText: currentRequestField.displayLabel,
+              filled: true),
           onChanged: (value) => {
                 currentRequestField.changed = true,
                 currentRequestField.value = int.tryParse(value)
@@ -191,8 +192,29 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
                     }),
                 ConfigurationItemLink(currentRequestReferenceField.value)
               ], padding: const EdgeInsets.only(top: 10, right: 10)))));
-      filters.add(WidgetFieldBuildInfo(currentRequestReferenceField.category!,
-          currentRequestReferenceField.displayLabel!, currentField));
+      filters.add(WidgetFieldBuildInfo(
+          currentRequestReferenceField.category ?? "",
+          currentRequestReferenceField.displayLabel!,
+          currentField));
+    }
+
+    for (ConfigurationItemReferenceListField currentRequestReferenceListField
+        in fields.configurationItemReferenceListFields) {
+      Widget currentField = SizedBox(
+          height: 160,
+          child: InputDecorator(
+              decoration: InputDecoration(
+                  labelText: currentRequestReferenceListField.displayLabel),
+              expands: true,
+              child: SingleChildScrollView(
+                  child: Column(
+                      children: currentRequestReferenceListField.value
+                          .map((e) => ConfigurationItemLink(e))
+                          .toList()))));
+      filters.add(WidgetFieldBuildInfo(
+          currentRequestReferenceListField.category ?? "",
+          currentRequestReferenceListField.displayLabel!,
+          currentField));
     }
 
     for (EnumField currentRequestEnumField in fields.enumFields) {

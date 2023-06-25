@@ -1,20 +1,21 @@
 package orbag.samples.cis;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
+import orbag.samples.impacts.Infrastructure2BusinessAware;
 import orbag.samples.security.InfrastructureCisPolicy;
 import orbag.metadata.ConfigurationItem;
 import orbag.metadata.ConfigurationItemProperty;
 import orbag.search.Searcheable;
 import orbag.security.AccessRestricted;
+import org.springframework.context.annotation.Lazy;
+
+import java.util.List;
 
 @ConfigurationItem(category = "Infrastructure")
 @Entity
 @AccessRestricted(inherts = InfrastructureCisPolicy.class )
-public class Server extends RootConfigurationItem {
+public class Server extends RootConfigurationItem implements Infrastructure2BusinessAware {
 
 	@Enumerated(EnumType.STRING)
 	ProductiveStage productiveStage;
@@ -83,4 +84,21 @@ public class Server extends RootConfigurationItem {
 		return "name=" + name + ", address=" + address + ", productiveStage=" + productiveStage;
 	}
 
+
+	@Lazy
+	@OneToMany(mappedBy = "server")
+	List<ApplicationInstance> installedApplications;
+
+	public List<ApplicationInstance> getInstalledApplications() {
+		return installedApplications;
+	}
+
+	public void setInstalledApplications(List<ApplicationInstance> installedApplications) {
+		this.installedApplications = installedApplications;
+	}
+
+	@Override
+	public List<?> getBusinessImpacts() {
+		return getInstalledApplications();
+	}
 }

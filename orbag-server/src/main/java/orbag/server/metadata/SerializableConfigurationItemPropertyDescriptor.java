@@ -13,7 +13,9 @@ public class SerializableConfigurationItemPropertyDescriptor {
 	boolean readOnly;
 	
 	boolean configurationItemReference;
-	
+
+	boolean collection;
+
 	String referencedConfigurationItemType;
 
 	public boolean isConfigurationItemReference() {
@@ -70,5 +72,13 @@ public class SerializableConfigurationItemPropertyDescriptor {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public boolean getCollection() {
+		return collection;
+	}
+
+	public void setCollection(boolean collection) {
+		this.collection = collection;
 	}
 }

@@ -72,6 +72,8 @@ Class | Method | HTTP request | Description
 *ConfigControllerApi* | [**getConfig**](doc//ConfigControllerApi.md#getconfig) | **GET** /public/config.json | Get application configurations
 *CreateControllerApi* | [**create**](doc//CreateControllerApi.md#create) | **POST** /api/create/execute | Execute the configuration item creation
 *CreateControllerApi* | [**getCreateTemplate**](doc//CreateControllerApi.md#getcreatetemplate) | **GET** /api/create/template/{configurationItemName} | Get configuration item creation template
+*GraphControllerApi* | [**generate**](doc//GraphControllerApi.md#generate) | **POST** /api/graph/generate | 
+*GraphControllerApi* | [**getAvailablePaths**](doc//GraphControllerApi.md#getavailablepaths) | **POST** /api/graph/getAvailablePaths | 
 *ListControllerApi* | [**listConfigurationItems**](doc//ListControllerApi.md#listconfigurationitems) | **GET** /api/list/{configurationItemName} | 
 *MetadataControllerApi* | [**getClassMetadata**](doc//MetadataControllerApi.md#getclassmetadata) | **GET** /api/metadata/{configurationItemType} | 
 *MetadataControllerApi* | [**getClassModel**](doc//MetadataControllerApi.md#getclassmodel) | **GET** /api/metadata | Get class model
@@ -93,12 +95,17 @@ Class | Method | HTTP request | Description
  - [ConfigResponse](doc//ConfigResponse.md)
  - [ConfigurationItemReference](doc//ConfigurationItemReference.md)
  - [ConfigurationItemReferenceField](doc//ConfigurationItemReferenceField.md)
+ - [ConfigurationItemReferenceListField](doc//ConfigurationItemReferenceListField.md)
  - [CreateRequest](doc//CreateRequest.md)
  - [CreateResponse](doc//CreateResponse.md)
  - [EnumField](doc//EnumField.md)
  - [ErrorPayload](doc//ErrorPayload.md)
+ - [GenerateGraphRequest](doc//GenerateGraphRequest.md)
+ - [GenerateGraphResponse](doc//GenerateGraphResponse.md)
  - [GetAvailableActionsRequest](doc//GetAvailableActionsRequest.md)
  - [GetAvailableActionsResponse](doc//GetAvailableActionsResponse.md)
+ - [GetAvailablePathsRequest](doc//GetAvailablePathsRequest.md)
+ - [GetAvailablePathsResponse](doc//GetAvailablePathsResponse.md)
  - [GetAvailableViewsRequest](doc//GetAvailableViewsRequest.md)
  - [GetAvailableViewsResponse](doc//GetAvailableViewsResponse.md)
  - [GetClassModelResponse](doc//GetClassModelResponse.md)
@@ -112,6 +119,9 @@ Class | Method | HTTP request | Description
  - [SerializableConfigurationItemDescriptor](doc//SerializableConfigurationItemDescriptor.md)
  - [SerializableConfigurationItemPropertyDescriptor](doc//SerializableConfigurationItemPropertyDescriptor.md)
  - [SerializableFieldGroup](doc//SerializableFieldGroup.md)
+ - [SerializableGraph](doc//SerializableGraph.md)
+ - [SerializablePath](doc//SerializablePath.md)
+ - [SerializableRelation](doc//SerializableRelation.md)
  - [SerializableRow](doc//SerializableRow.md)
  - [SerializableTable](doc//SerializableTable.md)
  - [SerializableView](doc//SerializableView.md)

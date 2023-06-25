@@ -97,47 +97,57 @@ public class ConfigurationItemDescriptor {
 				: configurationItemAnnotation.displayLabel();
 		configurationItemDescriptor.allowCreation = configurationItemAnnotation.allowCreation();
 		configurationItemDescriptor.readOnly = configurationItemAnnotation.readOnly();
-		Map<String, ConfigurationItemPropertyDescriptor> properties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
-		MyReflectionUtils.forEachDeclaredMethod(javaClass, m -> {
-			MyReflectionUtils.extractJavaBeanPropertyFromMethodInto(m, (name, setter) -> {
-				ConfigurationItemPropertyDescriptor propertyDescriptor = properties.get(name);
-				if (propertyDescriptor == null) {
-					propertyDescriptor = new ConfigurationItemPropertyDescriptor(configurationItemDescriptor, name);
-					properties.put(name, propertyDescriptor);
-				}
-				if (setter) {
-					propertyDescriptor.setSetterMethod(m);
-				} else {
-					propertyDescriptor.setGetterMethod(m);
-					ConfigurationItem annotation = m.getReturnType().getAnnotation(ConfigurationItem.class);
-					if (annotation!=null) {
-						propertyDescriptor
-							.setReferencedConfigurationItemType(ConfigurationItemDescriptor.fromClass(m.getReturnType(),null,false));
+		if (buildProperties) {
+			Map<String, ConfigurationItemPropertyDescriptor> properties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
+			MyReflectionUtils.forEachDeclaredMethod(javaClass, m -> {
+				MyReflectionUtils.extractJavaBeanPropertyFromMethodInto(m, (name, setter) -> {
+					ConfigurationItemPropertyDescriptor propertyDescriptor = properties.get(name);
+					if (propertyDescriptor == null) {
+						propertyDescriptor = new ConfigurationItemPropertyDescriptor(configurationItemDescriptor, name);
+						properties.put(name, propertyDescriptor);
 					}
-				}
-				
-				ConfigurationItemProperty propertyAnnotation = m.getAnnotation(ConfigurationItemProperty.class);
-				if (propertyAnnotation != null) {
-					propertyDescriptor.setVisible(!propertyAnnotation.hidden());
-					propertyDescriptor.setDisplayLabel(
-							propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
-					propertyDescriptor.setDescription(propertyAnnotation.description());
-					propertyDescriptor.setCategory(propertyAnnotation.category());
-					propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
-					propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
-					propertyDescriptor
-							.setReadOnly(configurationItemAnnotation.readOnly() || propertyAnnotation.readOnly());
+					if (setter) {
+						propertyDescriptor.setSetterMethod(m);
+					} else {
+						propertyDescriptor.setGetterMethod(m);
+						propertyDescriptor.setCollection(Collection.class.isAssignableFrom(m.getReturnType()));
+						ConfigurationItem annotation = m.getReturnType().getAnnotation(ConfigurationItem.class);
+						if (annotation != null) {
+							propertyDescriptor
+									.setReferencedConfigurationItemType(ConfigurationItemDescriptor.fromClass(m.getReturnType(), null, false));
+						}
+					}
+
+					ConfigurationItemProperty propertyAnnotation = m.getAnnotation(ConfigurationItemProperty.class);
+					if (propertyAnnotation != null) {
+						propertyDescriptor.setVisible(!propertyAnnotation.hidden());
+						propertyDescriptor.setDisplayLabel(
+								propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
+						propertyDescriptor.setDescription(propertyAnnotation.description());
+						propertyDescriptor.setCategory(propertyAnnotation.category());
+						propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());
+						propertyDescriptor.setMandatoryForCreation(propertyAnnotation.mandatoryForCreation());
+						propertyDescriptor
+								.setReadOnly(configurationItemAnnotation.readOnly() || propertyAnnotation.readOnly());
+						if (propertyDescriptor.isCollection()) {
+							ConfigurationItem itemClassConfigurationItemAnnotation = propertyAnnotation.itemsClass().getAnnotation(ConfigurationItem.class);
+							if (itemClassConfigurationItemAnnotation != null) {
+								propertyDescriptor
+										.setReferencedConfigurationItemType(ConfigurationItemDescriptor.fromClass(propertyAnnotation.itemsClass(), null, false));
+							}
+						}
+					}
+				});
+			});
+			Map<String, ConfigurationItemPropertyDescriptor> visibleProperties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
+			properties.forEach((name, property) -> {
+				property.setReadOnly(property.isReadOnly() || property.getSetterMethod() == null);
+				if (property.isVisible() && property.getGetterMethod() != null) {
+					visibleProperties.put(name, property);
 				}
 			});
-		});
-		Map<String, ConfigurationItemPropertyDescriptor> visibleProperties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
-		properties.forEach((name, property) -> {
-			property.setReadOnly(property.isReadOnly() || property.getSetterMethod() == null);
-			if (property.isVisible() && property.getGetterMethod() != null) {
-				visibleProperties.put(name, property);
-			}
-		});
-		configurationItemDescriptor.properties = visibleProperties;
+			configurationItemDescriptor.properties = visibleProperties;
+		}
 		return configurationItemDescriptor;
 	}
 

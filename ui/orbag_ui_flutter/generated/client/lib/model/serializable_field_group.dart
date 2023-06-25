@@ -18,6 +18,7 @@ class SerializableFieldGroup {
     this.enumFields = const [],
     this.numericFields = const [],
     this.stringFields = const [],
+    this.configurationItemReferenceListFields = const [],
   });
 
   List<BooleanField> booleanFields;
@@ -30,13 +31,16 @@ class SerializableFieldGroup {
 
   List<StringField> stringFields;
 
+  List<ConfigurationItemReferenceListField> configurationItemReferenceListFields;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is SerializableFieldGroup &&
      other.booleanFields == booleanFields &&
      other.configurationItemReferenceFields == configurationItemReferenceFields &&
      other.enumFields == enumFields &&
      other.numericFields == numericFields &&
-     other.stringFields == stringFields;
+     other.stringFields == stringFields &&
+     other.configurationItemReferenceListFields == configurationItemReferenceListFields;
 
   @override
   int get hashCode =>
@@ -45,10 +49,11 @@ class SerializableFieldGroup {
     (configurationItemReferenceFields.hashCode) +
     (enumFields.hashCode) +
     (numericFields.hashCode) +
-    (stringFields.hashCode);
+    (stringFields.hashCode) +
+    (configurationItemReferenceListFields.hashCode);
 
   @override
-  String toString() => 'SerializableFieldGroup[booleanFields=$booleanFields, configurationItemReferenceFields=$configurationItemReferenceFields, enumFields=$enumFields, numericFields=$numericFields, stringFields=$stringFields]';
+  String toString() => 'SerializableFieldGroup[booleanFields=$booleanFields, configurationItemReferenceFields=$configurationItemReferenceFields, enumFields=$enumFields, numericFields=$numericFields, stringFields=$stringFields, configurationItemReferenceListFields=$configurationItemReferenceListFields]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -57,6 +62,7 @@ class SerializableFieldGroup {
       json[r'enumFields'] = this.enumFields;
       json[r'numericFields'] = this.numericFields;
       json[r'stringFields'] = this.stringFields;
+      json[r'configurationItemReferenceListFields'] = this.configurationItemReferenceListFields;
     return json;
   }
 
@@ -84,6 +90,7 @@ class SerializableFieldGroup {
         enumFields: EnumField.listFromJson(json[r'enumFields']),
         numericFields: NumericField.listFromJson(json[r'numericFields']),
         stringFields: StringField.listFromJson(json[r'stringFields']),
+        configurationItemReferenceListFields: ConfigurationItemReferenceListField.listFromJson(json[r'configurationItemReferenceListFields']),
       );
     }
     return null;

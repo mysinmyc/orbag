@@ -22,4 +22,6 @@ public @interface ConfigurationItemProperty {
 	boolean hidden() default false;
 	
 	boolean readOnly() default false;
+
+	Class<?> itemsClass() default Object.class;
 }

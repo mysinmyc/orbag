@@ -68,7 +68,7 @@ class _SearchCiState extends State<SearchCi> {
                 Navigator.of(context).pop(ci);
               })
             ]))))).then((value) => {
-          if (widget.onSelectedCi == null)
+          if (widget.onSelectedCi == null && value != null)
             {Navigator.pushNamed(context, EditView.routeName, arguments: value)}
           else
             {widget.onSelectedCi!(value)}

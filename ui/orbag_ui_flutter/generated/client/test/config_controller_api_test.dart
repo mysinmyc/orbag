@@ -17,7 +17,7 @@ void main() {
   // final instance = ConfigControllerApi();
 
   group('tests for ConfigControllerApi', () {
-    // Get application configurations
+    // Get businessApplication configurations
     //
     //Future<ConfigResponse> getConfig() async
     test('test getConfig', () async {

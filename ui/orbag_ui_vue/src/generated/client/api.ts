@@ -231,6 +231,55 @@ export interface ConfigurationItemReferenceField {
 /**
  * 
  * @export
+ * @interface ConfigurationItemReferenceListField
+ */
+export interface ConfigurationItemReferenceListField {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'displayLabel'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'category'?: string;
+    /**
+     * 
+     * @type {Array<ConfigurationItemReference>}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'value'?: Array<ConfigurationItemReference>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'readOnly'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'changed'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConfigurationItemReferenceListField
+     */
+    'configurationItemType'?: string;
+}
+/**
+ * 
+ * @export
  * @interface CreateRequest
  */
 export interface CreateRequest {
@@ -364,6 +413,38 @@ export interface ErrorPayload {
 /**
  * 
  * @export
+ * @interface GenerateGraphRequest
+ */
+export interface GenerateGraphRequest {
+    /**
+     * 
+     * @type {Array<ConfigurationItemReference>}
+     * @memberof GenerateGraphRequest
+     */
+    'rootCis'?: Array<ConfigurationItemReference>;
+    /**
+     * 
+     * @type {SerializablePath}
+     * @memberof GenerateGraphRequest
+     */
+    'path'?: SerializablePath;
+}
+/**
+ * 
+ * @export
+ * @interface GenerateGraphResponse
+ */
+export interface GenerateGraphResponse {
+    /**
+     * 
+     * @type {SerializableGraph}
+     * @memberof GenerateGraphResponse
+     */
+    'graph'?: SerializableGraph;
+}
+/**
+ * 
+ * @export
  * @interface GetAvailableActionsRequest
  */
 export interface GetAvailableActionsRequest {
@@ -392,6 +473,32 @@ export interface GetAvailableActionsResponse {
      * @memberof GetAvailableActionsResponse
      */
     'availableActions'?: Array<SerializableAction>;
+}
+/**
+ * 
+ * @export
+ * @interface GetAvailablePathsRequest
+ */
+export interface GetAvailablePathsRequest {
+    /**
+     * 
+     * @type {Array<ConfigurationItemReference>}
+     * @memberof GetAvailablePathsRequest
+     */
+    'rootCis'?: Array<ConfigurationItemReference>;
+}
+/**
+ * 
+ * @export
+ * @interface GetAvailablePathsResponse
+ */
+export interface GetAvailablePathsResponse {
+    /**
+     * 
+     * @type {Array<SerializablePath>}
+     * @memberof GetAvailablePathsResponse
+     */
+    'availablePaths'?: Array<SerializablePath>;
 }
 /**
  * 
@@ -723,6 +830,12 @@ export interface SerializableConfigurationItemPropertyDescriptor {
     'configurationItemReference'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof SerializableConfigurationItemPropertyDescriptor
+     */
+    'collection'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof SerializableConfigurationItemPropertyDescriptor
      */
@@ -764,6 +877,75 @@ export interface SerializableFieldGroup {
      * @memberof SerializableFieldGroup
      */
     'stringFields'?: Array<StringField>;
+    /**
+     * 
+     * @type {Array<ConfigurationItemReferenceListField>}
+     * @memberof SerializableFieldGroup
+     */
+    'configurationItemReferenceListFields'?: Array<ConfigurationItemReferenceListField>;
+}
+/**
+ * 
+ * @export
+ * @interface SerializableGraph
+ */
+export interface SerializableGraph {
+    /**
+     * 
+     * @type {Array<SerializableRelation>}
+     * @memberof SerializableGraph
+     */
+    'relations'?: Array<SerializableRelation>;
+}
+/**
+ * 
+ * @export
+ * @interface SerializablePath
+ */
+export interface SerializablePath {
+    /**
+     * 
+     * @type {string}
+     * @memberof SerializablePath
+     */
+    'identifier'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SerializablePath
+     */
+    'displayLabel'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SerializableRelation
+ */
+export interface SerializableRelation {
+    /**
+     * 
+     * @type {string}
+     * @memberof SerializableRelation
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SerializableRelation
+     */
+    'displayLabel'?: string;
+    /**
+     * 
+     * @type {ConfigurationItemReference}
+     * @memberof SerializableRelation
+     */
+    'startingCi'?: ConfigurationItemReference;
+    /**
+     * 
+     * @type {ConfigurationItemReference}
+     * @memberof SerializableRelation
+     */
+    'endCi'?: ConfigurationItemReference;
 }
 /**
  * 
@@ -1722,6 +1904,182 @@ export class CreateControllerApi extends BaseAPI {
      */
     public getCreateTemplate(configurationItemName: string, options?: AxiosRequestConfig) {
         return CreateControllerApiFp(this.configuration).getCreateTemplate(configurationItemName, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * GraphControllerApi - axios parameter creator
+ * @export
+ */
+export const GraphControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {GenerateGraphRequest} generateGraphRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generate: async (generateGraphRequest: GenerateGraphRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'generateGraphRequest' is not null or undefined
+            assertParamExists('generate', 'generateGraphRequest', generateGraphRequest)
+            const localVarPath = `/api/graph/generate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(generateGraphRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {GetAvailablePathsRequest} getAvailablePathsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAvailablePaths: async (getAvailablePathsRequest: GetAvailablePathsRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'getAvailablePathsRequest' is not null or undefined
+            assertParamExists('getAvailablePaths', 'getAvailablePathsRequest', getAvailablePathsRequest)
+            const localVarPath = `/api/graph/getAvailablePaths`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(getAvailablePathsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * GraphControllerApi - functional programming interface
+ * @export
+ */
+export const GraphControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = GraphControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {GenerateGraphRequest} generateGraphRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generate(generateGraphRequest: GenerateGraphRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenerateGraphResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generate(generateGraphRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {GetAvailablePathsRequest} getAvailablePathsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAvailablePaths(getAvailablePathsRequest: GetAvailablePathsRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAvailablePathsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAvailablePaths(getAvailablePathsRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * GraphControllerApi - factory interface
+ * @export
+ */
+export const GraphControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = GraphControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {GenerateGraphRequest} generateGraphRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generate(generateGraphRequest: GenerateGraphRequest, options?: any): AxiosPromise<GenerateGraphResponse> {
+            return localVarFp.generate(generateGraphRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {GetAvailablePathsRequest} getAvailablePathsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAvailablePaths(getAvailablePathsRequest: GetAvailablePathsRequest, options?: any): AxiosPromise<GetAvailablePathsResponse> {
+            return localVarFp.getAvailablePaths(getAvailablePathsRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * GraphControllerApi - object-oriented interface
+ * @export
+ * @class GraphControllerApi
+ * @extends {BaseAPI}
+ */
+export class GraphControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {GenerateGraphRequest} generateGraphRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GraphControllerApi
+     */
+    public generate(generateGraphRequest: GenerateGraphRequest, options?: AxiosRequestConfig) {
+        return GraphControllerApiFp(this.configuration).generate(generateGraphRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {GetAvailablePathsRequest} getAvailablePathsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GraphControllerApi
+     */
+    public getAvailablePaths(getAvailablePathsRequest: GetAvailablePathsRequest, options?: AxiosRequestConfig) {
+        return GraphControllerApiFp(this.configuration).getAvailablePaths(getAvailablePathsRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

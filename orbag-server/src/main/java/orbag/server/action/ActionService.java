@@ -160,7 +160,7 @@ public class ActionService {
 			for (ConfigurationItemActionExecutionFilter filter : getFiltersFor(action, request)) {
 				filter.setActionParameters(action,builder, request);
 			}
-			action.buildParametersFor(request);
+			action.buildParametersFor(request,builder);
 		});
 	}
 
@@ -173,7 +173,7 @@ public class ActionService {
 		try {
 			invokeAction(serializableAction, sourceCiReference, targetCisReferences, user, (action, request) -> {
 				request.setParameters(parameters);
-				if (filterAction(action, request, feedback) && feedback.isOperationValid()) {
+				if (filterAction(action, request, feedback) && action.validateRequest(request,feedback) && feedback.isOperationValid()) {
 					action.execute(request, result);
 				}
 			});

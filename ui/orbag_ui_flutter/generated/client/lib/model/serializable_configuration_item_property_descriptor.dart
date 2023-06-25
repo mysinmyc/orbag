@@ -19,6 +19,7 @@ class SerializableConfigurationItemPropertyDescriptor {
     this.category,
     this.readOnly,
     this.configurationItemReference,
+    this.collection,
     this.referencedConfigurationItemType,
   });
 
@@ -76,6 +77,14 @@ class SerializableConfigurationItemPropertyDescriptor {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  bool? collection;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   String? referencedConfigurationItemType;
 
   @override
@@ -86,6 +95,7 @@ class SerializableConfigurationItemPropertyDescriptor {
      other.category == category &&
      other.readOnly == readOnly &&
      other.configurationItemReference == configurationItemReference &&
+     other.collection == collection &&
      other.referencedConfigurationItemType == referencedConfigurationItemType;
 
   @override
@@ -97,10 +107,11 @@ class SerializableConfigurationItemPropertyDescriptor {
     (category == null ? 0 : category!.hashCode) +
     (readOnly == null ? 0 : readOnly!.hashCode) +
     (configurationItemReference == null ? 0 : configurationItemReference!.hashCode) +
+    (collection == null ? 0 : collection!.hashCode) +
     (referencedConfigurationItemType == null ? 0 : referencedConfigurationItemType!.hashCode);
 
   @override
-  String toString() => 'SerializableConfigurationItemPropertyDescriptor[name=$name, displayLabel=$displayLabel, description=$description, category=$category, readOnly=$readOnly, configurationItemReference=$configurationItemReference, referencedConfigurationItemType=$referencedConfigurationItemType]';
+  String toString() => 'SerializableConfigurationItemPropertyDescriptor[name=$name, displayLabel=$displayLabel, description=$description, category=$category, readOnly=$readOnly, configurationItemReference=$configurationItemReference, collection=$collection, referencedConfigurationItemType=$referencedConfigurationItemType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -133,6 +144,11 @@ class SerializableConfigurationItemPropertyDescriptor {
       json[r'configurationItemReference'] = this.configurationItemReference;
     } else {
       json[r'configurationItemReference'] = null;
+    }
+    if (this.collection != null) {
+      json[r'collection'] = this.collection;
+    } else {
+      json[r'collection'] = null;
     }
     if (this.referencedConfigurationItemType != null) {
       json[r'referencedConfigurationItemType'] = this.referencedConfigurationItemType;
@@ -167,6 +183,7 @@ class SerializableConfigurationItemPropertyDescriptor {
         category: mapValueOfType<String>(json, r'category'),
         readOnly: mapValueOfType<bool>(json, r'readOnly'),
         configurationItemReference: mapValueOfType<bool>(json, r'configurationItemReference'),
+        collection: mapValueOfType<bool>(json, r'collection'),
         referencedConfigurationItemType: mapValueOfType<String>(json, r'referencedConfigurationItemType'),
       );
     }

@@ -174,3 +174,44 @@ insert into slow_configuration_item(id,name) values(-3,'ci 3');
 insert into slow_configuration_item(id,name) values(-4,'ci 4');
 insert into slow_configuration_item(id,name) values(-5,'ci 5');
 
+
+
+insert into customer(id,name) values(-1,'Customer A');
+insert into customer(id,name) values(-2,'Customer B');
+
+
+insert into business_process(id,customer_id,name) values(-10,-1,'Marketing');
+insert into business_process(id,customer_id,name) values(-11,-1,'Human Resources');
+insert into business_process(id,customer_id,name) values(-12,-1,'Governance');
+insert into business_process(id,customer_id,name) values(-13,-1,'Sales');
+insert into business_process(id,customer_id,name) values(-14,-1,'Accounting');
+
+insert into business_process(id,customer_id,name) values(-20,-2,'Marketing');
+insert into business_process(id,customer_id,name) values(-21,-2,'Human Resources');
+insert into business_process(id,customer_id,name) values(-22,-2,'Governance');
+insert into business_process(id,customer_id,name) values(-23,-2,'Sales');
+insert into business_process(id,customer_id,name) values(-24,-2,'Accounting');
+
+
+
+insert into business_application(id,name) values(-1,'Marketing application');
+insert into business_application(id,name) values(-2,'HR application');
+insert into business_application(id,name) values(-3,'Governance application');
+insert into business_application(id,name) values(-4,'Sales application');
+insert into business_application(id,name) values(-5,'Accounting application');
+
+insert into application_instance(id, server_id,business_application_id,installation_path ) values(-101, -10,-1,'/opt/marketing');
+insert into application_instance(id, server_id,business_application_id,installation_path ) values(-111, -11,-1,'/opt/marketing');
+
+insert into application_instance(id, server_id,business_application_id,installation_path ) values(-201, -20,-2,'/opt/hr');
+insert into application_instance(id, server_id,business_application_id,installation_path ) values(-211, -21,-2,'/opt/hr');
+
+
+insert into business_process2application_instance(business_process_id,application_instance_id) values(-10,-101);
+insert into business_process2application_instance(business_process_id,application_instance_id) values(-10,-111);
+
+insert into business_process2application_instance(business_process_id,application_instance_id) values(-11,-201);
+insert into business_process2application_instance(business_process_id,application_instance_id) values(-11,-211);
+
+
+

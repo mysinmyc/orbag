@@ -121,6 +121,46 @@ paths:
                 $ref: '#/components/schemas/SerializableTable'
       security:
       - JWT: []
+  /api/graph/getAvailablePaths:
+    post:
+      tags:
+      - graph-controller
+      operationId: getAvailablePaths
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAvailablePathsRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetAvailablePathsResponse'
+      security:
+      - JWT: []
+  /api/graph/generate:
+    post:
+      tags:
+      - graph-controller
+      operationId: generate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateGraphRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenerateGraphResponse'
+      security:
+      - JWT: []
   /api/create/execute:
     post:
       tags:
@@ -226,6 +266,12 @@ paths:
               $ref: '#/components/schemas/GetAvailableActionsRequest'
         required: true
       responses:
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -238,12 +284,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/GetAvailableActionsResponse'
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /api/action/buildExecutionTemplate:
@@ -260,6 +300,12 @@ paths:
               $ref: '#/components/schemas/BuildActionTemplateRequest'
         required: true
       responses:
+        "400":
+          description: Reference contains invalid objects
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
         "200":
           description: OK
           content:
@@ -278,12 +324,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/SubmitActionRequest'
-        "400":
-          description: Reference contains invalid objects
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorPayload'
       security:
       - JWT: []
   /public/config.json:
@@ -598,6 +638,25 @@ components:
           type: boolean
         configurationItemType:
           type: string
+    ConfigurationItemReferenceListField:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        category:
+          type: string
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+        readOnly:
+          type: boolean
+        changed:
+          type: boolean
+        configurationItemType:
+          type: string
     EnumField:
       type: object
       properties:
@@ -656,6 +715,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StringField'
+        configurationItemReferenceListFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReferenceListField'
     StringField:
       type: object
       properties:
@@ -691,6 +754,59 @@ components:
           - ROW_REFERENCE
           - HIGHLIGHTED_FIELDS
           - ALL_FIELDS
+    GetAvailablePathsRequest:
+      type: object
+      properties:
+        rootCis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+    GetAvailablePathsResponse:
+      type: object
+      properties:
+        availablePaths:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializablePath'
+    SerializablePath:
+      type: object
+      properties:
+        identifier:
+          type: string
+        displayLabel:
+          type: string
+    GenerateGraphRequest:
+      type: object
+      properties:
+        rootCis:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationItemReference'
+        path:
+          $ref: '#/components/schemas/SerializablePath'
+    GenerateGraphResponse:
+      type: object
+      properties:
+        graph:
+          $ref: '#/components/schemas/SerializableGraph'
+    SerializableGraph:
+      type: object
+      properties:
+        relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerializableRelation'
+    SerializableRelation:
+      type: object
+      properties:
+        name:
+          type: string
+        displayLabel:
+          type: string
+        startingCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
+        endCi:
+          $ref: '#/components/schemas/ConfigurationItemReference'
     CreateRequest:
       type: object
       properties:
@@ -880,6 +996,8 @@ components:
         readOnly:
           type: boolean
         configurationItemReference:
+          type: boolean
+        collection:
           type: boolean
         referencedConfigurationItemType:
           type: string

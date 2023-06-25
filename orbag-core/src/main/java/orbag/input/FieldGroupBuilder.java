@@ -35,4 +35,8 @@ public interface FieldGroupBuilder {
 
 	ConfigurationItemReferenceField addReferenceField(String name, String displayLabel, String configurationItemType)
 			throws DuplicateFieldException;
+
+
+	ConfigurationItemReferenceListField addReferenceListField(String name, String displayLabel, String configurationItemType)
+			throws DuplicateFieldException;
 }

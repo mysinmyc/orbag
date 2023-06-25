@@ -69,6 +69,10 @@ class MyHttpClient {
     return ViewControllerApi(_apiClient());
   }
 
+  GraphControllerApi get graphApi {
+    return GraphControllerApi(_apiClient());
+  }
+
   Future<LoginResponse> login(String userName, String password) async {
     LoginResponse? response = await authenticationApi().login(LoginRequest(
         userName: userName, password: password, persistent: false));
@@ -88,7 +92,7 @@ class MyHttpClient {
         body: body,
         headers: <String, String>{
           'authorization': "Bearer _authenticationToken",
-          'content-type': 'application/json'
+          'content-type': 'businessApplication/json'
         });
   }
 }

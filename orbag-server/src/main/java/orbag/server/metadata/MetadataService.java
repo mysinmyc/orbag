@@ -33,6 +33,7 @@ public class MetadataService {
 		result.setDescription(property.getDescription());
 		result.setCategory(property.getCategory());
 		result.setReadOnly(property.isReadOnly());
+		result.setCollection(property.isCollection());
 		result.setConfigurationItemReference(property.isConfigurationItemReference());
 		result.setReferencedConfigurationItemType(property.getReferencedConfigurationItemType()==null?null: property.getReferencedConfigurationItemType().getName());
 		return result;

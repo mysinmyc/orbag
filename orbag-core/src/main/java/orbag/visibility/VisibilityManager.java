@@ -35,6 +35,10 @@ public class VisibilityManager {
 	}
 
 	public boolean isObjectVisibile(Object objectToTest, FilterContext context) {
+		return isObjectVisibile(objectToTest,context,true);
+	}
+
+	public boolean isObjectVisibile(Object objectToTest, FilterContext context, boolean strict) {
 		boolean passedOneFilter=false;
 		if (objectVisibilityFilters != null) {
 			for (ObjectVisibilityFilter currentFilter : objectVisibilityFilters) {
@@ -46,7 +50,7 @@ public class VisibilityManager {
 				}
 			}
 		}
-		return isClassVisibile(objectToTest.getClass(), context,!passedOneFilter);
+		return isClassVisibile(objectToTest.getClass(), context,strict &&!passedOneFilter);
 	}
 
 	public Collection<Class<?>> filterClasses(Collection<Class<?>> classesToFilter, FilterContext context) {

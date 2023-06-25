@@ -22,6 +22,6 @@ public class SearchInGoogle extends ConfigurationItemActionBase {
     }
     @Override
     public void execute(ActionRequest request, ActionResult result) throws ActionExecutionException {
-        result.setLink("https://www.google.com?q="+ ((Displayable)request.getTargetCis().get(0)).getDisplayLabel());
+        result.setLink("https://www.google.com/search?q="+ ((Displayable)request.getTargetCis().get(0)).getDisplayLabel());
     }
 }

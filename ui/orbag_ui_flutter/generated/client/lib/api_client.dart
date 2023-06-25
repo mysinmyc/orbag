@@ -195,6 +195,8 @@ class ApiClient {
           return ConfigurationItemReference.fromJson(value);
         case 'ConfigurationItemReferenceField':
           return ConfigurationItemReferenceField.fromJson(value);
+        case 'ConfigurationItemReferenceListField':
+          return ConfigurationItemReferenceListField.fromJson(value);
         case 'CreateRequest':
           return CreateRequest.fromJson(value);
         case 'CreateResponse':
@@ -203,10 +205,18 @@ class ApiClient {
           return EnumField.fromJson(value);
         case 'ErrorPayload':
           return ErrorPayload.fromJson(value);
+        case 'GenerateGraphRequest':
+          return GenerateGraphRequest.fromJson(value);
+        case 'GenerateGraphResponse':
+          return GenerateGraphResponse.fromJson(value);
         case 'GetAvailableActionsRequest':
           return GetAvailableActionsRequest.fromJson(value);
         case 'GetAvailableActionsResponse':
           return GetAvailableActionsResponse.fromJson(value);
+        case 'GetAvailablePathsRequest':
+          return GetAvailablePathsRequest.fromJson(value);
+        case 'GetAvailablePathsResponse':
+          return GetAvailablePathsResponse.fromJson(value);
         case 'GetAvailableViewsRequest':
           return GetAvailableViewsRequest.fromJson(value);
         case 'GetAvailableViewsResponse':
@@ -233,6 +243,12 @@ class ApiClient {
           return SerializableConfigurationItemPropertyDescriptor.fromJson(value);
         case 'SerializableFieldGroup':
           return SerializableFieldGroup.fromJson(value);
+        case 'SerializableGraph':
+          return SerializableGraph.fromJson(value);
+        case 'SerializablePath':
+          return SerializablePath.fromJson(value);
+        case 'SerializableRelation':
+          return SerializableRelation.fromJson(value);
         case 'SerializableRow':
           return SerializableRow.fromJson(value);
         case 'SerializableTable':

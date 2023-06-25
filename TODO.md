@@ -28,6 +28,10 @@
     - [x] core
     - [x] ui-flutter
     - [ ] ui-vue 
+- [ ] configurationitemreference list
+    - [x] core
+    - [ ] ui-flutter
+    - [ ] ui-vue 
 - [ ] datetime fields
     - [ ] core
     - [ ] ui-flutter
@@ -44,6 +48,11 @@
     - [ ] core
     - [ ] ui-flutter
     - [ ] ui-vue
+- [ ] gestore dipendenze
+  - [x] core
+  - [x] ui-flutter
+  - [ ] ui-vue 
 - [ ] demo
 - [ ] localizzazione?
 - [ ] documentazione
+- [ ] test

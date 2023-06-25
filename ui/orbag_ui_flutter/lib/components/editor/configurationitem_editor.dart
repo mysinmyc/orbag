@@ -6,6 +6,8 @@ import 'package:orbag_ui_flutter/components/action/action_execution_feedback.dar
 import 'package:orbag_ui_flutter/components/action/action_execution_form.dart';
 import 'package:orbag_ui_flutter/components/action/action_util.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_properties_editor.dart';
+import 'package:orbag_ui_flutter/components/graph/dependencies_widget.dart';
+import 'package:orbag_ui_flutter/components/graph/dependencies_widgetb.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
 import 'package:orbag_ui_flutter/views/action_view.dart';
@@ -84,7 +86,9 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
             AsyncSnapshot<GetAvailableActionsResponse?> snapshot) {
           if (snapshot.hasData) {
             return PopupMenuButton(
-                onSelected: (value) {_executeAction(context, ActionData(value, [widget.ci]));},
+                onSelected: (value) {
+                  _executeAction(context, ActionData(value, [widget.ci]));
+                },
                 itemBuilder: (context) => snapshot.data!.availableActions
                     .map((e) => PopupMenuItem(
                           value: e,
@@ -97,6 +101,17 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
         });
   }
 
+  Widget _buildTabBody(int index, List<SerializableView> views) {
+    switch (index) {
+      case 0:
+        return ConfigurationItemPropertiesEditor(widget.ci);
+      case 1:
+        return DependenciesWidgetB(widget.ci);
+      default:
+        return buildView(views[_currentTabIndex - 2]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -107,6 +122,8 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
           tabs.add(const Tab(text: "Properties"));
 
           List<SerializableView> views = List.empty(growable: true);
+
+          tabs.add(const Tab(text: "Dependecies"));
 
           if (snapshot.hasData) {
             for (var element in snapshot.data!.availableViews) {
@@ -121,16 +138,18 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
 
           return Scaffold(
               appBar: AppBar(
-                title: Text(widget.ci.displayLabel!),
+                title: Text(widget.ci.displayLabel ?? "???"),
                 bottom: TabBar(tabs: tabs, controller: tabController),
                 actions: [buildActions()],
               ),
-              body: Stack( children: [SingleChildScrollView(
-                  child: _currentTabIndex == 0
-                      ? ConfigurationItemPropertiesEditor(widget.ci)
-                      : buildView(views[_currentTabIndex - 1])), ActionExecutionFeedBack(_actionResultInfoQueue, onDeleted: (context,result) {
-                Navigator.of(context).pop();
-              })]));
+              body: Stack(children: [
+                SingleChildScrollView(
+                    child: _buildTabBody(_currentTabIndex, views)),
+                ActionExecutionFeedBack(_actionResultInfoQueue,
+                    onDeleted: (context, result) {
+                  Navigator.of(context).pop();
+                })
+              ]));
         });
   }
 }

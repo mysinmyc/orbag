@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **category** | **String** |  | [optional] 
 **readOnly** | **bool** |  | [optional] 
 **configurationItemReference** | **bool** |  | [optional] 
+**collection** | **bool** |  | [optional] 
 **referencedConfigurationItemType** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

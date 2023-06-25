@@ -16,7 +16,9 @@ public class ConfigurationItemPropertyDescriptor {
 	boolean highlighted;
 
 	boolean mandatoryForCreation;
-	
+
+	boolean collection;
+
 	String displayLabel;
 	
 	String description;
@@ -129,5 +131,13 @@ public class ConfigurationItemPropertyDescriptor {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public boolean isCollection() {
+		return collection;
+	}
+
+	public void setCollection(boolean collection) {
+		this.collection = collection;
 	}
 }

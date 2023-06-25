@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
+import orbag.metadata.ConfigurationItemProperty;
 import org.springframework.context.annotation.Lazy;
 
 
@@ -20,7 +21,8 @@ public class ServerGroup extends RootConfigurationItem {
 	@Lazy
 	@OneToMany(mappedBy = "serverGroup")
 	List<Server> servers;
-	
+
+	@ConfigurationItemProperty(itemsClass = Server.class)
 	public List<Server> getServers() {
 		return servers;
 	}
