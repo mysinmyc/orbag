@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SerializableGraphBuilder implements  GraphBuilder{
 
-    boolean complete;
+    boolean stepComplete;
 
     ConfigurationItemReferenceService configurationItemReferenceService;
 
@@ -36,13 +36,13 @@ public class SerializableGraphBuilder implements  GraphBuilder{
     }
 
     @Override
-    public boolean isComplete() {
-        return complete;
+    public boolean isStepComplete() {
+        return stepComplete;
     }
 
     @Override
-    public void setComplete(boolean complete) {
-        this.complete = complete;
+    public void setStepComplete(boolean stepComplete) {
+        this.stepComplete = stepComplete;
     }
 
     public SerializableGraph build() {

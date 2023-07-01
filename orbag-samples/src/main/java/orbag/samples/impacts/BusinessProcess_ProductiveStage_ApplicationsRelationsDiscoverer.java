@@ -25,17 +25,14 @@ public class BusinessProcess_ProductiveStage_ApplicationsRelationsDiscoverer imp
 
     @Override
     public void discoverRelations(Object configurationItem, GraphBuilder graphBuilder, GraphGenerationContext context) {
-
         ProductiveStage productiveStage = ProductiveStage.valueOf(((PlaceholderConfigurationItem)configurationItem).getIdentifier().split("/")[1]);
-
         BusinessProcess businessProcess = (BusinessProcess) context.getPreviousSteps().get(0);
         for (ApplicationInstance currentApplication : businessProcess.getApplications()) {
-
             if (currentApplication.getServer() != null && productiveStage.equals(currentApplication.getServer().getProductiveStage()))
             {
                 graphBuilder.addRelation(configurationItem, currentApplication, "depends_on", "Depends on");
             }
         }
-        graphBuilder.setComplete(true);
+        graphBuilder.setStepComplete(true);
     }
 }

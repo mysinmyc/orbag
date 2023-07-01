@@ -13,7 +13,7 @@ public class RelatedCisGraphBuilder implements GraphBuilder{
 
     Object startingCi;
 
-    boolean complete;
+    boolean stepComplete;
 
     Map<Object,List<Object>> relatedCis = new HashMap<>();
 
@@ -41,13 +41,13 @@ public class RelatedCisGraphBuilder implements GraphBuilder{
 
 
     @Override
-    public boolean isComplete() {
-        return complete;
+    public boolean isStepComplete() {
+        return stepComplete;
     }
 
     @Override
-    public void setComplete(boolean complete) {
-        this.complete = complete;
+    public void setStepComplete(boolean stepComplete) {
+        this.stepComplete = stepComplete;
     }
 
 

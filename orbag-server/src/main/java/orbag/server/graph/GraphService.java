@@ -69,7 +69,7 @@ public class GraphService {
             if (currentDiscoverer.isAvailableFor(startingCi, graphGenerationContext)) {
                 currentDiscoverer.discoverRelations(startingCi, graphBuilder, graphGenerationContext);
             }
-            if (graphBuilder.isComplete()) {
+            if (graphBuilder.isStepComplete()) {
                 break;
             }
         }

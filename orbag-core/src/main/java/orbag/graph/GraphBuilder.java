@@ -4,7 +4,7 @@ public interface GraphBuilder {
 
     boolean addRelation(Object a, Object b, String relationName, String relationLabel);
 
-    boolean isComplete();
+    boolean isStepComplete();
 
-    void setComplete(boolean complete);
+    void setStepComplete(boolean complete);
 }
