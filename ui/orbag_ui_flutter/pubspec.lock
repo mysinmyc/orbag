@@ -219,14 +219,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_tree:
-    dependency: "direct main"
-    description:
-      name: flutter_tree
-      sha256: "321cf5dc5e1831bbf0d99a775af4aa5ea0b105223c65cfb5047729195339e8ef"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter

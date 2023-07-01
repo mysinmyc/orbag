@@ -79,7 +79,11 @@ Class | Method | HTTP request | Description
 *MetadataControllerApi* | [**getClassModel**](doc//MetadataControllerApi.md#getclassmodel) | **GET** /api/metadata | Get class model
 *ReferenceControllerApi* | [**getConfigurationItem**](doc//ReferenceControllerApi.md#getconfigurationitem) | **GET** /api/reference/{configurationItemType}/{configurationItemId} | 
 *SearchControllerApi* | [**execute**](doc//SearchControllerApi.md#execute) | **POST** /api/search/execute | 
+*SearchControllerApi* | [**executeLater**](doc//SearchControllerApi.md#executelater) | **POST** /api/search/executeLater | 
+*SearchControllerApi* | [**exportTsv**](doc//SearchControllerApi.md#exporttsv) | **GET** /api/search/execute/{searchId}.tsv | 
 *SearchControllerApi* | [**getSearchTemplate**](doc//SearchControllerApi.md#getsearchtemplate) | **GET** /api/search/template/{configurationItemName} | 
+*TreeControllerApi* | [**getChildren**](doc//TreeControllerApi.md#getchildren) | **POST** /api/tree/getChildren | 
+*TreeControllerApi* | [**getRoot**](doc//TreeControllerApi.md#getroot) | **POST** /api/tree/getRoot | 
 *UpdateControllerApi* | [**buildUpdateTemplate**](doc//UpdateControllerApi.md#buildupdatetemplate) | **POST** /api/update/buildUpdateTemplate | 
 *UpdateControllerApi* | [**update**](doc//UpdateControllerApi.md#update) | **POST** /api/update/execute | 
 *ViewControllerApi* | [**bind**](doc//ViewControllerApi.md#bind) | **POST** /api/view/bind | 
@@ -100,6 +104,7 @@ Class | Method | HTTP request | Description
  - [CreateResponse](doc//CreateResponse.md)
  - [EnumField](doc//EnumField.md)
  - [ErrorPayload](doc//ErrorPayload.md)
+ - [ExecuteLaterResponse](doc//ExecuteLaterResponse.md)
  - [GenerateGraphRequest](doc//GenerateGraphRequest.md)
  - [GenerateGraphResponse](doc//GenerateGraphResponse.md)
  - [GetAvailableActionsRequest](doc//GetAvailableActionsRequest.md)
@@ -108,7 +113,11 @@ Class | Method | HTTP request | Description
  - [GetAvailablePathsResponse](doc//GetAvailablePathsResponse.md)
  - [GetAvailableViewsRequest](doc//GetAvailableViewsRequest.md)
  - [GetAvailableViewsResponse](doc//GetAvailableViewsResponse.md)
+ - [GetChildrenRequest](doc//GetChildrenRequest.md)
+ - [GetChildrenResponse](doc//GetChildrenResponse.md)
  - [GetClassModelResponse](doc//GetClassModelResponse.md)
+ - [GetRootRequest](doc//GetRootRequest.md)
+ - [GetRootResponse](doc//GetRootResponse.md)
  - [ListConfigurationItemResponse](doc//ListConfigurationItemResponse.md)
  - [LoginRequest](doc//LoginRequest.md)
  - [LoginResponse](doc//LoginResponse.md)
@@ -128,6 +137,7 @@ Class | Method | HTTP request | Description
  - [StringField](doc//StringField.md)
  - [SubmitActionRequest](doc//SubmitActionRequest.md)
  - [SubmitActionResponse](doc//SubmitActionResponse.md)
+ - [TreeElement](doc//TreeElement.md)
  - [UpdateRequest](doc//UpdateRequest.md)
  - [ValidationError](doc//ValidationError.md)
  - [WhoAmIResponse](doc//WhoAmIResponse.md)

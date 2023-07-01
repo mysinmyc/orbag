@@ -78,6 +78,93 @@ class SearchControllerApi {
     return null;
   }
 
+  /// Performs an HTTP 'POST /api/search/executeLater' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [SearchRequest] searchRequest (required):
+  Future<Response> executeLaterWithHttpInfo(SearchRequest searchRequest,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/search/executeLater';
+
+    // ignore: prefer_final_locals
+    Object? postBody = searchRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [SearchRequest] searchRequest (required):
+  Future<ExecuteLaterResponse?> executeLater(SearchRequest searchRequest,) async {
+    final response = await executeLaterWithHttpInfo(searchRequest,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ExecuteLaterResponse',) as ExecuteLaterResponse;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/search/execute/{searchId}.tsv' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] searchId (required):
+  Future<Response> exportTsvWithHttpInfo(String searchId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/search/execute/{searchId}.tsv'
+      .replaceAll('{searchId}', searchId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] searchId (required):
+  Future<void> exportTsv(String searchId,) async {
+    final response = await exportTsvWithHttpInfo(searchId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Performs an HTTP 'GET /api/search/template/{configurationItemName}' operation and returns the [Response].
   /// Parameters:
   ///

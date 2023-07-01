@@ -413,21 +413,40 @@ export interface ErrorPayload {
 /**
  * 
  * @export
+ * @interface ExecuteLaterResponse
+ */
+export interface ExecuteLaterResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ExecuteLaterResponse
+     */
+    'searchId'?: string;
+}
+/**
+ * 
+ * @export
  * @interface GenerateGraphRequest
  */
 export interface GenerateGraphRequest {
     /**
      * 
-     * @type {Array<ConfigurationItemReference>}
+     * @type {ConfigurationItemReference}
      * @memberof GenerateGraphRequest
      */
-    'rootCis'?: Array<ConfigurationItemReference>;
+    'startingCi'?: ConfigurationItemReference;
     /**
      * 
      * @type {SerializablePath}
      * @memberof GenerateGraphRequest
      */
     'path'?: SerializablePath;
+    /**
+     * 
+     * @type {Array<ConfigurationItemReference>}
+     * @memberof GenerateGraphRequest
+     */
+    'previousSteps'?: Array<ConfigurationItemReference>;
 }
 /**
  * 
@@ -482,10 +501,10 @@ export interface GetAvailableActionsResponse {
 export interface GetAvailablePathsRequest {
     /**
      * 
-     * @type {Array<ConfigurationItemReference>}
+     * @type {ConfigurationItemReference}
      * @memberof GetAvailablePathsRequest
      */
-    'rootCis'?: Array<ConfigurationItemReference>;
+    'startingCi'?: ConfigurationItemReference;
 }
 /**
  * 
@@ -529,6 +548,32 @@ export interface GetAvailableViewsResponse {
 /**
  * 
  * @export
+ * @interface GetChildrenRequest
+ */
+export interface GetChildrenRequest {
+    /**
+     * 
+     * @type {TreeElement}
+     * @memberof GetChildrenRequest
+     */
+    'parent'?: TreeElement;
+}
+/**
+ * 
+ * @export
+ * @interface GetChildrenResponse
+ */
+export interface GetChildrenResponse {
+    /**
+     * 
+     * @type {Array<TreeElement>}
+     * @memberof GetChildrenResponse
+     */
+    'children'?: Array<TreeElement>;
+}
+/**
+ * 
+ * @export
  * @interface GetClassModelResponse
  */
 export interface GetClassModelResponse {
@@ -538,6 +583,32 @@ export interface GetClassModelResponse {
      * @memberof GetClassModelResponse
      */
     'configurationItemDescriptors'?: Array<SerializableConfigurationItemDescriptor>;
+}
+/**
+ * 
+ * @export
+ * @interface GetRootRequest
+ */
+export interface GetRootRequest {
+    /**
+     * 
+     * @type {ConfigurationItemReference}
+     * @memberof GetRootRequest
+     */
+    'ci'?: ConfigurationItemReference;
+}
+/**
+ * 
+ * @export
+ * @interface GetRootResponse
+ */
+export interface GetRootResponse {
+    /**
+     * 
+     * @type {TreeElement}
+     * @memberof GetRootResponse
+     */
+    'root'?: TreeElement;
 }
 /**
  * 
@@ -1150,6 +1221,49 @@ export const SubmitActionResponseConsequencesEnum = {
 
 export type SubmitActionResponseConsequencesEnum = typeof SubmitActionResponseConsequencesEnum[keyof typeof SubmitActionResponseConsequencesEnum];
 
+/**
+ * 
+ * @export
+ * @interface TreeElement
+ */
+export interface TreeElement {
+    /**
+     * 
+     * @type {string}
+     * @memberof TreeElement
+     */
+    'displayLabel'?: string;
+    /**
+     * 
+     * @type {ConfigurationItemReference}
+     * @memberof TreeElement
+     */
+    'ci'?: ConfigurationItemReference;
+    /**
+     * 
+     * @type {SerializablePath}
+     * @memberof TreeElement
+     */
+    'path'?: SerializablePath;
+    /**
+     * 
+     * @type {Array<ConfigurationItemReference>}
+     * @memberof TreeElement
+     */
+    'previousSteps'?: Array<ConfigurationItemReference>;
+    /**
+     * 
+     * @type {Array<TreeElement>}
+     * @memberof TreeElement
+     */
+    'children'?: Array<TreeElement>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TreeElement
+     */
+    'folder'?: boolean;
+}
 /**
  * 
  * @export
@@ -2559,6 +2673,82 @@ export const SearchControllerApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
+         * @param {SearchRequest} searchRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        executeLater: async (searchRequest: SearchRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'searchRequest' is not null or undefined
+            assertParamExists('executeLater', 'searchRequest', searchRequest)
+            const localVarPath = `/api/search/executeLater`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(searchRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} searchId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        exportTsv: async (searchId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'searchId' is not null or undefined
+            assertParamExists('exportTsv', 'searchId', searchId)
+            const localVarPath = `/api/search/execute/{searchId}.tsv`
+                .replace(`{${"searchId"}}`, encodeURIComponent(String(searchId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} configurationItemName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2618,6 +2808,26 @@ export const SearchControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {SearchRequest} searchRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async executeLater(searchRequest: SearchRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExecuteLaterResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.executeLater(searchRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} searchId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async exportTsv(searchId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.exportTsv(searchId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} configurationItemName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2646,6 +2856,24 @@ export const SearchControllerApiFactory = function (configuration?: Configuratio
          */
         execute(searchRequest: SearchRequest, limit?: number, offset?: number, options?: any): AxiosPromise<SerializableTable> {
             return localVarFp.execute(searchRequest, limit, offset, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {SearchRequest} searchRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        executeLater(searchRequest: SearchRequest, options?: any): AxiosPromise<ExecuteLaterResponse> {
+            return localVarFp.executeLater(searchRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} searchId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        exportTsv(searchId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.exportTsv(searchId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2681,6 +2909,28 @@ export class SearchControllerApi extends BaseAPI {
 
     /**
      * 
+     * @param {SearchRequest} searchRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SearchControllerApi
+     */
+    public executeLater(searchRequest: SearchRequest, options?: AxiosRequestConfig) {
+        return SearchControllerApiFp(this.configuration).executeLater(searchRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} searchId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SearchControllerApi
+     */
+    public exportTsv(searchId: string, options?: AxiosRequestConfig) {
+        return SearchControllerApiFp(this.configuration).exportTsv(searchId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} configurationItemName 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2688,6 +2938,182 @@ export class SearchControllerApi extends BaseAPI {
      */
     public getSearchTemplate(configurationItemName: string, options?: AxiosRequestConfig) {
         return SearchControllerApiFp(this.configuration).getSearchTemplate(configurationItemName, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * TreeControllerApi - axios parameter creator
+ * @export
+ */
+export const TreeControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {GetChildrenRequest} getChildrenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChildren: async (getChildrenRequest: GetChildrenRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'getChildrenRequest' is not null or undefined
+            assertParamExists('getChildren', 'getChildrenRequest', getChildrenRequest)
+            const localVarPath = `/api/tree/getChildren`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(getChildrenRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {GetRootRequest} getRootRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRoot: async (getRootRequest: GetRootRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'getRootRequest' is not null or undefined
+            assertParamExists('getRoot', 'getRootRequest', getRootRequest)
+            const localVarPath = `/api/tree/getRoot`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(getRootRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TreeControllerApi - functional programming interface
+ * @export
+ */
+export const TreeControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TreeControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {GetChildrenRequest} getChildrenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getChildren(getChildrenRequest: GetChildrenRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetChildrenResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChildren(getChildrenRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {GetRootRequest} getRootRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRoot(getRootRequest: GetRootRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetRootResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRoot(getRootRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TreeControllerApi - factory interface
+ * @export
+ */
+export const TreeControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TreeControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {GetChildrenRequest} getChildrenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChildren(getChildrenRequest: GetChildrenRequest, options?: any): AxiosPromise<GetChildrenResponse> {
+            return localVarFp.getChildren(getChildrenRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {GetRootRequest} getRootRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRoot(getRootRequest: GetRootRequest, options?: any): AxiosPromise<GetRootResponse> {
+            return localVarFp.getRoot(getRootRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TreeControllerApi - object-oriented interface
+ * @export
+ * @class TreeControllerApi
+ * @extends {BaseAPI}
+ */
+export class TreeControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {GetChildrenRequest} getChildrenRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TreeControllerApi
+     */
+    public getChildren(getChildrenRequest: GetChildrenRequest, options?: AxiosRequestConfig) {
+        return TreeControllerApiFp(this.configuration).getChildren(getChildrenRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {GetRootRequest} getRootRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TreeControllerApi
+     */
+    public getRoot(getRootRequest: GetRootRequest, options?: AxiosRequestConfig) {
+        return TreeControllerApiFp(this.configuration).getRoot(getRootRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

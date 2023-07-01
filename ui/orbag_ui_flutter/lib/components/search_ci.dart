@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/create_ci.dart';
 import 'package:orbag_ui_flutter/components/editor/fieldgroup_editor.dart';
@@ -26,7 +29,7 @@ class _SearchCiState extends State<SearchCi> {
       _configurationItemDescriptorFuture;
 
   bool _searchStarted = false;
-
+  bool _hasResult = false;
   @override
   void initState() {
     super.initState();
@@ -43,9 +46,11 @@ class _SearchCiState extends State<SearchCi> {
 
     setState(() {
       _searchStarted = true;
+      _hasResult = false;
       _searchResultFuture =
           MyHttpClient.instance.searchApi.execute(request).whenComplete(() {
         setState(() {
+          _hasResult = true;
           _searchStarted = false;
         });
       });
@@ -121,8 +126,22 @@ class _SearchCiState extends State<SearchCi> {
                     } else {
                       return Text("");
                     }
-                  })
+                  }),
+              Conditional.single(
+                  context: context,
+                  conditionBuilder: (context) => _hasResult,
+                  widgetBuilder: (context) => ElevatedButton.icon(
+                      onPressed: () => _exportTsv(searchRequest),
+                      icon: Icon(Icons.download),
+                      label: Text("Export TSV")),
+                  fallbackBuilder: (context) => RenderUtil.empty())
             ]);
+  }
+
+  _exportTsv(SearchRequest searchRequest) {
+    MyHttpClient.instance.searchApi.executeLater(searchRequest).then((value) =>
+        MyHttpClient.instance
+            .gotTo("api/search/execute/" + value!.searchId! + ".tsv"));
   }
 
   Widget buildResults(BuildContext context, SerializableTable result) {

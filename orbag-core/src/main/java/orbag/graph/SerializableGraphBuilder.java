@@ -7,6 +7,8 @@ import java.util.List;
 
 public class SerializableGraphBuilder implements  GraphBuilder{
 
+    boolean complete;
+
     ConfigurationItemReferenceService configurationItemReferenceService;
 
     SerializableGraph result = new SerializableGraph();
@@ -31,6 +33,16 @@ public class SerializableGraphBuilder implements  GraphBuilder{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean isComplete() {
+        return complete;
+    }
+
+    @Override
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 
     public SerializableGraph build() {

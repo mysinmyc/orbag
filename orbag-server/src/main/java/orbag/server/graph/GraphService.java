@@ -33,20 +33,12 @@ public class GraphService {
     @Autowired
     RelationsDiscovererRegistry relationsDiscovererRegistry;
 
-    boolean isPathVisibleForAtLeastForOneCi(Path path, List<?> configurationItems, Authentication user) {
-        for (Object ci : configurationItems) {
-            if (visibilityManager.isObjectVisibile(path, FilterContext.forTargetObject(ci).forUser(user),false)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    public List<SerializablePath> getAvailablePaths(List<ConfigurationItemReference> rootCiReferences, Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
-        List<?> rootCis = dao.getExistingCisOrThrow(rootCiReferences);
+    public List<SerializablePath> getAvailablePaths(ConfigurationItemReference startingCiReference, Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
+        Object startingCi = dao.getCi(startingCiReference);
         List<SerializablePath> availablePaths  = new ArrayList<>();
         for( Path currentPath : pathRegistry.getAllPaths()) {
-            if (isPathVisibleForAtLeastForOneCi(currentPath,rootCis,user)) {
+            if (visibilityManager.isObjectVisibile(currentPath, FilterContext.forTargetObject(startingCi).forUser(user),false)) {
                 SerializablePath path = new SerializablePath();
                 path.setIdentifier(currentPath.getIdentifier());
                 path.setDisplayLabel(currentPath.getDisplayLabel());
@@ -61,20 +53,24 @@ public class GraphService {
     }
 
 
-    public void generateGraphInto(List<ConfigurationItemReference> rootCiReferences, SerializablePath serializablePath, Authentication user, GraphBuilder graphBuilder) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
+    public void generateGraphInto(ConfigurationItemReference startingCiReference, SerializablePath serializablePath, List<ConfigurationItemReference> previousSteps, Authentication user, GraphBuilder graphBuilder) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
         Path path=getPathFroId(serializablePath.getIdentifier());
         if (path == null) {
             throw new UnmanagedObjectException("Invalid path " + serializablePath.getIdentifier());
         }
-        List<?> rootCis = dao.getExistingCisOrThrow(rootCiReferences);
+        Object startingCi = dao.getExistingCiOrThrow(startingCiReference);
         GraphGenerationContext graphGenerationContext = new GraphGenerationContext();
         graphGenerationContext.setPath(path);
         graphGenerationContext.setUser(user);
-        for (Object ci : rootCis) {
-            for (RelationsDiscoverer currentDiscoverer : visibilityManager.filterObjects(relationsDiscovererRegistry.getAllRelationsDiscoverers(), FilterContext.forTargetObject(ci).forUser(user))) {
-                if (currentDiscoverer.isAvailableFor(ci, graphGenerationContext)) {
-                    currentDiscoverer.discoverRelations(ci, graphBuilder, graphGenerationContext);
-                }
+        if (previousSteps!=null) {
+            graphGenerationContext.setPreviousSteps(dao.getExistingCisOrThrow(previousSteps));
+        }
+        for (RelationsDiscoverer currentDiscoverer : visibilityManager.filterObjects(relationsDiscovererRegistry.getAllRelationsDiscoverers(), FilterContext.forTargetObject(startingCi).forUser(user))) {
+            if (currentDiscoverer.isAvailableFor(startingCi, graphGenerationContext)) {
+                currentDiscoverer.discoverRelations(startingCi, graphBuilder, graphGenerationContext);
+            }
+            if (graphBuilder.isComplete()) {
+                break;
             }
         }
     }

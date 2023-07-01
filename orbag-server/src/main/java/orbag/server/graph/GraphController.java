@@ -31,14 +31,14 @@ public class GraphController {
     public GetAvailablePathsResponse getAvailablePaths(@RequestBody GetAvailablePathsRequest request,
                                                        Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
         GetAvailablePathsResponse response = new GetAvailablePathsResponse();
-        response.setAvailablePaths(graphService.getAvailablePaths(request.getRootCis(), user));
+        response.setAvailablePaths(graphService.getAvailablePaths(request.getStartingCi(), user));
         return response;
     }
 
     @PostMapping("/generate")
     public GenerateGraphResponse generate(@RequestBody GenerateGraphRequest request, Authentication user) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
         SerializableGraphBuilder graphBuilder = new SerializableGraphBuilder(referenceService);
-        graphService.generateGraphInto(request.getRootCis(),request.getPath(),user, graphBuilder);
+        graphService.generateGraphInto(request.getStartingCi(),request.getPath(),request.getPreviousSteps(),user, graphBuilder);
         GenerateGraphResponse response = new GenerateGraphResponse();
         response.setGraph(graphBuilder.build());
         return response;

@@ -10,6 +10,8 @@ All URIs are relative to *http://localhost:8080*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**execute**](SearchControllerApi.md#execute) | **POST** /api/search/execute | 
+[**executeLater**](SearchControllerApi.md#executelater) | **POST** /api/search/executeLater | 
+[**exportTsv**](SearchControllerApi.md#exporttsv) | **GET** /api/search/execute/{searchId}.tsv | 
 [**getSearchTemplate**](SearchControllerApi.md#getsearchtemplate) | **GET** /api/search/template/{configurationItemName} | 
 
 
@@ -61,6 +63,99 @@ Name | Type | Description  | Notes
 
  - **Content-Type**: application/json
  - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **executeLater**
+> ExecuteLaterResponse executeLater(searchRequest)
+
+
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = SearchControllerApi();
+final searchRequest = SearchRequest(); // SearchRequest | 
+
+try {
+    final result = api_instance.executeLater(searchRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling SearchControllerApi->executeLater: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **searchRequest** | [**SearchRequest**](SearchRequest.md)|  | 
+
+### Return type
+
+[**ExecuteLaterResponse**](ExecuteLaterResponse.md)
+
+### Authorization
+
+[JWT](../README.md#JWT)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **exportTsv**
+> exportTsv(searchId)
+
+
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = SearchControllerApi();
+final searchId = searchId_example; // String | 
+
+try {
+    api_instance.exportTsv(searchId);
+} catch (e) {
+    print('Exception when calling SearchControllerApi->exportTsv: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **searchId** | **String**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[JWT](../README.md#JWT)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

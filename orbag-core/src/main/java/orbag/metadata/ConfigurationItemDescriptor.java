@@ -25,6 +25,8 @@ public class ConfigurationItemDescriptor {
 
 	boolean readOnly;
 
+	boolean internal;
+
 	protected ConfigurationItemDescriptor(Class<?> javaClass, String name, Class<?> identifierClass) {
 		this.javaClass = javaClass;
 		this.name = (name == null || name.isEmpty()) ? javaClass.getSimpleName() : name;
@@ -74,6 +76,9 @@ public class ConfigurationItemDescriptor {
 		return readOnly;
 	}
 
+	public boolean isInternal() {
+		return internal;
+	}
 
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass) {
 		return fromClass(javaClass, null);
@@ -82,7 +87,8 @@ public class ConfigurationItemDescriptor {
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass,Class<?> identifierClass) {
 		return fromClass(javaClass, identifierClass,true);
 	}
-	
+
+
 	public static ConfigurationItemDescriptor fromClass(Class<?> javaClass, Class<?> identifierClass,boolean buildProperties) {
 		ConfigurationItem configurationItemAnnotation = javaClass.getAnnotation(ConfigurationItem.class);
 		if (configurationItemAnnotation == null || configurationItemAnnotation.hidden()) {
@@ -97,6 +103,7 @@ public class ConfigurationItemDescriptor {
 				: configurationItemAnnotation.displayLabel();
 		configurationItemDescriptor.allowCreation = configurationItemAnnotation.allowCreation();
 		configurationItemDescriptor.readOnly = configurationItemAnnotation.readOnly();
+		configurationItemDescriptor.internal = configurationItemAnnotation.internal();
 		if (buildProperties) {
 			Map<String, ConfigurationItemPropertyDescriptor> properties = new HashMap<String, ConfigurationItemPropertyDescriptor>();
 			MyReflectionUtils.forEachDeclaredMethod(javaClass, m -> {

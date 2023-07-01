@@ -3,6 +3,8 @@ package orbag.reference;
 
 import orbag.metadata.ConfigurationItemDescriptor;
 
+import java.util.Objects;
+
 public class ConfigurationItemReference {
 	
 	String identifier;
@@ -60,4 +62,16 @@ public class ConfigurationItemReference {
 		return result;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ConfigurationItemReference reference = (ConfigurationItemReference) o;
+		return Objects.equals(identifier, reference.identifier) && Objects.equals(configurationItemType, reference.configurationItemType);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(identifier, configurationItemType);
+	}
 }

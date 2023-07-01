@@ -205,6 +205,8 @@ class ApiClient {
           return EnumField.fromJson(value);
         case 'ErrorPayload':
           return ErrorPayload.fromJson(value);
+        case 'ExecuteLaterResponse':
+          return ExecuteLaterResponse.fromJson(value);
         case 'GenerateGraphRequest':
           return GenerateGraphRequest.fromJson(value);
         case 'GenerateGraphResponse':
@@ -221,8 +223,16 @@ class ApiClient {
           return GetAvailableViewsRequest.fromJson(value);
         case 'GetAvailableViewsResponse':
           return GetAvailableViewsResponse.fromJson(value);
+        case 'GetChildrenRequest':
+          return GetChildrenRequest.fromJson(value);
+        case 'GetChildrenResponse':
+          return GetChildrenResponse.fromJson(value);
         case 'GetClassModelResponse':
           return GetClassModelResponse.fromJson(value);
+        case 'GetRootRequest':
+          return GetRootRequest.fromJson(value);
+        case 'GetRootResponse':
+          return GetRootResponse.fromJson(value);
         case 'ListConfigurationItemResponse':
           return ListConfigurationItemResponse.fromJson(value);
         case 'LoginRequest':
@@ -261,6 +271,8 @@ class ApiClient {
           return SubmitActionRequest.fromJson(value);
         case 'SubmitActionResponse':
           return SubmitActionResponse.fromJson(value);
+        case 'TreeElement':
+          return TreeElement.fromJson(value);
         case 'UpdateRequest':
           return UpdateRequest.fromJson(value);
         case 'ValidationError':

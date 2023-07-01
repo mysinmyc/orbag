@@ -21,6 +21,8 @@ public @interface ConfigurationItem {
 	
 	boolean hidden() default false;
 
+	boolean internal() default false;
+
 	boolean readOnly() default false;
 
 	Class<?> identifierClass() default Object.class;

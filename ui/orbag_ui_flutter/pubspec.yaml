@@ -38,7 +38,6 @@ dependencies:
     path: generated/client
   flutter_conditional_rendering: ^2.0.0
   url_launcher: ^6.1.11
-  flutter_tree: ^2.0.3
 
 dev_dependencies:
   flutter_test:

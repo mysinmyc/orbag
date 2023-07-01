@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_link.dart';
+import 'package:orbag_ui_flutter/components/editor/configurationitem_list_link.dart';
 import 'package:orbag_ui_flutter/components/search_ci.dart';
 import 'package:orbag_ui_flutter/components/util/list_grouper.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
@@ -201,16 +202,12 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     for (ConfigurationItemReferenceListField currentRequestReferenceListField
         in fields.configurationItemReferenceListFields) {
       Widget currentField = SizedBox(
-          height: 160,
+          height: 80,
           child: InputDecorator(
               decoration: InputDecoration(
                   labelText: currentRequestReferenceListField.displayLabel),
-              expands: true,
-              child: SingleChildScrollView(
-                  child: Column(
-                      children: currentRequestReferenceListField.value
-                          .map((e) => ConfigurationItemLink(e))
-                          .toList()))));
+              child: RenderUtil.pad(ConfigurationItemListLink(
+                  currentRequestReferenceListField.value))));
       filters.add(WidgetFieldBuildInfo(
           currentRequestReferenceListField.category ?? "",
           currentRequestReferenceListField.displayLabel!,

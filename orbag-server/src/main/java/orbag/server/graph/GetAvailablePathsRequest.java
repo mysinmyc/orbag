@@ -6,13 +6,13 @@ import java.util.List;
 
 public class GetAvailablePathsRequest {
 
-	public List<ConfigurationItemReference> getRootCis() {
-		return rootCis;
+	ConfigurationItemReference startingCi;
+
+	public ConfigurationItemReference getStartingCi() {
+		return startingCi;
 	}
 
-	public void setRootCis(List<ConfigurationItemReference> rootCis) {
-		this.rootCis = rootCis;
+	public void setStartingCi(ConfigurationItemReference startingCi) {
+		this.startingCi = startingCi;
 	}
-
-	List<ConfigurationItemReference> rootCis;
 }

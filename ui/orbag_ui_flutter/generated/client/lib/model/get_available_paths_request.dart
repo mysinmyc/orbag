@@ -13,26 +13,36 @@ part of openapi.api;
 class GetAvailablePathsRequest {
   /// Returns a new [GetAvailablePathsRequest] instance.
   GetAvailablePathsRequest({
-    this.rootCis = const [],
+    this.startingCi,
   });
 
-  List<ConfigurationItemReference> rootCis;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ConfigurationItemReference? startingCi;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is GetAvailablePathsRequest &&
-     other.rootCis == rootCis;
+     other.startingCi == startingCi;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (rootCis.hashCode);
+    (startingCi == null ? 0 : startingCi!.hashCode);
 
   @override
-  String toString() => 'GetAvailablePathsRequest[rootCis=$rootCis]';
+  String toString() => 'GetAvailablePathsRequest[startingCi=$startingCi]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'rootCis'] = this.rootCis;
+    if (this.startingCi != null) {
+      json[r'startingCi'] = this.startingCi;
+    } else {
+      json[r'startingCi'] = null;
+    }
     return json;
   }
 
@@ -55,7 +65,7 @@ class GetAvailablePathsRequest {
       }());
 
       return GetAvailablePathsRequest(
-        rootCis: ConfigurationItemReference.listFromJson(json[r'rootCis']),
+        startingCi: ConfigurationItemReference.fromJson(json[r'startingCi']),
       );
     }
     return null;

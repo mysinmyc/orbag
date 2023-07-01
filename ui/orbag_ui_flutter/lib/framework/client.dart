@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:openapi/api.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:orbag_ui_flutter/framework/client_other.dart'
     if (dart.library.io) 'package:orbag_ui_flutter/framework/client_linux.dart'
@@ -73,6 +74,10 @@ class MyHttpClient {
     return GraphControllerApi(_apiClient());
   }
 
+  TreeControllerApi get treeApi {
+    return TreeControllerApi(_apiClient());
+  }
+
   Future<LoginResponse> login(String userName, String password) async {
     LoginResponse? response = await authenticationApi().login(LoginRequest(
         userName: userName, password: password, persistent: false));
@@ -85,6 +90,14 @@ class MyHttpClient {
         headers: <String, String>{
           'authorization': "Bearer $_authenticationToken"
         });
+  }
+
+  Future<dynamic> gotTo(String relativePath) async {
+    return await launchUrl(Uri.parse('$serverAddress/$relativePath'),
+        mode: LaunchMode.inAppWebView,
+        webViewConfiguration: WebViewConfiguration(headers: <String, String>{
+          'authorization': "Bearer $_authenticationToken"
+        }));
   }
 
   Future<http.Response> post(String relativePath, Object body) async {

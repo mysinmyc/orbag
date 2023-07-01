@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:openapi/api.dart';
 import 'package:orbag_ui_flutter/components/action/action_execution_feedback.dart';
@@ -11,15 +10,14 @@ import 'package:orbag_ui_flutter/components/table/tablesource.dart';
 import 'package:orbag_ui_flutter/components/util/label_util.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
-import 'package:orbag_ui_flutter/views/action_view.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationItemTable extends StatefulWidget {
   final ConfigurationItemReference? sourceCi;
   final SerializableTable table;
   final ValueChanged<ConfigurationItemReference>? onSelectedCi;
+  final List<Widget>? actions;
   const ConfigurationItemTable(this.table,
-      {super.key, this.onSelectedCi, this.sourceCi});
+      {super.key, this.onSelectedCi, this.sourceCi, this.actions});
 
   @override
   State<ConfigurationItemTable> createState() => _ConfigurationItemTableState();
@@ -142,6 +140,8 @@ class _ConfigurationItemTableState extends State<ConfigurationItemTable> {
         onSelectCi: widget.onSelectedCi);
 
     var table = PaginatedDataTable(
+        header: widget.actions == null ? null : RenderUtil.empty(),
+        actions: widget.actions,
         columns: columns,
         source: tableSource,
         sortColumnIndex: _sortColumnIndex,

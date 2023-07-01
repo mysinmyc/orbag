@@ -6,17 +6,19 @@ import java.util.List;
 
 public class GenerateGraphRequest {
 
-    public List<ConfigurationItemReference> getRootCis() {
-        return rootCis;
-    }
-
-    public void setRootCis(List<ConfigurationItemReference> rootCis) {
-        this.rootCis = rootCis;
-    }
-
-    List<ConfigurationItemReference> rootCis;
+    ConfigurationItemReference startingCi;
 
     SerializablePath path;
+
+    List<ConfigurationItemReference> previousSteps;
+
+    public ConfigurationItemReference getStartingCi() {
+        return startingCi;
+    }
+
+    public void setStartingCi(ConfigurationItemReference startingCi) {
+        this.startingCi = startingCi;
+    }
 
     public SerializablePath getPath() {
         return path;
@@ -24,5 +26,13 @@ public class GenerateGraphRequest {
 
     public void setPath(SerializablePath path) {
         this.path = path;
+    }
+
+    public List<ConfigurationItemReference> getPreviousSteps() {
+        return previousSteps;
+    }
+
+    public void setPreviousSteps(List<ConfigurationItemReference> previousSteps) {
+        this.previousSteps = previousSteps;
     }
 }

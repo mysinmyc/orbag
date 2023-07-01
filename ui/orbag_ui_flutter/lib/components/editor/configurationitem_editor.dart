@@ -6,11 +6,9 @@ import 'package:orbag_ui_flutter/components/action/action_execution_feedback.dar
 import 'package:orbag_ui_flutter/components/action/action_execution_form.dart';
 import 'package:orbag_ui_flutter/components/action/action_util.dart';
 import 'package:orbag_ui_flutter/components/editor/configurationitem_properties_editor.dart';
-import 'package:orbag_ui_flutter/components/graph/dependencies_widget.dart';
-import 'package:orbag_ui_flutter/components/graph/dependencies_widgetb.dart';
+import 'package:orbag_ui_flutter/components/tree/dependencies_widget.dart';
 import 'package:orbag_ui_flutter/components/table/configurationitem_table.dart';
 import 'package:orbag_ui_flutter/framework/client.dart';
-import 'package:orbag_ui_flutter/views/action_view.dart';
 
 class ConfigurationItemEditor extends StatefulWidget {
   final ConfigurationItemReference ci;
@@ -106,7 +104,7 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
       case 0:
         return ConfigurationItemPropertiesEditor(widget.ci);
       case 1:
-        return DependenciesWidgetB(widget.ci);
+        return DependenciesWidget(widget.ci);
       default:
         return buildView(views[_currentTabIndex - 2]);
     }
@@ -121,9 +119,9 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
           List<Tab> tabs = List.empty(growable: true);
           tabs.add(const Tab(text: "Properties"));
 
-          List<SerializableView> views = List.empty(growable: true);
+          tabs.add(const Tab(text: "Dependencies"));
 
-          tabs.add(const Tab(text: "Dependecies"));
+          List<SerializableView> views = List.empty(growable: true);
 
           if (snapshot.hasData) {
             for (var element in snapshot.data!.availableViews) {

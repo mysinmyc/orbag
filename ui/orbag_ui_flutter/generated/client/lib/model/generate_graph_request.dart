@@ -13,11 +13,18 @@ part of openapi.api;
 class GenerateGraphRequest {
   /// Returns a new [GenerateGraphRequest] instance.
   GenerateGraphRequest({
-    this.rootCis = const [],
+    this.startingCi,
     this.path,
+    this.previousSteps = const [],
   });
 
-  List<ConfigurationItemReference> rootCis;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ConfigurationItemReference? startingCi;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -27,28 +34,37 @@ class GenerateGraphRequest {
   ///
   SerializablePath? path;
 
+  List<ConfigurationItemReference> previousSteps;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is GenerateGraphRequest &&
-     other.rootCis == rootCis &&
-     other.path == path;
+     other.startingCi == startingCi &&
+     other.path == path &&
+     other.previousSteps == previousSteps;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (rootCis.hashCode) +
-    (path == null ? 0 : path!.hashCode);
+    (startingCi == null ? 0 : startingCi!.hashCode) +
+    (path == null ? 0 : path!.hashCode) +
+    (previousSteps.hashCode);
 
   @override
-  String toString() => 'GenerateGraphRequest[rootCis=$rootCis, path=$path]';
+  String toString() => 'GenerateGraphRequest[startingCi=$startingCi, path=$path, previousSteps=$previousSteps]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'rootCis'] = this.rootCis;
+    if (this.startingCi != null) {
+      json[r'startingCi'] = this.startingCi;
+    } else {
+      json[r'startingCi'] = null;
+    }
     if (this.path != null) {
       json[r'path'] = this.path;
     } else {
       json[r'path'] = null;
     }
+      json[r'previousSteps'] = this.previousSteps;
     return json;
   }
 
@@ -71,8 +87,9 @@ class GenerateGraphRequest {
       }());
 
       return GenerateGraphRequest(
-        rootCis: ConfigurationItemReference.listFromJson(json[r'rootCis']),
+        startingCi: ConfigurationItemReference.fromJson(json[r'startingCi']),
         path: SerializablePath.fromJson(json[r'path']),
+        previousSteps: ConfigurationItemReference.listFromJson(json[r'previousSteps']),
       );
     }
     return null;

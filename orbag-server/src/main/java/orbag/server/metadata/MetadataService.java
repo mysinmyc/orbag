@@ -42,7 +42,7 @@ public class MetadataService {
 	public List<SerializableConfigurationItemDescriptor> getConfigurationItemDescriptors(boolean includeProperties, Authentication user) {
 		List<SerializableConfigurationItemDescriptor> result = new ArrayList<>();
 		for (ConfigurationItemDescriptor currentDescriptor : metadataRegistry.getAllConfigurationItemDescriptors()) {
-			if (securityAssertionService.hasAuthorizationToConfigurationItemDescriptor(currentDescriptor, user,AccessType.values())) {
+			if (securityAssertionService.hasAuthorizationToConfigurationItemDescriptor(currentDescriptor, user,AccessType.values()) &&  ! currentDescriptor.isInternal()) {
 				try {
 					result.add(serialize(currentDescriptor, includeProperties,user));
 				} catch (OrbagSecurityException e) {
