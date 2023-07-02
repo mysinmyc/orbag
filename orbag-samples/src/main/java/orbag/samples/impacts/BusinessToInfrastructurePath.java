@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @ManagedClasses(Business2InfrastructureAware.class)
 public class BusinessToInfrastructurePath extends PathBase {
     @Override
-    public boolean isArrivalConfigurationItem(Object configurationItem) {
+    public boolean isDestination(Object configurationItem) {
         return configurationItem instanceof Server;
     }
 }

@@ -33,6 +33,6 @@ public class BusinessProcess_ProductiveStage_ApplicationsRelationsDiscoverer imp
                 graphBuilder.addRelation(configurationItem, currentApplication, "depends_on", "Depends on");
             }
         }
-        graphBuilder.setStepComplete(true);
+        graphBuilder.setStopBuild(true);
     }
 }

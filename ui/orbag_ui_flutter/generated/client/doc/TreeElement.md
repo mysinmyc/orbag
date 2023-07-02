@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **previousSteps** | [**List<ConfigurationItemReference>**](ConfigurationItemReference.md) |  | [optional] [default to const []]
 **children** | [**List<TreeElement>**](TreeElement.md) |  | [optional] [default to const []]
 **folder** | **bool** |  | [optional] 
+**destination** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -30,9 +30,8 @@ class _MyTreeItemState extends State<MyTreeItem> {
     return Container(
         height: 60,
         alignment: Alignment.centerLeft,
-        child: (widget.tree.itemWidgetBuilder == null)
-            ? Text(widget.data.label ?? " ??? ")
-            : widget.tree.itemWidgetBuilder!(context, widget.data));
+        child: (widget.tree.itemWidgetBuilder ??
+            MyTree.defaultItemWidgetBuilder)(context, widget.data));
   }
 
   void _expandAndCollapse() {

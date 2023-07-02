@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SerializableGraphBuilder implements  GraphBuilder{
 
-    boolean stepComplete;
+    boolean stopBuild;
 
     ConfigurationItemReferenceService configurationItemReferenceService;
 
@@ -35,17 +35,17 @@ public class SerializableGraphBuilder implements  GraphBuilder{
         }
     }
 
-    @Override
-    public boolean isStepComplete() {
-        return stepComplete;
-    }
-
-    @Override
-    public void setStepComplete(boolean stepComplete) {
-        this.stepComplete = stepComplete;
-    }
-
     public SerializableGraph build() {
         return result;
+    }
+
+    @Override
+    public boolean isStopBuild() {
+        return stopBuild;
+    }
+
+    @Override
+    public void setStopBuild(boolean stopBuild) {
+        this.stopBuild = stopBuild;
     }
 }

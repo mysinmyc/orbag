@@ -10,8 +10,10 @@ class MyHttpClient {
   static final MyHttpClient _instance = MyHttpClientImpl();
 
   String serverAddress;
+  void Function(String name, String value, int expirySeconds)?
+      setCookieFunction;
 
-  MyHttpClient(this.serverAddress);
+  MyHttpClient(this.serverAddress, {this.setCookieFunction});
 
   static MyHttpClient get instance {
     return _instance;
@@ -93,19 +95,21 @@ class MyHttpClient {
   }
 
   Future<dynamic> gotTo(String relativePath) async {
-    return await launchUrl(Uri.parse('$serverAddress/$relativePath'),
-        mode: LaunchMode.inAppWebView,
-        webViewConfiguration: WebViewConfiguration(headers: <String, String>{
-          'authorization': "Bearer $_authenticationToken"
-        }));
+    setCookie("JWT_SSO", "$_authenticationToken", 60);
+    return await launchUrl(Uri.parse('$serverAddress/$relativePath'));
   }
 
   Future<http.Response> post(String relativePath, Object body) async {
     return await http.post(Uri.parse('$serverAddress/$relativePath'),
         body: body,
         headers: <String, String>{
-          'authorization': "Bearer _authenticationToken",
-          'content-type': 'businessApplication/json'
+          'authorization': "Bearer $_authenticationToken",
         });
+  }
+
+  void setCookie(String name, String value, int expirySeconds) {
+    if (setCookieFunction != null) {
+      setCookieFunction!(name, value, expirySeconds);
+    }
   }
 }

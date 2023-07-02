@@ -136,7 +136,11 @@ class _ConfigurationItemEditorState extends State<ConfigurationItemEditor>
 
           return Scaffold(
               appBar: AppBar(
-                title: Text(widget.ci.displayLabel ?? "???"),
+                title: Text((widget.ci.displayLabel ?? "???") +
+                    " (" +
+                    (widget.ci.configurationItemTypeDisplayLabel ??
+                        widget.ci.configurationItemType!) +
+                    ")"),
                 bottom: TabBar(tabs: tabs, controller: tabController),
                 actions: [buildActions()],
               ),

@@ -9,12 +9,16 @@ class ConfigurationItemLink extends StatelessWidget {
   final bool showType;
   final bool truncateLabel;
   final double? width;
+  final IconData? icon;
+  final Color? iconColor;
   const ConfigurationItemLink(this.ci,
       {this.onSelectedCi,
       super.key,
       this.showType = false,
       this.truncateLabel = true,
-      this.width = 200});
+      this.width = 200,
+      this.icon,
+      this.iconColor});
 
   String getLabel() {
     String label = ci!.displayLabel ?? "???";
@@ -31,6 +35,12 @@ class ConfigurationItemLink extends StatelessWidget {
     return Align(alignment: Alignment.centerLeft, child: Text(getLabel()));
   }
 
+  Icon getIcon() {
+    return Icon(
+        icon ?? (onSelectedCi == null ? Icons.open_in_new : Icons.input),
+        color: iconColor);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (ci == null) {
@@ -41,8 +51,7 @@ class ConfigurationItemLink extends StatelessWidget {
           child: Tooltip(
               message: ci!.displayLabel ?? "???",
               child: TextButton.icon(
-                  icon: Icon(
-                      onSelectedCi == null ? Icons.open_in_new : Icons.input),
+                  icon: getIcon(),
                   label: getLabelWidget(),
                   onPressed: () {
                     if (onSelectedCi == null) {

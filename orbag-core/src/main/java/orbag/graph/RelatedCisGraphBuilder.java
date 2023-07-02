@@ -13,7 +13,7 @@ public class RelatedCisGraphBuilder implements GraphBuilder{
 
     Object startingCi;
 
-    boolean stepComplete;
+    boolean stopBuild;
 
     Map<Object,List<Object>> relatedCis = new HashMap<>();
 
@@ -38,20 +38,17 @@ public class RelatedCisGraphBuilder implements GraphBuilder{
         return true;
     }
 
-
-
-    @Override
-    public boolean isStepComplete() {
-        return stepComplete;
-    }
-
-    @Override
-    public void setStepComplete(boolean stepComplete) {
-        this.stepComplete = stepComplete;
-    }
-
-
     public List<Object> getRelatedCis(Object startingCi) {
         return  relatedCis.get(startingCi);
+    }
+
+    @Override
+    public boolean isStopBuild() {
+        return stopBuild;
+    }
+
+    @Override
+    public void setStopBuild(boolean stopBuild) {
+        this.stopBuild = stopBuild;
     }
 }

@@ -9,8 +9,18 @@ Drawer buildDrawerFromClassModel(BuildContext context, String title,
     GetClassModelResponse classModel, showHome) {
   Map<String, ExpansionTile> submenus = {};
 
-  for (SerializableConfigurationItemDescriptor currentClass
-      in classModel.configurationItemDescriptors) {
+  List<SerializableConfigurationItemDescriptor> descriptors =
+      classModel.configurationItemDescriptors;
+
+  descriptors.sort((a, b) {
+    int result = a.category!.compareTo(b.category!);
+    if (result == 0) {
+      result = (a.displayLabel ?? a.name ?? "???")
+          .compareTo((b.displayLabel ?? b.name ?? "???"));
+    }
+    return result;
+  });
+  for (SerializableConfigurationItemDescriptor currentClass in descriptors) {
     var currentSubMenu = submenus[currentClass.category];
     if (currentSubMenu == null) {
       currentSubMenu =

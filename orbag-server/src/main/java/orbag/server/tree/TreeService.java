@@ -2,6 +2,7 @@ package orbag.server.tree;
 
 import orbag.dao.ConfigurationItemDao;
 import orbag.dao.ConfigurationItemNotFoundException;
+import orbag.graph.Path;
 import orbag.graph.RelatedCisGraphBuilder;
 import orbag.graph.SerializableGraphBuilder;
 import orbag.metadata.UnmanagedObjectException;
@@ -65,14 +66,15 @@ public class TreeService {
         return currentElement;
     }
 
-    List<TreeElement> buildChildrenFromRelatedCis(TreeElement parent, Object parentCi, RelatedCisGraphBuilder relatedCisGraphBuilder , int maxDepth) throws UnmanagedObjectException {
+    List<TreeElement> buildChildrenFromRelatedCis(TreeElement parent, Object parentCi,Path path, RelatedCisGraphBuilder relatedCisGraphBuilder , int maxDepth) throws UnmanagedObjectException {
         List<TreeElement> result = new ArrayList<>();
         List<Object> relatedCis = relatedCisGraphBuilder.getRelatedCis(parentCi);
         if (relatedCis!=null) {
             for (Object relatedCi : relatedCis) {
                 TreeElement currentChild = buildChild(parent,relatedCi);
+                currentChild.setDestination(path.isDestination(relatedCi));
                 if (maxDepth>0) {
-                    currentChild.setChildren(buildChildrenFromRelatedCis(currentChild, relatedCi, relatedCisGraphBuilder,maxDepth-1).stream().filter(e -> !e.getCi().equals(parent.getCi())).toList());
+                    currentChild.setChildren(buildChildrenFromRelatedCis(currentChild, relatedCi,path, relatedCisGraphBuilder,maxDepth-1).stream().filter(e -> !e.getCi().equals(parent.getCi())).toList());
                 }
                 result.add(currentChild);
             }
@@ -84,10 +86,14 @@ public class TreeService {
         if (parent.getPath()==null){
             return getAvailablePaths(parent,user);
         }
+        Path path=graphService.getPath(parent.getPath());
+        if (path == null) {
+            throw new UnmanagedObjectException("Invalid path " + parent.getPath().getIdentifier());
+        }
         Object ci = dao.getCi(parent.getCi());
         RelatedCisGraphBuilder relatedCisGraphBuilder = new RelatedCisGraphBuilder();
         graphService.generateGraphInto(parent.getCi(),parent.getPath(),parent.getPreviousSteps(),user,relatedCisGraphBuilder);
-        return buildChildrenFromRelatedCis(parent,ci,relatedCisGraphBuilder,5);
+        return buildChildrenFromRelatedCis(parent,ci,path,relatedCisGraphBuilder,5);
     }
 
 

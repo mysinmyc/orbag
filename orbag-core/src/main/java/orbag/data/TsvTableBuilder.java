@@ -74,16 +74,27 @@ public class TsvTableBuilder<T> implements TableBuilder<T>, RowBuilder<T>, Parti
         writeHeader();
         if (currentRow!=null && !currentRow.isEmpty()) {
             for (TsvInternalColumn currentColumn : columns) {
-                    tsvBuilder.addCell(""+currentRow.get(currentColumn.getName()));
+                Object value = currentRow.get(currentColumn.getName());
+                tsvBuilder.addCell(value==null?null:value.toString());
             }
             tsvBuilder.nextRow();
         }
     }
 
+    private Object castValue(Object value, ColumnType columnType) {
+        if (value == null) {
+            return null;
+        }
+        if (columnType.equals(ColumnType.Reference)) {
+            return DisplayLabelUtils.getDisplayLabel(value);
+        }
+        return value;
+    }
+
     void resolveGeneratedValues() {
         for (TsvInternalColumn currentColumn : columns) {
             if (currentColumn.valueProvider != null) {
-                currentRow.put(currentColumn.getName(), currentColumn.valueProvider.apply(currentRowItem));
+                currentRow.put(currentColumn.getName(), castValue(currentColumn.valueProvider.apply(currentRowItem),currentColumn.getType()));
             }
         }
     }

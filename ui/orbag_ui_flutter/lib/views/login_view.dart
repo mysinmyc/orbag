@@ -80,6 +80,8 @@ class _LoginViewState extends State<LoginView> {
                                         child: TextField(
                                           controller: userNameController,
                                           decoration: const InputDecoration(
+                                              prefixIcon:
+                                                  Icon(Icons.person_outline),
                                               border: OutlineInputBorder(),
                                               labelText: "Login"),
                                           textInputAction: TextInputAction.next,
@@ -93,6 +95,8 @@ class _LoginViewState extends State<LoginView> {
                                           controller: passwordController,
                                           focusNode: passwordFocusNode,
                                           decoration: const InputDecoration(
+                                              prefixIcon:
+                                                  Icon(Icons.lock_outline),
                                               border: OutlineInputBorder(),
                                               labelText: "Password"),
                                           onSubmitted: (value) =>

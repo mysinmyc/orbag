@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class RelatedCisPath extends PathBase{
 
     @Override
-    public boolean isArrivalConfigurationItem(Object configurationItem) {
-        return true;
+    public boolean isDestination(Object configurationItem) {
+        return false;
     }
 }

@@ -48,13 +48,13 @@ public class GraphService {
         return availablePaths;
     }
 
-    Path getPathFroId(String id) {
-        return pathRegistry.getAllPaths().stream().filter( p -> p.getIdentifier().equals(id) ).findFirst().orElseGet(null);
+    public Path getPath(SerializablePath serializablePath) {
+        return pathRegistry.getAllPaths().stream().filter( p -> p.getIdentifier().equals(serializablePath.getIdentifier()) ).findFirst().orElseGet(null);
     }
 
 
     public void generateGraphInto(ConfigurationItemReference startingCiReference, SerializablePath serializablePath, List<ConfigurationItemReference> previousSteps, Authentication user, GraphBuilder graphBuilder) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
-        Path path=getPathFroId(serializablePath.getIdentifier());
+        Path path=getPath(serializablePath);
         if (path == null) {
             throw new UnmanagedObjectException("Invalid path " + serializablePath.getIdentifier());
         }
@@ -69,7 +69,7 @@ public class GraphService {
             if (currentDiscoverer.isAvailableFor(startingCi, graphGenerationContext)) {
                 currentDiscoverer.discoverRelations(startingCi, graphBuilder, graphGenerationContext);
             }
-            if (graphBuilder.isStepComplete()) {
+            if (graphBuilder.isStopBuild()) {
                 break;
             }
         }

@@ -12,8 +12,9 @@ import org.springframework.stereotype.Component;
 @DisplayLabel("Business impacts")
 @ManagedClasses(Infrastructure2BusinessAware.class)
 public class InfrastructureToBusinessPath extends PathBase {
+
     @Override
-    public boolean isArrivalConfigurationItem(Object configurationItem) {
+    public boolean isDestination(Object configurationItem) {
         return configurationItem instanceof Customer;
     }
 }

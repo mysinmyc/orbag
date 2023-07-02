@@ -19,6 +19,7 @@ class TreeElement {
     this.previousSteps = const [],
     this.children = const [],
     this.folder,
+    this.destination,
   });
 
   ///
@@ -57,6 +58,14 @@ class TreeElement {
   ///
   bool? folder;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? destination;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is TreeElement &&
      other.displayLabel == displayLabel &&
@@ -64,7 +73,8 @@ class TreeElement {
      other.path == path &&
      other.previousSteps == previousSteps &&
      other.children == children &&
-     other.folder == folder;
+     other.folder == folder &&
+     other.destination == destination;
 
   @override
   int get hashCode =>
@@ -74,10 +84,11 @@ class TreeElement {
     (path == null ? 0 : path!.hashCode) +
     (previousSteps.hashCode) +
     (children.hashCode) +
-    (folder == null ? 0 : folder!.hashCode);
+    (folder == null ? 0 : folder!.hashCode) +
+    (destination == null ? 0 : destination!.hashCode);
 
   @override
-  String toString() => 'TreeElement[displayLabel=$displayLabel, ci=$ci, path=$path, previousSteps=$previousSteps, children=$children, folder=$folder]';
+  String toString() => 'TreeElement[displayLabel=$displayLabel, ci=$ci, path=$path, previousSteps=$previousSteps, children=$children, folder=$folder, destination=$destination]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -102,6 +113,11 @@ class TreeElement {
       json[r'folder'] = this.folder;
     } else {
       json[r'folder'] = null;
+    }
+    if (this.destination != null) {
+      json[r'destination'] = this.destination;
+    } else {
+      json[r'destination'] = null;
     }
     return json;
   }
@@ -131,6 +147,7 @@ class TreeElement {
         previousSteps: ConfigurationItemReference.listFromJson(json[r'previousSteps']),
         children: TreeElement.listFromJson(json[r'children']),
         folder: mapValueOfType<bool>(json, r'folder'),
+        destination: mapValueOfType<bool>(json, r'destination'),
       );
     }
     return null;

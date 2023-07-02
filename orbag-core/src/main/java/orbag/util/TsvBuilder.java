@@ -32,13 +32,14 @@ public class TsvBuilder {
 
     public void addCell(String cell) throws IOException {
         if (currentColumn> 0) {
-            outputStreamWriter.append(cell);
+            outputStreamWriter.append(fieldDelimiter);
         }
-        outputStreamWriter.write(cell);
+        outputStreamWriter.append( cell == null ? "" : cell);
         currentColumn++;
     }
 
-    public void nextRow() {
+    public void nextRow() throws IOException {
+        outputStreamWriter.append("\n");
         currentRow++;
         currentColumn=0;
     }

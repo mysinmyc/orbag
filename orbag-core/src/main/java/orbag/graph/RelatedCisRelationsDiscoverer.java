@@ -7,6 +7,9 @@ import orbag.visibility.ManagedClasses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
+
 @Component
 @ManagedClasses(Object.class)
 public class RelatedCisRelationsDiscoverer implements RelationsDiscoverer {
@@ -31,7 +34,11 @@ public class RelatedCisRelationsDiscoverer implements RelationsDiscoverer {
                         try {
                             Object relatedCi = property.getGetterMethod().invoke(startingCi);
                             if (relatedCi!=null) {
-                                graphBuilder.addRelation(startingCi, relatedCi, property.getName(), property.getDisplayLabel());
+                                for (Object currentRelatedCi : ( relatedCi instanceof Collection ?  (Collection)relatedCi : List.of(relatedCi))) {
+                                        if (context.getPreviousSteps().size()==0 || !context.getPreviousSteps().get(0).equals(relatedCi)) {
+                                            graphBuilder.addRelation(startingCi, currentRelatedCi, property.getName(), property.getDisplayLabel());
+                                        }
+                                }
                             }
                         }catch (Exception e){
                         }

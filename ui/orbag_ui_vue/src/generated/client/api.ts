@@ -1263,6 +1263,12 @@ export interface TreeElement {
      * @memberof TreeElement
      */
     'folder'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TreeElement
+     */
+    'destination'?: boolean;
 }
 /**
  * 

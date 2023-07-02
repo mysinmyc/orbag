@@ -7,5 +7,5 @@ public interface Path extends Displayable {
 
     String getIdentifier();
 
-    boolean isArrivalConfigurationItem(Object configurationItem);
+    boolean isDestination(Object configurationItem);
 }

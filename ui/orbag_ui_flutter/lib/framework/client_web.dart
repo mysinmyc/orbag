@@ -4,6 +4,9 @@ import 'package:js/js.dart';
 @JS('getServerAddress')
 external String getServerAddress();
 
+@JS('setCookie')
+external void setCookie(String name, String value, int expireSeconds);
+
 class MyHttpClientImpl extends MyHttpClient {
-  MyHttpClientImpl() : super(getServerAddress());
+  MyHttpClientImpl() : super(getServerAddress(), setCookieFunction: setCookie);
 }

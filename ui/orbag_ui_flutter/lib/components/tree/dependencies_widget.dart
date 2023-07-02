@@ -21,58 +21,94 @@ class _DependenciesWidgetState extends State<DependenciesWidget> {
   @override
   void initState() {
     super.initState();
-    treeData = [MyTreeItemData(label: widget.ci.displayLabel)];
+    treeData = [
+      MyTreeItemData(
+          label: (widget.ci.displayLabel ?? "???") +
+              " (" +
+              (widget.ci.configurationItemTypeDisplayLabel ?? "???") +
+              ")",
+          icon: Icons.my_location,
+          iconColor: Colors.black)
+    ];
+  }
+
+  IconData getIcon(TreeElement element) {
+    if (element.folder!) {
+      return Icons.folder_open;
+    }
+    return element.destination! ? Icons.place : Icons.directions;
+  }
+
+  Color? getIconColor(TreeElement element, IconData? data) {
+    if (data == null) {
+      return null;
+    }
+    if (data == Icons.place) {
+      return Colors.red;
+    }
+    if (data == Icons.directions) {
+      return Colors.green;
+    }
+  }
+
+  List<MyTreeItemData> buildTreeItemData(List<TreeElement> elements,
+      {IconData? icon, Color? iconColor}) {
+    List<MyTreeItemData> result = List.empty(growable: true);
+
+    if (elements.isEmpty) {}
+
+    for (TreeElement currentElement in elements) {
+      result.add(MyTreeItemData(
+          extra: currentElement,
+          label: currentElement.displayLabel,
+          icon: icon ?? getIcon(currentElement),
+          iconColor:
+              getIconColor(currentElement, icon ?? getIcon(currentElement)),
+          hasChildren: !currentElement.destination!));
+    }
+    result.sort((a, b) => a.label!.compareTo(b.label!));
+    return result;
   }
 
   Future<List<MyTreeItemData>> _loadChildren(MyTreeItemData parent) async {
-    List<MyTreeItemData> result = List.empty(growable: true);
     if (parent.extra == null) {
       GetChildrenResponse? response = await MyHttpClient.instance.treeApi
           .getChildren(GetChildrenRequest(parent: TreeElement(ci: widget.ci)));
-
-      for (TreeElement currentElement in response!.children) {
-        result.add(MyTreeItemData(
-            extra: currentElement, label: currentElement.displayLabel));
-      }
+      return buildTreeItemData(response!.children, icon: Icons.map_outlined);
     } else {
-      if (parent.extra is Dummy) {
-        return [];
-      }
-
       if (parent.extra is TreeElement) {
         TreeElement parentTreeElement = parent.extra as TreeElement;
-
         if (parentTreeElement.children.isNotEmpty) {
-          for (TreeElement currentElement in parentTreeElement.children) {
-            result.add(MyTreeItemData(
-                extra: currentElement, label: currentElement.displayLabel));
-          }
+          return buildTreeItemData(parentTreeElement.children);
         } else {
           GetChildrenResponse? response = await MyHttpClient.instance.treeApi
               .getChildren(
                   GetChildrenRequest(parent: parent.extra as TreeElement));
-
-          for (TreeElement currentElement in response!.children) {
-            result.add(MyTreeItemData(
-                extra: currentElement, label: currentElement.displayLabel));
-          }
+          return buildTreeItemData(response!.children);
         }
+      } else {
+        return [];
       }
     }
-    return result;
   }
 
   Widget _buildItemWidget(BuildContext context, MyTreeItemData data) {
     if (data.extra != null && data.extra! is TreeElement) {
       TreeElement extra = data.extra! as TreeElement;
       if (extra.ci == null || extra.folder!) {
-        return Text(extra.displayLabel ?? data.label ?? "???");
+        return MyTree.defaultItemWidgetBuilder(context, data);
       } else {
-        return ConfigurationItemLink(extra.ci,
-            showType: true, truncateLabel: false, width: null);
+        return ConfigurationItemLink(
+          extra.ci,
+          showType: true,
+          truncateLabel: false,
+          width: null,
+          icon: getIcon(extra),
+          iconColor: getIconColor(extra, getIcon(extra)),
+        );
       }
     } else {
-      return Text(data.label ?? "???");
+      return MyTree.defaultItemWidgetBuilder(context, data);
     }
   }
 

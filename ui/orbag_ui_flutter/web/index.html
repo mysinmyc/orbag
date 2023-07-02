@@ -50,6 +50,13 @@
       return getAppConfig().address;
     }
     
+    function setCookie(name, value, expireSeconds) {
+      const d = new Date();
+      d.setTime(d.getTime() + expireSeconds * 1000);
+      let expires = "expires="+d.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
     function loadConfig(callback) {
       fetch("/public/config.json").then(function (response){
         response.json().then(json =>{

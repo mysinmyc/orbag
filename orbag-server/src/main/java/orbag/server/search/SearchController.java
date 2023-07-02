@@ -3,24 +3,18 @@ package orbag.server.search;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.servlet.ServletResponse;
-import orbag.data.TsvTableBuilder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import orbag.data.*;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.server.ApiInfo;
 import orbag.util.OneTimeCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import orbag.data.PaginationInfo;
-import orbag.data.SerializableTable;
-import orbag.data.SerializableTableBuilder;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.security.OrbagSecurityException;
 
@@ -65,10 +59,12 @@ public class SearchController {
 		return response;
 	}
 
-	@GetMapping(value = "/execute/{searchId}.tsv", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@RequestMapping(value = "/execute/{searchId}.tsv", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE} , method = {RequestMethod.GET,RequestMethod.POST })
 	public void exportTsv(@PathVariable("searchId") String id, ServletResponse response, Authentication user) throws Exception {
+		((HttpServletResponse)response).setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".tsv");
 		SearchRequest request=oneTimeCache.getUserData(user,id);
 		try (OutputStream outputStream = response.getOutputStream(); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream); TsvTableBuilder<Object> tsvTableBuilder = new TsvTableBuilder<>(outputStreamWriter)) {
+			tsvTableBuilder.addGeneratedColumn("Configuration Item", ColumnType.Reference,o -> o);
 			searchService.executeSearchInto(request, user, new PaginationInfo(), tsvTableBuilder);
 		}
 	}

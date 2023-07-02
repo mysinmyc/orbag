@@ -37,6 +37,6 @@ public class BusinessProcess2ProductiveStageRelationsDiscoverer implements Relat
         for (ProductiveStage productiveStage : stages) {
             graphBuilder.addRelation(configurationItem, new PlaceholderConfigurationItem("productiveStage/"+productiveStage.name(),productiveStage.name()),"productiveStage", "Productive stage");
         }
-        graphBuilder.setStepComplete(true);
+        graphBuilder.setStopBuild(true);
     }
 }
