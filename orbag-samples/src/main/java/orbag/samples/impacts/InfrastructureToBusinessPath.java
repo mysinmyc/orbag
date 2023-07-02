@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @DisplayLabel("Business impacts")
-@ManagedClasses(Infrastructure2BusinessAware.class)
+@ManagedClasses({Infrastructure2BusinessAware.class, Infrastructure2BusinessDiscovered.class})
 public class InfrastructureToBusinessPath extends PathBase {
 
     @Override
