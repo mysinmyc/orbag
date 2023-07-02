@@ -89,7 +89,7 @@ class _SearchCiState extends State<SearchCi> {
         saveCaption: "Search ",
         saveIcon: const Icon(Icons.search),
         saveVisible: true,
-        additionalFields: (context, changeCallBack) => [
+        additionalFields: (context, changeCallBack, getValue) => [
               DropdownButtonFormField(
                   items: const [
                     DropdownMenuItem(
@@ -112,7 +112,7 @@ class _SearchCiState extends State<SearchCi> {
                         if (value != null) {searchRequest.resultType = value}
                       })
             ],
-        additionalButtons: (context, changeCallBack) => [
+        additionalButtons: (context, changeCallBack, getValue) => [
               FutureBuilder(
                   future: _configurationItemDescriptorFuture,
                   builder: (context, snapshot) {
@@ -127,14 +127,13 @@ class _SearchCiState extends State<SearchCi> {
                       return Text("");
                     }
                   }),
-              Conditional.single(
-                  context: context,
-                  conditionBuilder: (context) => _hasResult,
-                  widgetBuilder: (context) => ElevatedButton.icon(
-                      onPressed: () => _exportTsv(searchRequest),
-                      icon: Icon(Icons.download),
-                      label: Text("Export TSV")),
-                  fallbackBuilder: (context) => RenderUtil.empty())
+              ElevatedButton.icon(
+                  onPressed: () {
+                    searchRequest.parameters = getValue();
+                    _exportTsv(searchRequest);
+                  },
+                  icon: Icon(Icons.download),
+                  label: Text("Export TSV"))
             ]);
   }
 

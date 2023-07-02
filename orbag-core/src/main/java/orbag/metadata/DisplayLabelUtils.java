@@ -37,4 +37,20 @@ public class DisplayLabelUtils {
 		}
 		return displayLabel;
 	}
+
+    public static String camelToSpaced(String string) {
+		if (string ==null) {
+			return null;
+		}
+		String result="";
+		for (int cnt=0; cnt < string.length(); cnt++) {
+			char currentChar = string.charAt(cnt);
+			if (cnt > 0 && Character.isUpperCase( currentChar)) {
+				result+= " " + Character.toLowerCase(currentChar);
+			} else {
+				result += currentChar;
+			}
+		}
+		return result;
+    }
 }

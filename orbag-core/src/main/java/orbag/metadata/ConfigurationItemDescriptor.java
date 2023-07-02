@@ -99,7 +99,7 @@ public class ConfigurationItemDescriptor {
 				identifierClass == null ? configurationItemAnnotation.identifierClass() : identifierClass);
 		configurationItemDescriptor.category = configurationItemAnnotation.category();
 		configurationItemDescriptor.displayLabel = configurationItemAnnotation.displayLabel().isEmpty()
-				? configurationItemDescriptor.getName()
+				? DisplayLabelUtils.camelToSpaced( configurationItemDescriptor.getName())
 				: configurationItemAnnotation.displayLabel();
 		configurationItemDescriptor.allowCreation = configurationItemAnnotation.allowCreation();
 		configurationItemDescriptor.readOnly = configurationItemAnnotation.readOnly();
@@ -129,7 +129,7 @@ public class ConfigurationItemDescriptor {
 					if (propertyAnnotation != null) {
 						propertyDescriptor.setVisible(!propertyAnnotation.hidden());
 						propertyDescriptor.setDisplayLabel(
-								propertyAnnotation.displayLabel().isEmpty() ? name : propertyAnnotation.displayLabel());
+								propertyAnnotation.displayLabel().isEmpty() ? DisplayLabelUtils.camelToSpaced(name) : propertyAnnotation.displayLabel());
 						propertyDescriptor.setDescription(propertyAnnotation.description());
 						propertyDescriptor.setCategory(propertyAnnotation.category());
 						propertyDescriptor.setHighlighted(propertyAnnotation.highlighted());

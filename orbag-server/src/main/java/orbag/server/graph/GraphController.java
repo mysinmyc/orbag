@@ -2,19 +2,24 @@ package orbag.server.graph;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import orbag.dao.ConfigurationItemNotFoundException;
-import orbag.graph.GraphBuilder;
 import orbag.graph.SerializableGraphBuilder;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.server.ApiInfo;
-import orbag.server.view.GetAvailableViewsResponse;
+import orbag.server.impact.GenerateReportRequest;
+import orbag.server.impact.GenerateReportResponse;
+import orbag.server.search.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/graph")
@@ -26,6 +31,7 @@ public class GraphController {
 
     @Autowired
     ConfigurationItemReferenceService referenceService;
+
 
     @PostMapping("/getAvailablePaths")
     public GetAvailablePathsResponse getAvailablePaths(@RequestBody GetAvailablePathsRequest request,
@@ -43,4 +49,5 @@ public class GraphController {
         response.setGraph(graphBuilder.build());
         return response;
     }
+
 }

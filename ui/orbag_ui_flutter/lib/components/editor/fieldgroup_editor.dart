@@ -9,7 +9,9 @@ import 'package:orbag_ui_flutter/components/util/list_grouper.dart';
 import 'package:orbag_ui_flutter/components/util/render_util.dart';
 
 typedef AdditionalWidgetBuilder = List<Widget> Function(
-    BuildContext buildContext, VoidCallback changeCallBack);
+    BuildContext buildContext,
+    VoidCallback changeCallBack,
+    SerializableFieldGroup Function() getValue);
 
 typedef FieldGroupEditorSaveCallback = void Function(
     SerializableFieldGroup value);
@@ -236,6 +238,10 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     return filters;
   }
 
+  void commit() {
+    _formKey.currentState!.save();
+  }
+
   Widget buildFilters(BuildContext context, SerializableFieldGroup fields) {
     List<WidgetFieldBuildInfo> widgetForFields = _buildFieldWidgets(fields);
     widgetForFields.sort((a, b) => a.compareTo(b));
@@ -256,7 +262,10 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
 
     if (widget.additionalFields != null) {
       filters.addAll(widget.additionalFields!(
-          context, () => setState(() => changed = true)));
+          context, () => setState(() => changed = true), () {
+        commit();
+        return widget.source;
+      }));
     }
 
     List<Widget> buttons = List.empty(growable: true);
@@ -278,7 +287,10 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
 
       if (widget.additionalButtons != null) {
         buttons.addAll(widget.additionalButtons!(
-            context, () => setState(() => changed = true)));
+            context, () => setState(() => changed = true), () {
+          commit();
+          return widget.source;
+        }));
       }
     }
 

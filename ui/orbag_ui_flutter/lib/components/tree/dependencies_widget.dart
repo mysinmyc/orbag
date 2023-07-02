@@ -49,13 +49,20 @@ class _DependenciesWidgetState extends State<DependenciesWidget> {
     if (data == Icons.directions) {
       return Colors.green;
     }
+    return null;
   }
 
   List<MyTreeItemData> buildTreeItemData(List<TreeElement> elements,
       {IconData? icon, Color? iconColor}) {
     List<MyTreeItemData> result = List.empty(growable: true);
 
-    if (elements.isEmpty) {}
+    if (elements.isEmpty) {
+      result.add(MyTreeItemData(
+          label: "no relations found",
+          icon: Icons.do_not_disturb,
+          iconColor: Colors.red,
+          hasChildren: false));
+    }
 
     for (TreeElement currentElement in elements) {
       result.add(MyTreeItemData(

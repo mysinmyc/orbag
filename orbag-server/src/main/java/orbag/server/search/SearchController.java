@@ -21,6 +21,10 @@ import orbag.security.OrbagSecurityException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/search")
@@ -59,10 +63,10 @@ public class SearchController {
 		return response;
 	}
 
-	@RequestMapping(value = "/execute/{searchId}.tsv", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE} , method = {RequestMethod.GET,RequestMethod.POST })
+	@GetMapping(value = "/execute/{searchId}.tsv", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public void exportTsv(@PathVariable("searchId") String id, ServletResponse response, Authentication user) throws Exception {
-		((HttpServletResponse)response).setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".tsv");
 		SearchRequest request=oneTimeCache.getUserData(user,id);
+		((HttpServletResponse)response).setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Search_"+request.getConfigurationItemName()+"_"+ new SimpleDateFormat("yyyy-MM-dd_hhmm").format(new Date()) +".tsv");
 		try (OutputStream outputStream = response.getOutputStream(); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream); TsvTableBuilder<Object> tsvTableBuilder = new TsvTableBuilder<>(outputStreamWriter)) {
 			tsvTableBuilder.addGeneratedColumn("Configuration Item", ColumnType.Reference,o -> o);
 			searchService.executeSearchInto(request, user, new PaginationInfo(), tsvTableBuilder);
