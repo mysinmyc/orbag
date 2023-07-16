@@ -90,27 +90,37 @@ class _SearchCiState extends State<SearchCi> {
         saveIcon: const Icon(Icons.search),
         saveVisible: true,
         additionalFields: (context, changeCallBack, getValue) => [
-              DropdownButtonFormField(
-                  items: const [
-                    DropdownMenuItem(
-                        value: SearchRequestResultTypeEnum.ROW_REFERENCE,
-                        child: Text("Don't show any field")),
-                    DropdownMenuItem(
-                        value: SearchRequestResultTypeEnum.HIGHLIGHTED_FIELDS,
-                        child: Text("Show highlighted fields")),
-                    DropdownMenuItem(
-                        value: SearchRequestResultTypeEnum.ALL_FIELDS,
-                        child: Text("Show all fields"))
-                  ],
-                  value: widget.onSelectedCi == null &&
-                          MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                      ? searchRequest.resultType
-                      : SearchRequestResultTypeEnum.ROW_REFERENCE,
-                  onChanged: (newValue) => {},
-                  onSaved: (value) => {
-                        if (value != null) {searchRequest.resultType = value}
-                      })
+              SizedBox(
+                  height: 80,
+                  child: InputDecorator(
+                      decoration: InputDecoration(
+                          labelText: "Fields to show",
+                          border: const OutlineInputBorder(),
+                          filled: true),
+                      child: DropdownButtonFormField(
+                          items: const [
+                            DropdownMenuItem(
+                                value:
+                                    SearchRequestResultTypeEnum.ROW_REFERENCE,
+                                child: Text("Don't show any field")),
+                            DropdownMenuItem(
+                                value: SearchRequestResultTypeEnum
+                                    .HIGHLIGHTED_FIELDS,
+                                child: Text("Show highlighted fields")),
+                            DropdownMenuItem(
+                                value: SearchRequestResultTypeEnum.ALL_FIELDS,
+                                child: Text("Show all fields"))
+                          ],
+                          value: widget.onSelectedCi == null &&
+                                  MediaQuery.of(context).orientation ==
+                                      Orientation.landscape
+                              ? searchRequest.resultType
+                              : SearchRequestResultTypeEnum.ROW_REFERENCE,
+                          onChanged: (newValue) => {},
+                          onSaved: (value) => {
+                                if (value != null)
+                                  {searchRequest.resultType = value}
+                              })))
             ],
         additionalButtons: (context, changeCallBack, getValue) => [
               FutureBuilder(

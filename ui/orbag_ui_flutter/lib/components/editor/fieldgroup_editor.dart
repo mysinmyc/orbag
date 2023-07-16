@@ -88,49 +88,59 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     List<WidgetFieldBuildInfo> filters = List.empty(growable: true);
 
     for (StringField currentRequestField in fields.stringFields) {
-      TextFormField currentField = TextFormField(
-          readOnly: currentRequestField.readOnly!,
-          enabled: widget.enabled && !currentRequestField.readOnly!,
-          initialValue: currentRequestField.value,
-          autofocus: filters.isEmpty,
-          textInputAction: TextInputAction.send,
-          /*
+      Widget currentField = SizedBox(
+          height: 80,
+          child: TextFormField(
+              expands: true,
+              minLines: null,
+              maxLines: null,
+              readOnly: currentRequestField.readOnly!,
+              enabled: widget.enabled && !currentRequestField.readOnly!,
+              initialValue: currentRequestField.value,
+              autofocus: filters.isEmpty,
+              textInputAction: TextInputAction.send,
+              /*
           onFieldSubmitted: (value) {
             _formKey.currentState!.save();
             widget.onSave(fields);
             changed = false;
           },
           */
-          decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              labelText: currentRequestField.displayLabel,
-              filled: true),
-          onChanged: (value) => {
-                currentRequestField.changed = true,
-                currentRequestField.value = value
-              });
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: currentRequestField.displayLabel,
+                  filled: true),
+              onChanged: (value) => {
+                    currentRequestField.changed = true,
+                    currentRequestField.value = value
+                  }));
       filters.add(WidgetFieldBuildInfo(currentRequestField.category ?? "",
           currentRequestField.displayLabel!, currentField));
     }
 
     for (NumericField currentRequestField in fields.numericFields) {
-      TextFormField currentField = TextFormField(
-          readOnly: currentRequestField.readOnly!,
-          textInputAction: TextInputAction.send,
-          enabled: widget.enabled && !currentRequestField.readOnly!,
-          autofocus: filters.isEmpty,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly
-          ],
-          initialValue: currentRequestField.value?.toString(),
-          decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              labelText: currentRequestField.displayLabel,
-              filled: true),
-          onChanged: (value) => {
-                currentRequestField.changed = true,
-                currentRequestField.value = int.tryParse(value)
-              });
+      Widget currentField = SizedBox(
+          height: 80,
+          child: TextFormField(
+              expands: true,
+              minLines: null,
+              maxLines: null,
+              readOnly: currentRequestField.readOnly!,
+              textInputAction: TextInputAction.send,
+              enabled: widget.enabled && !currentRequestField.readOnly!,
+              autofocus: filters.isEmpty,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
+              initialValue: currentRequestField.value?.toString(),
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: currentRequestField.displayLabel,
+                  filled: true),
+              onChanged: (value) => {
+                    currentRequestField.changed = true,
+                    currentRequestField.value = int.tryParse(value)
+                  }));
       filters.add(WidgetFieldBuildInfo(currentRequestField.category,
           currentRequestField.displayLabel, currentField));
     }
@@ -156,7 +166,9 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           height: 80,
           child: InputDecorator(
               decoration: InputDecoration(
-                  labelText: currentRequestReferenceField.displayLabel),
+                  labelText: currentRequestReferenceField.displayLabel,
+                  border: const OutlineInputBorder(),
+                  filled: true),
               expands: true,
               child: Row(
                   children: RenderUtil.padAll([
@@ -207,7 +219,9 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
           height: 80,
           child: InputDecorator(
               decoration: InputDecoration(
-                  labelText: currentRequestReferenceListField.displayLabel),
+                  labelText: currentRequestReferenceListField.displayLabel,
+                  border: const OutlineInputBorder(),
+                  filled: true),
               child: RenderUtil.pad(ConfigurationItemListLink(
                   currentRequestReferenceListField.value))));
       filters.add(WidgetFieldBuildInfo(
@@ -218,8 +232,10 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
 
     for (EnumField currentRequestEnumField in fields.enumFields) {
       Widget currentField = InputDecorator(
-          decoration:
-              InputDecoration(labelText: currentRequestEnumField.displayLabel),
+          decoration: InputDecoration(
+              labelText: currentRequestEnumField.displayLabel,
+              border: const OutlineInputBorder(),
+              filled: true),
           child: DropdownButtonFormField<String>(
             hint: Text(
                 "No " + currentRequestEnumField.displayLabel! + " selected"),
@@ -261,11 +277,13 @@ class _FieldGroupEditorState extends State<FieldGroupEditor> {
     }
 
     if (widget.additionalFields != null) {
-      filters.addAll(widget.additionalFields!(
-          context, () => setState(() => changed = true), () {
-        commit();
-        return widget.source;
-      }));
+      filters.addAll(RenderUtil.toRows(
+          RenderUtil.padAll(widget.additionalFields!(
+              context, () => setState(() => changed = true), () {
+            commit();
+            return widget.source;
+          })),
+          (MediaQuery.of(context).size.width / 600).clamp(1, 4).round()));
     }
 
     List<Widget> buttons = List.empty(growable: true);
