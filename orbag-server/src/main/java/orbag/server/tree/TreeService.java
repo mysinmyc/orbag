@@ -4,7 +4,6 @@ import orbag.dao.ConfigurationItemDao;
 import orbag.dao.ConfigurationItemNotFoundException;
 import orbag.graph.Path;
 import orbag.graph.RelatedCisGraphBuilder;
-import orbag.graph.SerializableGraphBuilder;
 import orbag.metadata.UnmanagedObjectException;
 import orbag.reference.ConfigurationItemReference;
 import orbag.reference.ConfigurationItemReferenceService;

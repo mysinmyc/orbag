@@ -2,7 +2,7 @@ package orbag.graph;
 
 public interface GraphBuilder {
 
-    boolean addRelation(Object a, Object b, String relationName, String relationLabel);
+    boolean addRelation(Object fromCi, Object toCi, String relationName, String relationLabel);
 
     boolean isStopBuild();
 

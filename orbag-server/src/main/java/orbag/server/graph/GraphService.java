@@ -52,7 +52,6 @@ public class GraphService {
         return pathRegistry.getAllPaths().stream().filter( p -> p.getIdentifier().equals(serializablePath.getIdentifier()) ).findFirst().orElseGet(null);
     }
 
-
     public void generateGraphInto(ConfigurationItemReference startingCiReference, SerializablePath serializablePath, List<ConfigurationItemReference> previousSteps, Authentication user, GraphBuilder graphBuilder) throws UnmanagedObjectException, ConfigurationItemNotFoundException {
         Path path=getPath(serializablePath);
         if (path == null) {
@@ -65,9 +64,10 @@ public class GraphService {
         if (previousSteps!=null) {
             graphGenerationContext.setPreviousSteps(dao.getExistingCisOrThrow(previousSteps));
         }
+        SecuredGraphBuilderDecorator securedGraphBuilder = new SecuredGraphBuilderDecorator(graphBuilder,securityAssertionService,user);
         for (RelationsDiscoverer currentDiscoverer : visibilityManager.filterObjects(relationsDiscovererRegistry.getAllRelationsDiscoverers(), FilterContext.forTargetObject(startingCi).forUser(user))) {
             if (currentDiscoverer.isAvailableFor(startingCi, graphGenerationContext)) {
-                currentDiscoverer.discoverRelations(startingCi, graphBuilder, graphGenerationContext);
+                currentDiscoverer.discoverRelations(startingCi, securedGraphBuilder, graphGenerationContext);
             }
             if (graphBuilder.isStopBuild()) {
                 break;

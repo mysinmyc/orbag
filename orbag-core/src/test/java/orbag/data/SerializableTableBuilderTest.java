@@ -10,11 +10,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import orbag.EnableOrbagCore;
 import orbag.reference.ConfigurationItemReferenceService;
 import orbag.util.LimitExceededException;
+import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest
-@SpringBootConfiguration
-@EnableOrbagCore
 public class SerializableTableBuilderTest {
+
+
+	@Configuration
+	@EnableOrbagCore
+	static class ConfigurationClass {
+
+	}
+
 
 	@Test
 	void test(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) {

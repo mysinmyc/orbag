@@ -8,20 +8,21 @@ import orbag.data.TableBuilder;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.function.Function;
 
 public class TsvBuilder {
 
-    OutputStreamWriter outputStreamWriter;
+    Writer outputStreamWriter;
 
     String fieldDelimiter;
 
-    public TsvBuilder(OutputStreamWriter outputStreamWriter){
+    public TsvBuilder(Writer outputStreamWriter){
         this(outputStreamWriter,"\t");
     }
 
-    public TsvBuilder(OutputStreamWriter outputStreamWriter, String fieldDelimiter){
+    public TsvBuilder(Writer outputStreamWriter, String fieldDelimiter){
         this.outputStreamWriter = outputStreamWriter;
         this.fieldDelimiter=fieldDelimiter;
     }

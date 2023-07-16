@@ -7,6 +7,7 @@ import orbag.util.TsvBuilder;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +18,8 @@ public class TsvTableBuilder<T> implements TableBuilder<T>, RowBuilder<T>, Parti
 
     TsvBuilder tsvBuilder;
 
-    public TsvTableBuilder(OutputStreamWriter outputStreamWriter) {
-        this.tsvBuilder = new TsvBuilder(outputStreamWriter);
+    public TsvTableBuilder(Writer writer) {
+        this.tsvBuilder = new TsvBuilder(writer);
     }
 
 

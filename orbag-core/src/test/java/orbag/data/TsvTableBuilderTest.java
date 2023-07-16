@@ -1,40 +1,62 @@
 package orbag.data;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import orbag.EnableOrbagCore;
+import orbag.reference.ConfigurationItemReferenceService;
+import orbag.util.LimitExceededException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 
-import orbag.EnableOrbagCore;
-import orbag.reference.ConfigurationItemReferenceService;
-import orbag.util.LimitExceededException;
+import java.io.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@SpringBootConfiguration
-@EnableOrbagCore
-public class SerializableTableBuilderTest {
+public class TsvTableBuilderTest {
+
+	@Configuration
+	@EnableOrbagCore
+	static class ConfigurationClass {
+
+	}
 
 	@Test
-	void test(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) {
+	void test(@Autowired ConfigurationItemReferenceService configurationItemReferenceService) throws IOException {
 
-		SerializableTableBuilder<String> tableBuilder = new SerializableTableBuilder<String>(configurationItemReferenceService);
-		tableBuilder.setLimit(10);
-		tableBuilder.addColumn("static", ColumnType.Primitive);
-		tableBuilder.addGeneratedColumn("generated", ColumnType.Primitive, (o) -> (o.toString()));
+		try (
+			 Writer writer = new StringWriter()) {
+			TsvTableBuilder<String> tableBuilder = new TsvTableBuilder<String>(writer);
+			tableBuilder.addColumn("static", ColumnType.Primitive);
+			tableBuilder.addGeneratedColumn("generated", ColumnType.Primitive, (o) -> (o.toString()));
 
-		RowBuilder<String> rowbuilder= tableBuilder.rows();
-		for (int cnt = 0; cnt < 10; cnt++) {
-			rowbuilder.addRow("ciao"+cnt).withValue("prima", 1);
+			RowBuilder<String> rowbuilder = tableBuilder.rows();
+			for (int cnt = 0; cnt < 10; cnt++) {
+
+				rowbuilder.addRow("ciao" + cnt).withValue("static", cnt*2);
+			}
+
+
+			writer.flush();
+
+			String result =  writer.toString();
+
+			String[] rows = result.split("\n");
+			assertArrayEquals(new String[]{
+					"static\tgenerated",
+					"0\tciao0",
+					"2\tciao1",
+					"4\tciao2",
+					"6\tciao3",
+					"8\tciao4",
+					"10\tciao5",
+					"12\tciao6",
+					"14\tciao7",
+					"16\tciao8",
+			}, rows);
 		}
-		
-		assertThrows(LimitExceededException.class, ()->rowbuilder.addRow("too much"));
-		SerializableTable table = tableBuilder.build();
-		assertEquals(2,table.getColumns().size());
-		assertEquals(10,table.getRows().size());
-		
-		assertEquals("ciao0",table.getRows().get(0).getFields().get("generated"));
+
 	}
 	
 
